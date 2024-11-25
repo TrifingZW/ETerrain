@@ -22,7 +22,7 @@ public:
 
     void Init() override;
     void Ready() override;
-    void Rendering(SpriteBatch &spriteBatch) override;
+    void Rendering(const SpriteBatch &spriteBatch) override;
     void Gui() override;
 
     GLuint VAO{}, VBO{}, EBO{};

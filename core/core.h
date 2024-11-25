@@ -8,8 +8,8 @@
 
 class Core {
 public:
-    static  GraphicsDevice GraphicsDevice;
-    static SpriteBatch SpriteBatch;
+   const static GraphicsDevice GraphicsDevice;
+   const static SpriteBatch SpriteBatch;
     Editor RootNode{};
 
     // 静态方法，获取单例实例

@@ -16,7 +16,7 @@ void GamePanel2D::Init() {
 void GamePanel2D::Ready() {
 }
 
-void GamePanel2D::Rendering(SpriteBatch &spriteBatch) {
+void GamePanel2D::Rendering(const SpriteBatch &spriteBatch) {
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glViewport(0, 0, width, height);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

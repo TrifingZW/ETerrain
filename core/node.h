@@ -38,13 +38,13 @@ public:
     void InitTree();
     void ReadyTree();
     void ProcessTree(float delta);
-    void RenderingTree(SpriteBatch &spriteBatch);
+    void RenderingTree(const SpriteBatch &spriteBatch);
     void GuiTree();
     void InputTree(int key);
     virtual void Init();
     virtual void Ready();
     virtual void Process(float delta);
-    virtual void Rendering(SpriteBatch &spriteBatch);
+    virtual void Rendering(const SpriteBatch &spriteBatch);
     virtual void Gui();
     virtual void Input(int key);
 

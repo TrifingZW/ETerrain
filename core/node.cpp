@@ -27,7 +27,7 @@ void Node::ProcessTree(const float delta) {
     }
 }
 
-void Node::RenderingTree(SpriteBatch &spriteBatch) {
+void Node::RenderingTree(const SpriteBatch &spriteBatch) {
     Rendering(spriteBatch);
     for (const auto &child: children) {
         child->RenderingTree(spriteBatch);
@@ -57,7 +57,7 @@ void Node::Ready() {
 void Node::Process(float delta) {
 }
 
-void Node::Rendering(SpriteBatch &spriteBatch) {
+void Node::Rendering(const SpriteBatch &spriteBatch) {
 }
 
 void Node::Gui() {
