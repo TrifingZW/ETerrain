@@ -57,17 +57,10 @@ add_executable(ETerrain
         core/graphics/sprite_batch.h
         core/graphics/graphics_device.cpp
         core/graphics/graphics_device.h
+        core/graphics/buffer_manager.cpp
+        core/graphics/buffer_manager.h
         core/graphics/render_target.cpp
         core/graphics/render_target.h
-        core/graphics/sprite_sortmode.h
-        core/graphics/blend_state.cpp
-        core/graphics/blend_state.h
-        core/graphics/sampler_state.cpp
-        core/graphics/sampler_state.h
-        core/graphics/depthstencil_state.cpp
-        core/graphics/depthstencil_state.h
-        core/graphics/rasterizer_state.cpp
-        core/graphics/rasterizer_state.h
 )
 
 # 设置核心件路径

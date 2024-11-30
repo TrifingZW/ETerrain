@@ -5,7 +5,7 @@
 #include "core.h"
 
 const GraphicsDevice Core::GraphicsDevice{};
-const SpriteBatch Core::SpriteBatch = SpriteBatch::SpriteBatch(GraphicsDevice);
+const SpriteBatch Core::SpriteBatch{};
 
 void Core::Renderings() {
     RootNode.RenderingTree(SpriteBatch);

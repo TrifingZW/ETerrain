@@ -8,15 +8,16 @@
 
 #include "editor.h"
 
-void GamePanel2D::Init() {
+void GamePanel2D::Init()
+{
     NewFramebuffer();
     InitOpenGlResources();
 }
 
-void GamePanel2D::Ready() {
-}
+void GamePanel2D::Ready() {}
 
-void GamePanel2D::Rendering(const SpriteBatch &spriteBatch) {
+void GamePanel2D::Rendering(const SpriteBatch& spriteBatch)
+{
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glViewport(0, 0, width, height);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -42,7 +43,8 @@ void GamePanel2D::Rendering(const SpriteBatch &spriteBatch) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GamePanel2D::Gui() {
+void GamePanel2D::Gui()
+{
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0)); // 设置窗口内边距为 0
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f); // 去掉窗口边框
 
@@ -50,7 +52,8 @@ void GamePanel2D::Gui() {
     ImGui::Begin("Game2D");
 
     const ImVec2 panelSize = ImGui::GetContentRegionAvail();
-    if (static_cast<int>(panelSize.x) != width || static_cast<int>(panelSize.y) != height) {
+    if (static_cast<int>(panelSize.x) != width || static_cast<int>(panelSize.y) != height)
+    {
         width = static_cast<int>(panelSize.x);
         height = static_cast<int>(panelSize.y);
         NewFramebuffer();
@@ -67,16 +70,19 @@ void GamePanel2D::Gui() {
     ImGui::PopStyleVar(2);
 }
 
-void GamePanel2D::NewFramebuffer() {
+void GamePanel2D::NewFramebuffer()
+{
     // 设置相机视口大小
     camera2d->SetViewportSize(glm::vec2(static_cast<float>(width), static_cast<float>(height)));
     camera2d->SetZoom(5.0f);
     // 生成新缓冲前先删除
-    if (framebuffer) {
+    if (framebuffer)
+    {
         glDeleteFramebuffers(1, &framebuffer);
         framebuffer = 0;
     }
-    if (textureBuffer) {
+    if (textureBuffer)
+    {
         glDeleteTextures(1, &textureBuffer);
         textureBuffer = 0;
     }
@@ -97,7 +103,8 @@ void GamePanel2D::NewFramebuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GamePanel2D::InitOpenGlResources() {
+void GamePanel2D::InitOpenGlResources()
+{
     const std::vector<float> vertices = Editor::loadResources->plantResourceTextureParser.GetVertices("desert_4.png");
     // @formatter:off
     constexpr unsigned int indices[] = {

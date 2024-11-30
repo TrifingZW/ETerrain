@@ -15,12 +15,14 @@
 
 using namespace glm;
 
-void GamePanel3D::Init() {
+void GamePanel3D::Init()
+{
     NewFramebuffer();
     InitOpenGlResources();
 }
 
-void GamePanel3D::Ready() {
+void GamePanel3D::Ready()
+{
     texture1 = Editor::loadResources->plantResourceTextureParser.Texture2D.Id;
     texture2 = Editor::loadResources->terrainResourceTextureParser.Texture2D.Id;
 }
@@ -38,7 +40,8 @@ constexpr vec3 cubePositions[] = {
     vec3(-1.3f, 1.0f, -1.5f)
 };
 
-void GamePanel3D::Rendering(const SpriteBatch &spriteBatch) {
+void GamePanel3D::Rendering(const SpriteBatch& spriteBatch)
+{
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glViewport(0, 0, width, height);
     glClearColor(1.0f, 0.1f, 0.1f, 1.0f);
@@ -60,7 +63,8 @@ void GamePanel3D::Rendering(const SpriteBatch &spriteBatch) {
 
     shader2.Use();
     glBindVertexArray(VAO2);
-    for (unsigned int i = 0; i < 10; i++) {
+    for (unsigned int i = 0; i < 10; i++)
+    {
         model = mat4(1.0f);
         model = translate(model, cubePositions[i]);
         model = rotate(model,/*static_cast<float>(glfwGetTime()) **/radians(50.0f), vec3(1.0f, 0.3f, 0.5f));
@@ -78,7 +82,8 @@ void GamePanel3D::Rendering(const SpriteBatch &spriteBatch) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GamePanel3D::Gui() {
+void GamePanel3D::Gui()
+{
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0)); // 设置窗口内边距为 0
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f); // 去掉窗口边框
 
@@ -86,7 +91,8 @@ void GamePanel3D::Gui() {
     ImGui::Begin("Game3D");
 
     const ImVec2 panelSize = ImGui::GetContentRegionAvail();
-    if (static_cast<int>(panelSize.x) != width || static_cast<int>(panelSize.y) != height) {
+    if (static_cast<int>(panelSize.x) != width || static_cast<int>(panelSize.y) != height)
+    {
         width = static_cast<int>(panelSize.x);
         height = static_cast<int>(panelSize.y);
         NewFramebuffer();
@@ -127,7 +133,8 @@ void GamePanel3D::Gui() {
     ImGui::End();
 }
 
-void GamePanel3D::Input(int key) {
+void GamePanel3D::Input(int key)
+{
     if (ImGui::IsKeyDown(ImGuiKey_W))
         camera3d->Transform3D.Translate(normalize(camera3d->Transform3D.Forward()) * 0.01f);
     if (ImGui::IsKeyDown(ImGuiKey_S))
@@ -138,20 +145,24 @@ void GamePanel3D::Input(int key) {
         camera3d->Transform3D.Translate(normalize(camera3d->Transform3D.RightAxis()) * 0.01f);
 }
 
-void GamePanel3D::NewFramebuffer() {
+void GamePanel3D::NewFramebuffer()
+{
     // 设置相机纵横比
     camera3d->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
 
     // 生成新缓冲前先删除
-    if (framebuffer) {
+    if (framebuffer)
+    {
         glDeleteFramebuffers(1, &framebuffer);
         framebuffer = 0; // 清空 ID，避免重复删除
     }
-    if (depthRenderbuffer) {
+    if (depthRenderbuffer)
+    {
         glDeleteRenderbuffers(1, &depthRenderbuffer);
         depthRenderbuffer = 0;
     }
-    if (textureBuffer) {
+    if (textureBuffer)
+    {
         glDeleteTextures(1, &textureBuffer);
         textureBuffer = 0;
     }
@@ -177,7 +188,8 @@ void GamePanel3D::NewFramebuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GamePanel3D::InitOpenGlResources() {
+void GamePanel3D::InitOpenGlResources()
+{
   // @formatter:off
   constexpr float vertices[] = {
       //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
@@ -300,7 +312,7 @@ void GamePanel3D::InitOpenGlResources() {
     )";
 
     // 片段着色器
-    constexpr auto *fragmentShaderSource = R"(
+    constexpr auto* fragmentShaderSource = R"(
         #version 330 core
         out vec4 FragColor;
 
@@ -316,7 +328,7 @@ void GamePanel3D::InitOpenGlResources() {
     )";
 
     // 片段着色器2
-    constexpr auto *fragmentShaderSource2 = R"(
+    constexpr auto* fragmentShaderSource2 = R"(
         #version 330 core
         out vec4 FragColor;
 

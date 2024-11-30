@@ -5,6 +5,4 @@
 #pragma once
 
 
-class SpriteBatch {
-
-};
+class BufferManager {};
