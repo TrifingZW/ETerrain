@@ -3,6 +3,14 @@
 //
 
 #pragma once
+#include <glad/glad.h>
 
 
-class RenderTarget {};
+class RenderTarget
+{
+public:
+    int width{}, height{};
+    GLuint framebuffer = {}, textureBuffer{};
+
+    RenderTarget(int width, int height);
+};

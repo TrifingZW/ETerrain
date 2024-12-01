@@ -38,7 +38,7 @@ public:
     void InitTree();
     void ReadyTree();
     void ProcessTree(float delta);
-    void RenderingTree(const SpriteBatch &spriteBatch);
+    void RenderingTree(const SpriteBatch* spriteBatch);
     void GuiTree();
     void InputTree(int key);
     virtual void Init();

@@ -61,6 +61,8 @@ add_executable(ETerrain
         core/graphics/buffer_manager.h
         core/graphics/render_target.cpp
         core/graphics/render_target.h
+        core/graphics/graphics_structure.h
+        core/graphics/graphics_enum.h
 )
 
 # 设置核心件路径

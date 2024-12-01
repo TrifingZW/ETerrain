@@ -10,11 +10,14 @@
 
 #include "glm/gtc/type_ptr.inl"
 
-Shader::Shader() {
+Shader::Shader()
+{
     // 顶点着色器
     constexpr auto vShaderCode = R"(
         #version 330 core
-        layout (location = 0) in vec4 vertex;
+        layout (location = 0) in vec3 vertex;
+        layout (location = 1) in vec2 textureCoord;
+        layout (location = 2) in mat4 model;
 
         out vec2 TexCoords;
 
@@ -23,12 +26,12 @@ Shader::Shader() {
 
         void main()
         {
-            TexCoords = vertex.zw;
-            gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);
+            TexCoords = textureCoord;
+            gl_Position = projection * model * vec4(vertex, 1.0);
         }
     )";
     // 片段着色器
-    constexpr auto *fShaderCode = R"(
+    constexpr auto* fShaderCode = R"(
         #version 330 core
         in vec2 TexCoords;
         out vec4 color;
@@ -43,8 +46,10 @@ Shader::Shader() {
     shaderId = LinkShader(vShaderCode, fShaderCode);
 }
 
-Shader::Shader(const char *source1, const char *source2, ShaderSourceType type) {
-    if (type == ShaderSourceType::Path) {
+Shader::Shader(const char* source1, const char* source2, ShaderSourceType type)
+{
+    if (type == ShaderSourceType::Path)
+    {
         // 1. 从文件路径中获取顶点/片段着色器
         std::string vertexCode;
         std::string fragmentCode;
@@ -53,7 +58,8 @@ Shader::Shader(const char *source1, const char *source2, ShaderSourceType type) 
         // 保证ifstream对象可以抛出异常：
         vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
         fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        try {
+        try
+        {
             // 打开文件
             vShaderFile.open(source1);
             fShaderFile.open(source2);
@@ -67,45 +73,54 @@ Shader::Shader(const char *source1, const char *source2, ShaderSourceType type) 
             // 转换数据流到string
             vertexCode = vShaderStream.str();
             fragmentCode = fShaderStream.str();
-        } catch (const std::ifstream::failure &e) {
+        } catch (const std::ifstream::failure& e)
+        {
             std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: "
                     << e.what() << " (vertexPath: " << source1
                     << ", fragmentPath: " << source2 << ")" << std::endl;
         }
-        const char *vShaderCode = vertexCode.c_str();
-        const char *fShaderCode = fragmentCode.c_str();
+        const char* vShaderCode = vertexCode.c_str();
+        const char* fShaderCode = fragmentCode.c_str();
 
         shaderId = LinkShader(vShaderCode, fShaderCode);
-    } else if (type == ShaderSourceType::Code) {
+    } else if (type == ShaderSourceType::Code)
+    {
         shaderId = LinkShader(source1, source2);
     }
 }
 
-void Shader::Use() const {
+void Shader::Use() const
+{
     glUseProgram(shaderId);
 }
 
-void Shader::SetBool(const std::string &name, const bool value) const {
+void Shader::SetBool(const std::string& name, const bool value) const
+{
     glUniform1i(glGetUniformLocation(shaderId, name.c_str()), static_cast<int>(value));
 }
 
-void Shader::SetInt(const std::string &name, const int value) const {
+void Shader::SetInt(const std::string& name, const int value) const
+{
     glUniform1i(glGetUniformLocation(shaderId, name.c_str()), value);
 }
 
-void Shader::SetFloat(const std::string &name, const float value) const {
+void Shader::SetFloat(const std::string& name, const float value) const
+{
     glUniform1f(glGetUniformLocation(shaderId, name.c_str()), value);
 }
 
-void Shader::SetMatrix4(const std::string &name, glm::mat4 value) const {
+void Shader::SetMatrix4(const std::string& name, glm::mat4 value) const
+{
     glUniformMatrix4fv(glGetUniformLocation(shaderId, name.c_str()), 1, GL_FALSE, value_ptr(value));
 }
 
-void Shader::SetVector3(const std::string &name, glm::vec3 value) const {
+void Shader::SetVector3(const std::string& name, glm::vec3 value) const
+{
     glUniform3fv(glGetUniformLocation(shaderId, name.c_str()), 1, value_ptr(value));
 }
 
-GLuint Shader::LinkShader(const char *vShaderCode, const char *fShaderCode) {
+GLuint Shader::LinkShader(const char* vShaderCode, const char* fShaderCode)
+{
     // 创建着色器程序
     const GLuint vertexShader = CreateShader(vShaderCode, GL_VERTEX_SHADER);
     const GLuint fragmentShader = CreateShader(fShaderCode, GL_FRAGMENT_SHADER);
@@ -117,7 +132,8 @@ GLuint Shader::LinkShader(const char *vShaderCode, const char *fShaderCode) {
 
     int success;
     glGetProgramiv(id, GL_LINK_STATUS, &success);
-    if (!success) {
+    if (!success)
+    {
         char infoLog[512];
         glGetProgramInfoLog(id, 512, nullptr, infoLog);
         std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
@@ -129,14 +145,16 @@ GLuint Shader::LinkShader(const char *vShaderCode, const char *fShaderCode) {
     return id;
 }
 
-GLuint Shader::CreateShader(const char *source, const GLenum shader_type) {
+GLuint Shader::CreateShader(const char* source, const GLenum shader_type)
+{
     const GLuint shader = glCreateShader(shader_type);
     glShaderSource(shader, 1, &source, nullptr);
     glCompileShader(shader);
 
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
+    if (!success)
+    {
         char infoLog[512];
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
         std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;

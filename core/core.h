@@ -1,20 +1,24 @@
 //
 // Created by TrifingZW on 24-11-17.
 //
+
 #pragma once
 
 #include "editor.h"
 #include "graphics/graphics_device.h"
 #include "graphics/sprite_batch.h"
 
-class Core {
+class Core
+{
+    static GraphicsDevice* _graphicsDevice;
+    static SpriteBatch* _spriteBatch;
+
 public:
-   const static GraphicsDevice GraphicsDevice;
-   const static SpriteBatch SpriteBatch;
     Editor RootNode{};
 
     // 静态方法，获取单例实例
-    static Core &instance() {
+    static Core& Instance()
+    {
         static Core core;
         return core;
     }
@@ -27,4 +31,7 @@ public:
     void InitTree();
     void ProcessTree(float delta);
     void Input(int key);
+
+    static GraphicsDevice* GetGraphicsDevice();
+    static SpriteBatch* GetSpriteBatch();
 };

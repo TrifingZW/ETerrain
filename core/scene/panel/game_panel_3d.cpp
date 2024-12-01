@@ -9,8 +9,8 @@
 #include <iostream>
 
 #include "editor.h"
-#include "glm/ext/matrix_transform.hpp"
 #include "glm/fwd.hpp"
+#include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.inl"
 
 using namespace glm;

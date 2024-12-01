@@ -80,7 +80,7 @@ void renderImGui() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    Core::instance().ImGuiAll();
+    Core::Instance().ImGuiAll();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -90,7 +90,7 @@ void renderImGui() {
 void renderOpenGL() {
     glClearColor(1.0f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    Core::instance().Renderings();
+    Core::Instance().Renderings();
 }
 
 // 退出程序时清理
@@ -128,7 +128,7 @@ int main(int, char **) {
 
     // 初始化 OpenGL 和 ImGui 和 Core
     initImGui(window, glsl_version);
-    Core::instance().InitTree();
+    Core::Instance().InitTree();
 
     // 主循环
     while (!glfwWindowShouldClose(window)) {
@@ -137,8 +137,8 @@ int main(int, char **) {
         const auto currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        Core::instance().ProcessTree(currentFrame);
-        Core::instance().Input(1);
+        Core::Instance().ProcessTree(currentFrame);
+        Core::Instance().Input(1);
 
         // 如果窗口最小化，暂停一段时间以减少无效计算
         if (glfwGetWindowAttrib(window, GLFW_ICONIFIED)) {

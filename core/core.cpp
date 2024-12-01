@@ -4,26 +4,38 @@
 
 #include "core.h"
 
-const GraphicsDevice Core::GraphicsDevice{};
-const SpriteBatch Core::SpriteBatch{};
+GraphicsDevice* Core::_graphicsDevice = nullptr;
+SpriteBatch* Core::_spriteBatch = nullptr;
 
-void Core::Renderings() {
-    RootNode.RenderingTree(SpriteBatch);
+void Core::Renderings()
+{
+    RootNode.RenderingTree(_spriteBatch);
 }
 
-void Core::ImGuiAll() {
+void Core::ImGuiAll()
+{
     RootNode.GuiTree();
 }
 
-void Core::InitTree() {
+void Core::InitTree()
+{
+    _graphicsDevice = new GraphicsDevice();
+    _spriteBatch = new SpriteBatch(_graphicsDevice);
+
     RootNode.InitTree();
     RootNode.ReadyTree();
 }
 
-void Core::ProcessTree(const float delta) {
+void Core::ProcessTree(const float delta)
+{
     RootNode.ProcessTree(delta);
 }
 
-void Core::Input(const int key) {
+void Core::Input(const int key)
+{
     RootNode.InputTree(key);
 }
+
+GraphicsDevice* Core::GetGraphicsDevice() { return _graphicsDevice; }
+
+SpriteBatch* Core::GetSpriteBatch() { return _spriteBatch; }

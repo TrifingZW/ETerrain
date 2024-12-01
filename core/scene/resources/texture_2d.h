@@ -20,5 +20,5 @@ public:
     // 从图像数据生成纹理
     void Generate(int width, int height, int channels, const unsigned char *data);
     // 将纹理绑定为当前活动的 GL_TEXTURE_2D 纹理对象
-    void Bind() const;
+    void Bind(GLenum target) const;
 };

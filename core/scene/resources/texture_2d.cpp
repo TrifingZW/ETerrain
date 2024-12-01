@@ -4,7 +4,8 @@
 
 #include "texture_2d.h"
 
-void Texture2D::Generate(const int width, const int height, const int channels, const unsigned char *data) {
+void Texture2D::Generate(const int width, const int height, const int channels, const unsigned char* data)
+{
     Width = width;
     Height = height;
     InternalFormat = ImageFormat = channels == 4 ? GL_RGBA : GL_RGB;
@@ -23,6 +24,8 @@ void Texture2D::Generate(const int width, const int height, const int channels, 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture2D::Bind() const {
+void Texture2D::Bind(const GLenum target) const
+{
+    glActiveTexture(target);
     glBindTexture(GL_TEXTURE_2D, Id);
 }
