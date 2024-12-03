@@ -21,4 +21,5 @@ public:
 
     void SetDataPointerEXT(int offset, const PositionTexture4* positionColorTexture4, int count, SetDataOptions options) const;
     void SetMatrixPointerEXT(int offset, const glm::mat4* model, int count, SetDataOptions options) const;
+    void SetIndexPointerEXT(const short* indices, GLsizeiptr size) const;
 };

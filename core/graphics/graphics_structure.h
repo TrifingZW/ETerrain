@@ -9,6 +9,7 @@
 
 struct Rect
 {
+    Rect(const float x, const float y, const float width, const float height): X(x), Y(y), Width(width), Height(height) {}
     float X{}, Y{}, Width{}, Height{};
 };
 

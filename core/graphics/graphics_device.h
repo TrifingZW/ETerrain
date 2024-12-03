@@ -19,7 +19,6 @@ class GraphicsDevice
 
 public:
     Texture2D* texture2D = nullptr;
-    glm::mat4 modelMatrix{};
     glm::mat4 observeMatrix{};
 
     void SetRenderTarget(RenderTarget* renderTarget);
@@ -30,9 +29,9 @@ public:
         int numVertices
     ) const;
 
-    static void Clear();
-    static void Clear(glm::vec4 color);
-    static void ResetBuffer();
-    static void ResetTexture();
-    static void ResetRenderTarget();
+    void Clear();
+    void Clear(glm::vec4 color);
+    void ResetBuffer();
+    void ResetTexture();
+    void ResetRenderTarget();
 };

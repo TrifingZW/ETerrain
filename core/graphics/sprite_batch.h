@@ -8,25 +8,37 @@
 
 #include "buffer_manager.h"
 #include "graphics_device.h"
-#include "scene/resources/texture_2d.h"
 #include "graphics_enum.h"
 #include "graphics_structure.h"
 #include "glm/fwd.hpp"
+#include "glm/detail/_noise.hpp"
+#include "glm/detail/_noise.hpp"
+#include "glm/detail/_noise.hpp"
+#include "glm/detail/_noise.hpp"
+#include "glm/gtx/associated_min_max.hpp"
+#include "scene/resources/texture_2d.h"
 
 class SpriteBatch
 {
 public:
     static constexpr int MAX_SPRITES = 2048;
+    static constexpr int MAX_VERTICES = MAX_SPRITES * 4;
+    static constexpr int MAX_INDICES = MAX_SPRITES * 6;
+    static constexpr GLsizeiptr MAX_VERTICES_SIZE = MAX_SPRITES * sizeof(PositionTexture4);
+    static constexpr GLsizeiptr MAX_INDICES_SIZE = MAX_INDICES * sizeof(short);
+    static constexpr GLsizeiptr MAX_MODELS_SIZE = MAX_INDICES * sizeof(glm::mat4);
 
 private:
     GraphicsDevice* _graphicsDevice = nullptr;
-    BufferManager _bufferManager = BufferManager(MAX_SPRITES * 5 * 4, MAX_SPRITES * 6, MAX_SPRITES * 4 * sizeof(glm::mat4));
+    BufferManager _bufferManager = BufferManager(MAX_VERTICES_SIZE, MAX_INDICES_SIZE, MAX_MODELS_SIZE);
 
     PositionTexture4 _vertexInfo[MAX_SPRITES] = {};
     glm::mat4 _modelMatrix[MAX_SPRITES] = {};
     Texture2D* _textureInfo[MAX_SPRITES] = {};
+    short* _indices = new short[MAX_INDICES];
 
     SpriteSortMode _sortMode = SpriteSortMode::Deferred;
+    glm::mat4 _matrix = glm::mat4(0.1f);
     bool _beginCalled = false;
     int _numSprites = 0;
     int _bufferOffset = 0;
@@ -35,9 +47,9 @@ public:
     explicit SpriteBatch(GraphicsDevice* graphicsDevice);
 
     void Begin();
-    void Begin(SpriteSortMode sortMode);
+    void Begin(SpriteSortMode sortMode, const glm::mat4& matrix);
     void Draw(
-        const Texture2D& texture2D,
+        ::Texture2D* texture2D,
         Rect SourceRect,
         Rect TargetRect,
         Color color,
@@ -50,7 +62,7 @@ public:
 private:
     void CheckBegin(const std::string& method) const;
     void PushSprite(
-        Texture2D texture,
+        Texture2D* texture,
         float sourceX,
         float sourceY,
         float sourceW,
@@ -67,8 +79,9 @@ private:
     );
     void FlushBatch();
     int UpdateVertexBuffer(int start, int count);
-    void DrawPrimitives(Texture2D* texture2D, int i, int i1) const;
+    void DrawPrimitives(Texture2D* texture2D, int primitiveOffset, int primitiveSize) const;
     void PrepRenderState();
+    static void GenerateIndexArray(short* indices);
 
     static void GenerateVertexInfo(
         PositionTexture4* sprite,

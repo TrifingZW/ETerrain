@@ -21,6 +21,7 @@ Shader::Shader()
 
         out vec2 TexCoords;
 
+        uniform mat4 model2;
         uniform mat4 projection;
 
         void main()

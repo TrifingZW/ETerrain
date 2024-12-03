@@ -40,7 +40,7 @@ constexpr vec3 cubePositions[] = {
     vec3(-1.3f, 1.0f, -1.5f)
 };
 
-void GamePanel3D::Rendering(const SpriteBatch& spriteBatch)
+void GamePanel3D::Rendering(SpriteBatch& spriteBatch)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glViewport(0, 0, width, height);

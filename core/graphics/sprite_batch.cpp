@@ -4,24 +4,31 @@
 
 #include "sprite_batch.h"
 
+#include <iostream>
 #include <stdexcept>
 
 #include "glm/ext/matrix_transform.hpp"
 
-SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphicsDevice) {}
-void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred); }
+SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphicsDevice)
+{
+    GenerateIndexArray(_indices);
+    _bufferManager.SetIndexPointerEXT(_indices, MAX_INDICES_SIZE);
+}
 
-void SpriteBatch::Begin(const SpriteSortMode sortMode)
+void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred, glm::mat4(0.1f)); }
+
+void SpriteBatch::Begin(const SpriteSortMode sortMode, const glm::mat4& matrix)
 {
     if (_beginCalled)
         throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
     _beginCalled = true;
 
     _sortMode = sortMode;
+    _matrix = matrix;
 }
 
 void SpriteBatch::Draw(
-    const Texture2D& texture2D,
+    Texture2D* texture2D,
     const Rect SourceRect,
     const Rect TargetRect,
     const Color color,
@@ -71,7 +78,7 @@ void SpriteBatch::CheckBegin(const std::string& method) const
 }
 
 void SpriteBatch::PushSprite(
-    Texture2D texture,
+    Texture2D* texture,
     const float sourceX,
     const float sourceY,
     const float sourceW,
@@ -94,8 +101,8 @@ void SpriteBatch::PushSprite(
         GenerateVertexInfo(
             &_vertexInfo[_numSprites],
             &_modelMatrix[_numSprites],
-            texture.Width,
-            texture.Height,
+            texture->Width,
+            texture->Height,
             sourceX,
             sourceY,
             sourceW,
@@ -110,7 +117,7 @@ void SpriteBatch::PushSprite(
             rotation,
             effects
         );
-        _textureInfo[_numSprites] = &texture;
+        _textureInfo[_numSprites] = texture;
         _numSprites++;
     } else
     {
@@ -119,8 +126,8 @@ void SpriteBatch::PushSprite(
             GenerateVertexInfo(
                 &_vertexInfo[0],
                 &_modelMatrix[0],
-                texture.Width,
-                texture.Height,
+                texture->Width,
+                texture->Height,
                 sourceX,
                 sourceY,
                 sourceW,
@@ -135,17 +142,17 @@ void SpriteBatch::PushSprite(
                 rotation,
                 effects
             );
-            _textureInfo[0] = &texture;
+            _textureInfo[0] = texture;
             _numSprites++;
         } else
         {
-            if (_textureInfo[0] != &texture)
+            if (_textureInfo[0] != texture)
                 FlushBatch();
             GenerateVertexInfo(
                 &_vertexInfo[0],
                 &_modelMatrix[0],
-                texture.Width,
-                texture.Height,
+                texture->Width,
+                texture->Height,
                 sourceX,
                 sourceY,
                 sourceW,
@@ -191,8 +198,8 @@ void SpriteBatch::GenerateVertexInfo(
 
     const auto minXRatio = sourceX / static_cast<float>(textureW);
     const auto minYRatio = sourceY / static_cast<float>(textureH);
-    const auto maxXRatio = sourceX + sourceW / static_cast<float>(textureW);
-    const auto maxYRatio = sourceY + sourceH / static_cast<float>(textureH);
+    const auto maxXRatio = (sourceX + sourceW) / static_cast<float>(textureW);
+    const auto maxYRatio = (sourceY + sourceH) / static_cast<float>(textureH);
     sprite->TextureCoordinate0 = glm::vec2(minXRatio, minYRatio);
     sprite->TextureCoordinate1 = glm::vec2(maxXRatio, minYRatio);
     sprite->TextureCoordinate2 = glm::vec2(maxXRatio, maxYRatio);
@@ -249,15 +256,7 @@ int SpriteBatch::UpdateVertexBuffer(const int start, const int count)
 
     const PositionTexture4* p = &_vertexInfo[start];
     const glm::mat4* m = &_modelMatrix[start];
-    /* We use Discard here because the last batch
-     * may still be executing, and we can't always
-     * trust the driver to use a staging buffer for
-     * buffer uploads that overlap between commands.
-     *
-     * If you aren't using the whole vertex buffer,
-     * that's your own fault. Use the whole buffer!
-     * -flibit
-     */
+
     _bufferManager.SetDataPointerEXT(offset, p, count, options);
     _bufferManager.SetMatrixPointerEXT(offset, m, count, options);
 
@@ -265,10 +264,27 @@ int SpriteBatch::UpdateVertexBuffer(const int start, const int count)
     return offset;
 }
 
-void SpriteBatch::DrawPrimitives(Texture2D* texture2D, const int i, const int i1) const
+void SpriteBatch::DrawPrimitives(Texture2D* texture2D, const int primitiveOffset, const int primitiveSize) const
 {
     _graphicsDevice->texture2D = texture2D;
-    _graphicsDevice->DrawIndexedPrimitives(GL_FRAMEBUFFER, i, i1);
+    _graphicsDevice->DrawIndexedPrimitives(GL_TRIANGLES, primitiveOffset * 4, primitiveSize * 6);
 }
 
-void SpriteBatch::PrepRenderState() {}
+void SpriteBatch::PrepRenderState()
+{
+    _graphicsDevice->observeMatrix = _matrix;
+    _graphicsDevice->SetBufferManager(&_bufferManager);
+}
+
+void SpriteBatch::GenerateIndexArray(short* indices)
+{
+    for (int i = 0, j = 0; i < MAX_INDICES; i += 6, j += 4)
+    {
+        indices[i] = static_cast<short>(j + 2);
+        indices[i + 1] = static_cast<short>(j + 1);
+        indices[i + 2] = static_cast<short>(j + 3);
+        indices[i + 3] = static_cast<short>(j + 1);
+        indices[i + 4] = static_cast<short>(j);
+        indices[i + 5] = static_cast<short>(j + 3);
+    }
+}

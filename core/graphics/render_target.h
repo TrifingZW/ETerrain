@@ -13,4 +13,7 @@ public:
     GLuint framebuffer = {}, textureBuffer{};
 
     RenderTarget(int width, int height);
+    ~RenderTarget();
+
+   void Reinitialize(int width, int height);
 };

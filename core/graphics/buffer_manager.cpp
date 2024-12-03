@@ -4,6 +4,7 @@
 
 #include "buffer_manager.h"
 
+#include "core.h"
 #include "graphics_device.h"
 
 BufferManager::BufferManager(
@@ -31,22 +32,20 @@ BufferManager::BufferManager(
     glEnableVertexAttribArray(1);
 
     // 模型矩阵缓冲
-    GLuint modelBuffer;
-    glGenBuffers(1, &modelBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, modelBuffer);
+    glGenBuffers(1, &MBO);
+    glBindBuffer(GL_ARRAY_BUFFER, MBO);
     glBufferData(GL_ARRAY_BUFFER, modelSize, nullptr, GL_DYNAMIC_DRAW);
 
     // 获取着色器中 model uniform 的位置
     constexpr GLuint modelLoc = 2;
-
     // 假设顶点数据已经传递到 vertex buffer 中
     // 设置模型矩阵的属性
-    glBindBuffer(GL_ARRAY_BUFFER, modelBuffer);
-    glVertexAttribPointer(modelLoc, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), static_cast<GLvoid *>(nullptr));
+    glBindBuffer(GL_ARRAY_BUFFER, MBO);
+    glVertexAttribPointer(modelLoc, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void *>(sizeof(float) * 3));
     glVertexAttribDivisor(modelLoc, 1); // 每个实例使用一个不同的矩阵
     glEnableVertexAttribArray(modelLoc);
 
-    GraphicsDevice::ResetBuffer();
+    Core::GetGraphicsDevice()->ResetBuffer();
 }
 
 void BufferManager::SetDataPointerEXT(
@@ -56,12 +55,12 @@ void BufferManager::SetDataPointerEXT(
     const SetDataOptions options
 ) const
 {
-    const auto memoryOffset = static_cast<GLsizeiptr>(offset * 5 * sizeof(float));
-    const auto memoryLength = static_cast<GLsizeiptr>(count * 5 * sizeof(float));
+    const auto memoryOffset = static_cast<GLsizeiptr>(offset * sizeof(PositionTexture4));
+    const auto memoryLength = static_cast<GLsizeiptr>(count * sizeof(PositionTexture4));
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     if (options == SetDataOptions::Discard)
-        glBufferData(GL_ARRAY_BUFFER, memoryLength, positionColorTexture4, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, _vertexSize, positionColorTexture4, GL_DYNAMIC_DRAW);
     else
     {
         // 映射缓冲区并更新部分数据
@@ -77,16 +76,18 @@ void BufferManager::SetDataPointerEXT(
             glUnmapBuffer(GL_ARRAY_BUFFER);
         }
     }
+
+    Core::GetGraphicsDevice()->ResetBuffer();
 }
 
 void BufferManager::SetMatrixPointerEXT(const int offset, const glm::mat4* model, const int count, const SetDataOptions options) const
 {
     const auto memoryOffset = static_cast<GLsizeiptr>(offset * sizeof(glm::mat4));
-    const auto memoryLength = static_cast<GLsizeiptr>(count * sizeof(glm::mat4));
+    const auto memoryLength = static_cast<GLsizeiptr>((offset + count) * sizeof(glm::mat4));
 
     glBindBuffer(GL_ARRAY_BUFFER, MBO);
     if (options == SetDataOptions::Discard)
-        glBufferData(GL_ARRAY_BUFFER, memoryLength, model, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, _modelSize, model, GL_DYNAMIC_DRAW);
     else
     {
         // 映射缓冲区并更新部分数据
@@ -102,4 +103,12 @@ void BufferManager::SetMatrixPointerEXT(const int offset, const glm::mat4* model
             glUnmapBuffer(GL_ARRAY_BUFFER);
         }
     }
+
+    Core::GetGraphicsDevice()->ResetBuffer();
+}
+
+void BufferManager::SetIndexPointerEXT(const short* indices, const GLsizeiptr size) const
+{
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices,GL_STATIC_DRAW);
 }
