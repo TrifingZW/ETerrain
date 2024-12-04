@@ -5,7 +5,7 @@
 #pragma once
 
 #include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
+#include "glm/vec4.hpp"
 
 struct Rect
 {
@@ -21,15 +21,17 @@ struct Color
 
 struct PositionTexture4
 {
-    glm::vec3 Position0{0.0f, 0.0f, 0.0f};
+    glm::vec4 Position0{0.0f, 0.0f, 0.0f, 1.0f};
     glm::vec2 TextureCoordinate0{0.0f, 0.0f};
 
-    glm::vec3 Position1{1.0f, 0.0f, 0.0f};
+    glm::vec4 Position1{1.0f, 0.0f, 0.0f, 1.0f};
     glm::vec2 TextureCoordinate1{1.0f, 0.0f};
 
-    glm::vec3 Position2{1.0f, 1.0f, 0.0f};
+    glm::vec4 Position2{1.0f, 1.0f, 0.0f, 1.0f};
     glm::vec2 TextureCoordinate2{1.0f, 1.0f};
 
-    glm::vec3 Position3{0.0f, 1.0f, 0.0f};
+    glm::vec4 Position3{0.0f, 1.0f, 0.0f, 1.0f};
     glm::vec2 TextureCoordinate3{0.0f, 1.0f};
+
+    static constexpr PositionTexture4 Default() { return {}; }
 };

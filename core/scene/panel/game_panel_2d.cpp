@@ -23,17 +23,18 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     spriteBatch.Begin(SpriteSortMode::Deferred, camera2d->GetProjectionMatrix());
     spriteBatch.Draw(
         &Editor::loadResources->terrainResourceTextureParser.Texture2D,
-        Rect(0.0f, 0.0f, 493.0f, 755.0f),
-        Rect(0.0f, 0.0f, 100.0f, 100.0f),
-        Color(0, 1, 1, 1),
-        0,
-        glm::vec2(10, 10),
-        SpriteEffects::None
-    );
-    spriteBatch.Draw(
-        &Editor::loadResources->plantResourceTextureParser.Texture2D,
-        Rect(0.0f, 0.0f, 493.0f, 755.0f),
-        Rect(0.0f, 0.0f, 100.0f, 100.0f),
+        Rect(
+            0.0f,
+            0.0f,
+            Editor::loadResources->terrainResourceTextureParser.Texture2D.Width,
+            Editor::loadResources->terrainResourceTextureParser.Texture2D.Height
+        ),
+        Rect(
+            0.0f,
+            0.0f,
+            Editor::loadResources->terrainResourceTextureParser.Texture2D.Width/10.0f,
+            Editor::loadResources->terrainResourceTextureParser.Texture2D.Height/10.0f
+        ),
         Color(0, 1, 1, 1),
         0,
         glm::vec2(10, 10),

@@ -4,10 +4,10 @@
 
 #include "sprite_batch.h"
 
-#include <iostream>
 #include <stdexcept>
 
 #include "glm/ext/matrix_transform.hpp"
+
 
 SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphicsDevice)
 {
@@ -100,7 +100,6 @@ void SpriteBatch::PushSprite(
             FlushBatch();
         GenerateVertexInfo(
             &_vertexInfo[_numSprites],
-            &_modelMatrix[_numSprites],
             texture->Width,
             texture->Height,
             sourceX,
@@ -125,7 +124,6 @@ void SpriteBatch::PushSprite(
         {
             GenerateVertexInfo(
                 &_vertexInfo[0],
-                &_modelMatrix[0],
                 texture->Width,
                 texture->Height,
                 sourceX,
@@ -150,7 +148,6 @@ void SpriteBatch::PushSprite(
                 FlushBatch();
             GenerateVertexInfo(
                 &_vertexInfo[0],
-                &_modelMatrix[0],
                 texture->Width,
                 texture->Height,
                 sourceX,
@@ -173,7 +170,6 @@ void SpriteBatch::PushSprite(
 
 void SpriteBatch::GenerateVertexInfo(
     PositionTexture4* sprite,
-    glm::mat4* model,
     const int textureW,
     const int textureH,
     const float sourceX,
@@ -191,15 +187,20 @@ void SpriteBatch::GenerateVertexInfo(
     SpriteEffects effects
 )
 {
-    glm::mat4 mat(1.0f);
-    mat = translate(mat, glm::vec3(destinationX + originX, destinationY + originY, 0.0f));
-    mat = scale(mat, glm::vec3(glm::vec2(destinationW, destinationH), 1.0f));
-    memcpy(model, &mat, sizeof(glm::mat4));
+    glm::mat4 model(1.0f);
+    model = translate(model, glm::vec3(destinationX + originX, destinationY + originY, 0.0f));
+    model = scale(model, glm::vec3(glm::vec2(destinationW, destinationH), 1.0f));
+
+    sprite->Position0 = model * PositionTexture4::Default().Position0;
+    sprite->Position1 = model * PositionTexture4::Default().Position1;
+    sprite->Position2 = model * PositionTexture4::Default().Position2;
+    sprite->Position3 = model * PositionTexture4::Default().Position3;
 
     const auto minXRatio = sourceX / static_cast<float>(textureW);
     const auto minYRatio = sourceY / static_cast<float>(textureH);
     const auto maxXRatio = (sourceX + sourceW) / static_cast<float>(textureW);
     const auto maxYRatio = (sourceY + sourceH) / static_cast<float>(textureH);
+
     sprite->TextureCoordinate0 = glm::vec2(minXRatio, minYRatio);
     sprite->TextureCoordinate1 = glm::vec2(maxXRatio, minYRatio);
     sprite->TextureCoordinate2 = glm::vec2(maxXRatio, maxYRatio);
@@ -255,10 +256,8 @@ int SpriteBatch::UpdateVertexBuffer(const int start, const int count)
     }
 
     const PositionTexture4* p = &_vertexInfo[start];
-    const glm::mat4* m = &_modelMatrix[start];
 
     _bufferManager.SetDataPointerEXT(offset, p, count, options);
-    _bufferManager.SetMatrixPointerEXT(offset, m, count, options);
 
     _bufferOffset = offset + count;
     return offset;

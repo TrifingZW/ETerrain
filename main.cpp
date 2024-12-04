@@ -140,6 +140,9 @@ int main(int, char**)
     initImGui(window, glsl_version);
     Core::Instance().InitTree();
 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+
     // 主循环
     while (!glfwWindowShouldClose(window))
     {

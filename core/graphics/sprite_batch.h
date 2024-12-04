@@ -11,10 +11,6 @@
 #include "graphics_enum.h"
 #include "graphics_structure.h"
 #include "glm/fwd.hpp"
-#include "glm/detail/_noise.hpp"
-#include "glm/detail/_noise.hpp"
-#include "glm/detail/_noise.hpp"
-#include "glm/detail/_noise.hpp"
 #include "glm/gtx/associated_min_max.hpp"
 #include "scene/resources/texture_2d.h"
 
@@ -26,14 +22,12 @@ public:
     static constexpr int MAX_INDICES = MAX_SPRITES * 6;
     static constexpr GLsizeiptr MAX_VERTICES_SIZE = MAX_SPRITES * sizeof(PositionTexture4);
     static constexpr GLsizeiptr MAX_INDICES_SIZE = MAX_INDICES * sizeof(short);
-    static constexpr GLsizeiptr MAX_MODELS_SIZE = MAX_INDICES * sizeof(glm::mat4);
 
 private:
     GraphicsDevice* _graphicsDevice = nullptr;
-    BufferManager _bufferManager = BufferManager(MAX_VERTICES_SIZE, MAX_INDICES_SIZE, MAX_MODELS_SIZE);
+    BufferManager _bufferManager = BufferManager(MAX_VERTICES_SIZE, MAX_INDICES_SIZE);
 
     PositionTexture4 _vertexInfo[MAX_SPRITES] = {};
-    glm::mat4 _modelMatrix[MAX_SPRITES] = {};
     Texture2D* _textureInfo[MAX_SPRITES] = {};
     short* _indices = new short[MAX_INDICES];
 
@@ -49,7 +43,7 @@ public:
     void Begin();
     void Begin(SpriteSortMode sortMode, const glm::mat4& matrix);
     void Draw(
-        ::Texture2D* texture2D,
+        Texture2D* texture2D,
         Rect SourceRect,
         Rect TargetRect,
         Color color,
@@ -85,7 +79,6 @@ private:
 
     static void GenerateVertexInfo(
         PositionTexture4* sprite,
-        glm::mat4* model,
         int textureW,
         int textureH,
         float sourceX,

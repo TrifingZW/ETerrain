@@ -15,19 +15,17 @@ Shader::Shader()
     // 顶点着色器
     constexpr auto vShaderCode = R"(
         #version 330 core
-        layout (location = 0) in vec3 vertex;
+        layout (location = 0) in vec4 vertex;
         layout (location = 1) in vec2 textureCoord;
-        layout (location = 2) in mat4 model;
 
         out vec2 TexCoords;
 
-        uniform mat4 model2;
         uniform mat4 projection;
 
         void main()
         {
             TexCoords = textureCoord;
-            gl_Position = projection * model * vec4(vertex, 1.0);
+            gl_Position = projection * vertex;
         }
     )";
     // 片段着色器
