@@ -1,23 +1,19 @@
 //
-// Created by TrifingZW on 24-11-22.
+// Created by TrifingZW on 24-12-5.
 //
 
 #pragma once
-
-#include "node.h"
-#include "parser/bin_parser.h"
 #include "scene/2d/camera_2d.h"
-#include "scene/resources/shader.h"
 
-class GamePanel2D : public Node
+
+class HexPanel : public Node
 {
 public:
     Camera2D* camera2d = nullptr;
     RenderTarget* renderTarget = nullptr;
 
-    BinParser binParser = {};
 
-    explicit GamePanel2D()
+    explicit HexPanel()
     {
         auto* camera = new Camera2D();
         camera2d = camera;

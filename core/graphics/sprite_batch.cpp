@@ -6,6 +6,7 @@
 
 #include <stdexcept>
 
+#include "../../e_terrain.h"
 #include "glm/ext/matrix_transform.hpp"
 
 
@@ -15,7 +16,7 @@ SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphi
     _bufferManager.SetIndexPointerEXT(_indices, MAX_INDICES_SIZE);
 }
 
-void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred, glm::mat4(0.1f)); }
+void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred, glm::mat4(1.0f)); }
 
 void SpriteBatch::Begin(const SpriteSortMode sortMode, const glm::mat4& matrix)
 {
@@ -25,6 +26,181 @@ void SpriteBatch::Begin(const SpriteSortMode sortMode, const glm::mat4& matrix)
 
     _sortMode = sortMode;
     _matrix = matrix;
+}
+
+void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Color color)
+{
+    CheckBegin("Draw");
+    PushSprite(
+        texture,
+        0.0f,
+        0.0f,
+        1.0f,
+        1.0f,
+        position.x,
+        position.y,
+        static_cast<float>(texture->Width),
+        static_cast<float>(texture->Height),
+        color,
+        0.0f,
+        0.0f,
+        0.0f,
+        SpriteEffects::None
+    );
+}
+
+void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Rect sourceRect, const Color color)
+{
+    const float sourceX = sourceRect.X / static_cast<float>(texture->Width);
+    const float sourceY = sourceRect.Y / static_cast<float>(texture->Height);
+    const float sourceW = sourceRect.Width / static_cast<float>(texture->Width);
+    const float sourceH = sourceRect.Height / static_cast<float>(texture->Height);
+    const float destW = sourceRect.Width;
+    const float destH = sourceRect.Height;
+    CheckBegin("Draw");
+    PushSprite(
+        texture,
+        sourceX,
+        sourceY,
+        sourceW,
+        sourceH,
+        position.x,
+        position.y,
+        destW,
+        destH,
+        color,
+        0.0f,
+        0.0f,
+        0.0f,
+        SpriteEffects::None
+    );
+}
+
+void SpriteBatch::Draw(
+    Texture2D* texture,
+    const glm::vec2 position,
+    const Rect sourceRect,
+    const Color color,
+    const float rotation,
+    const glm::vec2 origin,
+    const float scale,
+    const SpriteEffects effects
+)
+{
+    CheckBegin("Draw");
+    float destW = scale;
+    float destH = scale;
+    const float sourceX = sourceRect.X / static_cast<float>(texture->Width);
+    const float sourceY = sourceRect.Y / static_cast<float>(texture->Height);
+    const float sourceW = glm::sign(sourceRect.Width)
+                          * glm::max(glm::abs(sourceRect.Width), ETerrain::Epsilon) / static_cast<float>(texture->Width);
+    const float sourceH = glm::sign(sourceRect.Height)
+                          * glm::max(glm::abs(sourceRect.Height), ETerrain::Epsilon) / static_cast<float>(texture->Height);
+    destW *= sourceRect.Width;
+    destH *= sourceRect.Height;
+
+    PushSprite(
+        texture,
+        sourceX,
+        sourceY,
+        sourceW,
+        sourceH,
+        position.x,
+        position.y,
+        destW,
+        destH,
+        color,
+        origin.x / sourceW / static_cast<float>(texture->Width),
+        origin.y / sourceH / static_cast<float>(texture->Height),
+        rotation,
+        effects
+    );
+}
+
+void SpriteBatch::Draw(
+    Texture2D* texture,
+    const glm::vec2 position,
+    const Rect sourceRect,
+    const Color color,
+    const float rotation,
+    const glm::vec2 origin,
+    glm::vec2 scale,
+    const SpriteEffects effects
+)
+{
+    CheckBegin("Draw");
+    const float sourceX = sourceRect.X / static_cast<float>(texture->Width);
+    const float sourceY = sourceRect.Y / static_cast<float>(texture->Height);
+    const float sourceW = glm::sign(sourceRect.Width)
+                          * glm::max(glm::abs(sourceRect.Width), ETerrain::Epsilon) / static_cast<float>(texture->Width);
+    const float sourceH = glm::sign(sourceRect.Height)
+                          * glm::max(glm::abs(sourceRect.Height), ETerrain::Epsilon) / static_cast<float>(texture->Height);
+    scale.x *= sourceRect.Width;
+    scale.y *= sourceRect.Height;
+
+    PushSprite(
+        texture,
+        sourceX,
+        sourceY,
+        sourceW,
+        sourceH,
+        position.x,
+        position.y,
+        scale.x,
+        scale.y,
+        color,
+        origin.x / sourceW / static_cast<float>(texture->Width),
+        origin.y / sourceH / static_cast<float>(texture->Height),
+        rotation,
+        effects
+    );
+}
+
+void SpriteBatch::Draw(Texture2D* texture, const Rect TargetRect, const Color color)
+{
+    CheckBegin("Draw");
+    PushSprite(
+        texture,
+        0.0f,
+        0.0f,
+        1.0f,
+        1.0f,
+        TargetRect.X,
+        TargetRect.Y,
+        TargetRect.Width,
+        TargetRect.Height,
+        color,
+        0.0f,
+        0.0f,
+        0.0f,
+        SpriteEffects::None
+    );
+}
+
+void SpriteBatch::Draw(Texture2D* texture, const Rect SourceRect, const Rect TargetRect, const Color color)
+{
+    CheckBegin("Draw");
+    const float sourceX = SourceRect.X / static_cast<float>(texture->Width);
+    const float sourceY = SourceRect.Y / static_cast<float>(texture->Height);
+    const float sourceW = SourceRect.Width / static_cast<float>(texture->Width);
+    const float sourceH = SourceRect.Height / static_cast<float>(texture->Height);
+
+    PushSprite(
+        texture,
+        sourceX,
+        sourceY,
+        sourceW,
+        sourceH,
+        TargetRect.X,
+        TargetRect.Y,
+        TargetRect.Width,
+        TargetRect.Height,
+        color,
+        0.0f,
+        0.0f,
+        0.0f,
+        SpriteEffects::None
+    );
 }
 
 void SpriteBatch::Draw(

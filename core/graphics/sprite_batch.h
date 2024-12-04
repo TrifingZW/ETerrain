@@ -42,6 +42,31 @@ public:
 
     void Begin();
     void Begin(SpriteSortMode sortMode, const glm::mat4& matrix);
+
+    void Draw(Texture2D* texture, glm::vec2 position, Color color);
+    void Draw(Texture2D* texture, glm::vec2 position, Rect sourceRect, Color color);
+    void Draw(
+        Texture2D* texture,
+        glm::vec2 position,
+        Rect sourceRect,
+        Color color,
+        float rotation,
+        glm::vec2 origin,
+        float scale,
+        SpriteEffects effects
+    );
+    void Draw(
+        Texture2D* texture,
+        glm::vec2 position,
+        Rect sourceRect,
+        Color color,
+        float rotation,
+        glm::vec2 origin,
+        glm::vec2 scale,
+        SpriteEffects effects
+    );
+    void Draw(Texture2D* texture, Rect TargetRect, Color color);
+    void Draw(Texture2D* texture, Rect SourceRect, Rect TargetRect, Color color);
     void Draw(
         Texture2D* texture2D,
         Rect SourceRect,
@@ -51,6 +76,7 @@ public:
         glm::vec2 origin,
         SpriteEffects effects
     );
+
     void End();
 
 private:

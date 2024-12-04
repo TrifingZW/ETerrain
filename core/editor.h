@@ -9,24 +9,32 @@
 #include "nodes/load_resources.h"
 #include "scene/panel/game_panel_2d.h"
 #include "scene/panel/game_panel_3d.h"
+#include "scene/panel/hex_panel.h"
 
-class Editor : public Node {
+class Editor : public Node
+{
 public:
     ImGuiID dockSpaceId{};
-    GamePanel2D *gamePanel2d = nullptr;
-    GamePanel3D *gamePanel3d = nullptr;
-    static LoadResources *loadResources;
+    HexPanel* hexPanel = nullptr;
+    GamePanel2D* gamePanel2d = nullptr;
+    GamePanel3D* gamePanel3d = nullptr;
+    static LoadResources* loadResources;
 
-    explicit Editor() {
-        auto *panel2d = new GamePanel2D();
+    explicit Editor()
+    {
+        auto* panelHex = new HexPanel();
+        hexPanel = panelHex;
+        AddChild(std::unique_ptr<Node>(panelHex));
+
+        auto* panel2d = new GamePanel2D();
         gamePanel2d = panel2d;
         AddChild(std::unique_ptr<Node>(panel2d));
 
-        auto *panel3d = new GamePanel3D();
+        auto* panel3d = new GamePanel3D();
         gamePanel3d = panel3d;
         AddChild(std::unique_ptr<Node>(panel3d));
 
-        auto *load_resources = new LoadResources();
+        auto* load_resources = new LoadResources();
         loadResources = load_resources;
         AddChild(std::unique_ptr<Node>(load_resources));
     }

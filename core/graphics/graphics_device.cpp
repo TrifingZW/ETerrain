@@ -4,10 +4,8 @@
 
 #include "graphics_device.h"
 
-#include <iostream>
 #include <ostream>
 
-#include "glm/ext/matrix_transform.hpp"
 #include "glm/gtx/associated_min_max.hpp"
 #include "glm/gtx/string_cast.hpp"
 
@@ -67,4 +65,5 @@ void GraphicsDevice::ResetTexture()
 void GraphicsDevice::ResetRenderTarget()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }

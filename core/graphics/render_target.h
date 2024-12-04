@@ -9,11 +9,12 @@
 class RenderTarget
 {
 public:
+    bool depth;
     int width{}, height{};
-    GLuint framebuffer = {}, textureBuffer{};
+    GLuint framebuffer = {}, depthRenderbuffer{}, textureBuffer{};
 
-    RenderTarget(int width, int height);
+    RenderTarget(int width, int height, bool depth = false);
     ~RenderTarget();
 
-   void Reinitialize(int width, int height);
+    void Reinitialize(int width, int height, bool depth = false);
 };

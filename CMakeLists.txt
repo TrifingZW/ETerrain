@@ -63,6 +63,14 @@ add_executable(ETerrain
         core/graphics/render_target.h
         core/graphics/graphics_structure.h
         core/graphics/graphics_enum.h
+        e_terrain.h
+        core/parser/btl_structure.h
+        core/parser/bin_parser.cpp
+        core/parser/bin_parser.h
+        core/scene/panel/hex_manager.cpp
+        core/scene/panel/hex_manager.h
+        core/scene/panel/hex_panel.cpp
+        core/scene/panel/hex_panel.h
 )
 
 # 设置核心件路径
