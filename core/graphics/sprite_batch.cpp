@@ -6,8 +6,8 @@
 
 #include <stdexcept>
 
-#include "../../e_terrain.h"
 #include "glm/ext/matrix_transform.hpp"
+#include "math/math_funcs.h"
 
 
 SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphicsDevice)
@@ -21,7 +21,7 @@ void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred, glm::mat4(1.0f)); }
 void SpriteBatch::Begin(const SpriteSortMode sortMode, const glm::mat4& matrix)
 {
     if (_beginCalled)
-        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
+        throw "在成功调用 End 之前，无法再次调用 Begin。";
     _beginCalled = true;
 
     _sortMode = sortMode;
@@ -44,6 +44,27 @@ void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Color
         color,
         0.0f,
         0.0f,
+        0.0f,
+        SpriteEffects::None
+    );
+}
+
+void SpriteBatch::DrawCenter(Texture2D* texture, glm::vec2 position, Color color)
+{
+    CheckBegin("Draw");
+    PushSprite(
+        texture,
+        0.0f,
+        0.0f,
+        1.0f,
+        1.0f,
+        position.x,
+        position.y,
+        static_cast<float>(texture->Width),
+        static_cast<float>(texture->Height),
+        color,
+        static_cast<float>(texture->Width) / 2.0f,
+        static_cast<float>(texture->Height) / 2.0f,
         0.0f,
         SpriteEffects::None
     );
@@ -93,9 +114,9 @@ void SpriteBatch::Draw(
     const float sourceX = sourceRect.X / static_cast<float>(texture->Width);
     const float sourceY = sourceRect.Y / static_cast<float>(texture->Height);
     const float sourceW = glm::sign(sourceRect.Width)
-                          * glm::max(glm::abs(sourceRect.Width), ETerrain::Epsilon) / static_cast<float>(texture->Width);
+                          * glm::max(glm::abs(sourceRect.Width), Math::Epsilon) / static_cast<float>(texture->Width);
     const float sourceH = glm::sign(sourceRect.Height)
-                          * glm::max(glm::abs(sourceRect.Height), ETerrain::Epsilon) / static_cast<float>(texture->Height);
+                          * glm::max(glm::abs(sourceRect.Height), Math::Epsilon) / static_cast<float>(texture->Height);
     destW *= sourceRect.Width;
     destH *= sourceRect.Height;
 
@@ -110,8 +131,8 @@ void SpriteBatch::Draw(
         destW,
         destH,
         color,
-        origin.x / sourceW / static_cast<float>(texture->Width),
-        origin.y / sourceH / static_cast<float>(texture->Height),
+        origin.x,
+        origin.y,
         rotation,
         effects
     );
@@ -132,9 +153,9 @@ void SpriteBatch::Draw(
     const float sourceX = sourceRect.X / static_cast<float>(texture->Width);
     const float sourceY = sourceRect.Y / static_cast<float>(texture->Height);
     const float sourceW = glm::sign(sourceRect.Width)
-                          * glm::max(glm::abs(sourceRect.Width), ETerrain::Epsilon) / static_cast<float>(texture->Width);
+                          * glm::max(glm::abs(sourceRect.Width), Math::Epsilon) / static_cast<float>(texture->Width);
     const float sourceH = glm::sign(sourceRect.Height)
-                          * glm::max(glm::abs(sourceRect.Height), ETerrain::Epsilon) / static_cast<float>(texture->Height);
+                          * glm::max(glm::abs(sourceRect.Height), Math::Epsilon) / static_cast<float>(texture->Height);
     scale.x *= sourceRect.Width;
     scale.y *= sourceRect.Height;
 
@@ -149,8 +170,8 @@ void SpriteBatch::Draw(
         scale.x,
         scale.y,
         color,
-        origin.x / sourceW / static_cast<float>(texture->Width),
-        origin.y / sourceH / static_cast<float>(texture->Height),
+        origin.x,
+        origin.y,
         rotation,
         effects
     );
@@ -214,12 +235,23 @@ void SpriteBatch::Draw(
 )
 {
     CheckBegin("Draw");
+    const float sourceX = SourceRect.X / static_cast<float>(texture2D->Width);
+    const float sourceY = SourceRect.Y / static_cast<float>(texture2D->Height);
+    const float sourceW = glm::sign(SourceRect.Width) * glm::max(
+                              glm::abs(SourceRect.Width),
+                              Math::Epsilon
+                          ) / static_cast<float>(texture2D->Width);
+    const float sourceH = glm::sign(SourceRect.Height) * glm::max(
+                              glm::abs(SourceRect.Height),
+                              Math::Epsilon
+                          ) / static_cast<float>(texture2D->Height);
+
     PushSprite(
         texture2D,
-        SourceRect.X,
-        SourceRect.Y,
-        SourceRect.Width,
-        SourceRect.Height,
+        sourceX,
+        sourceY,
+        sourceW,
+        sourceH,
         TargetRect.X,
         TargetRect.Y,
         TargetRect.Width,
@@ -235,7 +267,7 @@ void SpriteBatch::Draw(
 void SpriteBatch::End()
 {
     if (!_beginCalled)
-        throw std::runtime_error("在成功调用 Begin 之前，无法再次调用 End。");
+        throw "在成功调用 Begin 之前，无法再次调用 End。";
     _beginCalled = false;
 
     if (_sortMode != SpriteSortMode::Immediate)
@@ -245,12 +277,10 @@ void SpriteBatch::End()
 void SpriteBatch::CheckBegin(const std::string& method) const
 {
     if (!_beginCalled)
-        throw std::runtime_error(
-            method + " was called, but Begin has" +
-            " not yet been called. Begin must be" +
-            " called successfully before you can" +
-            " call " + method + "."
-        );
+        throw method + " was called, but Begin has" +
+              " not yet been called. Begin must be" +
+              " called successfully before you can" +
+              " call " + method + ".";
 }
 
 void SpriteBatch::PushSprite(
@@ -276,8 +306,6 @@ void SpriteBatch::PushSprite(
             FlushBatch();
         GenerateVertexInfo(
             &_vertexInfo[_numSprites],
-            texture->Width,
-            texture->Height,
             sourceX,
             sourceY,
             sourceW,
@@ -294,14 +322,13 @@ void SpriteBatch::PushSprite(
         );
         _textureInfo[_numSprites] = texture;
         _numSprites++;
-    } else
+    }
+    else
     {
         if (_numSprites == 0)
         {
             GenerateVertexInfo(
                 &_vertexInfo[0],
-                texture->Width,
-                texture->Height,
                 sourceX,
                 sourceY,
                 sourceW,
@@ -318,14 +345,13 @@ void SpriteBatch::PushSprite(
             );
             _textureInfo[0] = texture;
             _numSprites++;
-        } else
+        }
+        else
         {
             if (_textureInfo[0] != texture)
                 FlushBatch();
             GenerateVertexInfo(
                 &_vertexInfo[0],
-                texture->Width,
-                texture->Height,
                 sourceX,
                 sourceY,
                 sourceW,
@@ -346,8 +372,6 @@ void SpriteBatch::PushSprite(
 
 void SpriteBatch::GenerateVertexInfo(
     PositionTexture4* sprite,
-    const int textureW,
-    const int textureH,
     const float sourceX,
     const float sourceY,
     const float sourceW,
@@ -364,7 +388,7 @@ void SpriteBatch::GenerateVertexInfo(
 )
 {
     glm::mat4 model(1.0f);
-    model = translate(model, glm::vec3(destinationX + originX, destinationY + originY, 0.0f));
+    model = translate(model, glm::vec3(destinationX - originX, destinationY - originY, 0.0f));
     model = scale(model, glm::vec3(glm::vec2(destinationW, destinationH), 1.0f));
 
     sprite->Position0 = model * PositionTexture4::Default().Position0;
@@ -372,10 +396,10 @@ void SpriteBatch::GenerateVertexInfo(
     sprite->Position2 = model * PositionTexture4::Default().Position2;
     sprite->Position3 = model * PositionTexture4::Default().Position3;
 
-    const auto minXRatio = sourceX / static_cast<float>(textureW);
-    const auto minYRatio = sourceY / static_cast<float>(textureH);
-    const auto maxXRatio = (sourceX + sourceW) / static_cast<float>(textureW);
-    const auto maxYRatio = (sourceY + sourceH) / static_cast<float>(textureH);
+    const auto minXRatio = sourceX;
+    const auto minYRatio = sourceY;
+    const auto maxXRatio = sourceX + sourceW;
+    const auto maxYRatio = sourceY + sourceH;
 
     sprite->TextureCoordinate0 = glm::vec2(minXRatio, minYRatio);
     sprite->TextureCoordinate1 = glm::vec2(maxXRatio, minYRatio);
@@ -425,7 +449,8 @@ int SpriteBatch::UpdateVertexBuffer(const int start, const int count)
     {
         offset = 0;
         options = SetDataOptions::Discard;
-    } else
+    }
+    else
     {
         offset = _bufferOffset;
         options = SetDataOptions::NoOverwrite;

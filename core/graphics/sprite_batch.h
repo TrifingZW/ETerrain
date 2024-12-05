@@ -44,6 +44,7 @@ public:
     void Begin(SpriteSortMode sortMode, const glm::mat4& matrix);
 
     void Draw(Texture2D* texture, glm::vec2 position, Color color);
+    void DrawCenter(Texture2D* texture, glm::vec2 position, Color color);
     void Draw(Texture2D* texture, glm::vec2 position, Rect sourceRect, Color color);
     void Draw(
         Texture2D* texture,
@@ -105,8 +106,6 @@ private:
 
     static void GenerateVertexInfo(
         PositionTexture4* sprite,
-        int textureW,
-        int textureH,
         float sourceX,
         float sourceY,
         float sourceW,
