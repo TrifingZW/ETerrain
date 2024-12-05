@@ -46,6 +46,7 @@ public:
     void Draw(Texture2D* texture, glm::vec2 position, Color color);
     void DrawCenter(Texture2D* texture, glm::vec2 position, Color color);
     void Draw(Texture2D* texture, glm::vec2 position, Rect sourceRect, Color color);
+    void DrawCenter(Texture2D* texture, glm::vec2 position, Rect sourceRect, Color color);
     void Draw(
         Texture2D* texture,
         glm::vec2 position,
