@@ -17,7 +17,7 @@
 class SpriteBatch
 {
 public:
-    static constexpr int MAX_SPRITES = 2048;
+    static constexpr int MAX_SPRITES = 4096;
     static constexpr int MAX_VERTICES = MAX_SPRITES * 4;
     static constexpr int MAX_INDICES = MAX_SPRITES * 6;
     static constexpr GLsizeiptr MAX_VERTICES_SIZE = MAX_SPRITES * sizeof(PositionTexture4);

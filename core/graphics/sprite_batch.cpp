@@ -49,7 +49,7 @@ void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Color
     );
 }
 
-void SpriteBatch::DrawCenter(Texture2D* texture, glm::vec2 position, Color color)
+void SpriteBatch::DrawCenter(Texture2D* texture, const glm::vec2 position, const Color color)
 {
     CheckBegin("Draw");
     PushSprite(
@@ -97,7 +97,7 @@ void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Rect 
     );
 }
 
-void SpriteBatch::DrawCenter(Texture2D* texture, glm::vec2 position, Rect sourceRect, Color color)
+void SpriteBatch::DrawCenter(Texture2D* texture, const glm::vec2 position, const Rect sourceRect, const Color color)
 {
     const float sourceX = sourceRect.X / static_cast<float>(texture->Width);
     const float sourceY = sourceRect.Y / static_cast<float>(texture->Height);
@@ -117,8 +117,8 @@ void SpriteBatch::DrawCenter(Texture2D* texture, glm::vec2 position, Rect source
         destW,
         destH,
         color,
-        static_cast<float>(texture->Width) / 2.0f,
-        static_cast<float>(texture->Height) / 2.0f,
+        static_cast<float>(sourceRect.Width) / 2.0f,
+        static_cast<float>(sourceRect.Height) / 2.0f,
         0.0f,
         SpriteEffects::None
     );
