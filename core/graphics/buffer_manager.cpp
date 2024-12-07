@@ -7,6 +7,8 @@
 #include "core.h"
 #include "graphics_device.h"
 
+using namespace Graphics;
+
 BufferManager::BufferManager(
     const GLsizeiptr vertexSize,
     const GLsizeiptr indexSize

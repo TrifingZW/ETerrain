@@ -7,7 +7,7 @@
 #include "glm/common.hpp"
 #include "math/math_funcs.h"
 
-HexManager::HexManager(const float hexWidth, const float hexHeight, const int tileWidth, const int tileHeight)
+HexManager::HexManager(const int hexWidth, const int hexHeight, const int tileWidth, const int tileHeight)
     : hexWidth(hexWidth),
       hexHeight(hexHeight),
       tileWidth(tileWidth),
@@ -55,10 +55,10 @@ glm::ivec2 HexManager::PixelToHex(const glm::vec2& pixel) const
 
 float HexManager::GetPixelWidth() const
 {
-    return static_cast<float>(tileWidth) + (outerRadius * (4.0f / 3.0f) * hexWidth);
+    return static_cast<float>(tileWidth) + static_cast<float>(tileWidth) * (3.0f / 4.0f) * static_cast<float>(hexWidth - 1);
 }
 
 float HexManager::GetPixelHeight() const
 {
-    return static_cast<float>(tileHeight) + (innerRadius / 2.0f) + (static_cast<float>(tileHeight) * hexHeight);
+    return static_cast<float>(tileHeight) * (3.0f / 2.0f) + static_cast<float>(tileHeight) * static_cast<float>(hexHeight - 1);
 }

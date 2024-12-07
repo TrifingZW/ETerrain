@@ -4,6 +4,8 @@
 
 #include "core.h"
 
+#include <random>
+
 GraphicsDevice* Core::_graphicsDevice = nullptr;
 SpriteBatch* Core::_spriteBatch = nullptr;
 
@@ -38,4 +40,4 @@ void Core::Input(const int key)
 
 GraphicsDevice* Core::GetGraphicsDevice() { return _graphicsDevice; }
 
-SpriteBatch* Core::GetSpriteBatch() { return _spriteBatch; }
+SpriteBatch& Core::GetSpriteBatch() { return *_spriteBatch; }

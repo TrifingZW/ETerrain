@@ -8,13 +8,17 @@
 #include "parser/resource_texture_parser.h"
 #include "parser/terrain_config_parser.h"
 
-
-class LoadResources : public Node {
+class LoadResources : public Node
+{
 public:
     MapConfigParser mapConfigParser{};
     TerrainConfigParser terrainConfigParser{};
     ResourceTextureParser plantResourceTextureParser = ResourceTextureParser("assets/plant_hd");
     ResourceTextureParser terrainResourceTextureParser = ResourceTextureParser("assets/terrain_hd");
 
+    Texture2D* mapLand = new Texture2D();
+    Texture2D* mapSea = new Texture2D();
+
     void Init() override;
+    void LoadTexture2D() const;
 };

@@ -10,8 +10,10 @@
 #include "glm/detail/func_packing_simd.inl"
 #include "scene/resources/shader.h"
 #include "scene/resources/texture_2d.h"
+#include "graphics_resource.h"
+#include "sampler_state.h"
 
-class GraphicsDevice
+class GraphicsDevice : public GraphicsResource
 {
     Shader _shader{};
     RenderTarget* _renderTarget = nullptr;
@@ -20,6 +22,7 @@ class GraphicsDevice
 public:
     Texture2D* texture2D = nullptr;
     glm::mat4 observeMatrix{};
+    SamplerState samplerState{};
 
     void SetRenderTarget(RenderTarget* renderTarget);
     void SetBufferManager(BufferManager* bufferManager);

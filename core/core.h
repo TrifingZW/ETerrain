@@ -33,5 +33,5 @@ public:
     void Input(int key);
 
     static GraphicsDevice* GetGraphicsDevice();
-    static SpriteBatch* GetSpriteBatch();
+    static SpriteBatch& GetSpriteBatch();
 };

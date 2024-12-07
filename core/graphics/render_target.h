@@ -4,9 +4,9 @@
 
 #pragma once
 #include <glad/glad.h>
+#include "graphics_resource.h"
 
-
-class RenderTarget
+class RenderTarget: public GraphicsResource
 {
 public:
     bool depth;

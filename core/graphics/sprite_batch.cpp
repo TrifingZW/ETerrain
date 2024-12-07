@@ -5,10 +5,12 @@
 #include "sprite_batch.h"
 
 #include <stdexcept>
+#include <utility>
 
 #include "glm/ext/matrix_transform.hpp"
 #include "math/math_funcs.h"
 
+using namespace Graphics;
 
 SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphicsDevice)
 {
@@ -18,13 +20,27 @@ SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphi
 
 void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred, glm::mat4(1.0f)); }
 
-void SpriteBatch::Begin(const SpriteSortMode sortMode, const glm::mat4& matrix)
+void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, const glm::mat4& matrix)
 {
     if (_beginCalled)
-        throw "在成功调用 End 之前，无法再次调用 Begin。";
+        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
     _beginCalled = true;
 
-    _sortMode = sortMode;
+    _spriteSortMode = spriteSortMode;
+    _samplerState = SamplerState();
+    _matrix = matrix;
+}
+
+void SpriteBatch::Begin(SamplerState samplerState, const glm::mat4& matrix) {}
+
+void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, SamplerState samplerState, const glm::mat4& matrix)
+{
+    if (_beginCalled)
+        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
+    _beginCalled = true;
+
+    _spriteSortMode = spriteSortMode;
+    _samplerState = samplerState;
     _matrix = matrix;
 }
 
@@ -211,8 +227,8 @@ void SpriteBatch::Draw(Texture2D* texture, const Rect TargetRect, const Color co
         texture,
         0.0f,
         0.0f,
-        1.0f,
-        1.0f,
+        TargetRect.Width / static_cast<float>(texture->Width),
+        TargetRect.Height / static_cast<float>(texture->Height),
         TargetRect.X,
         TargetRect.Y,
         TargetRect.Width,
@@ -294,20 +310,22 @@ void SpriteBatch::Draw(
 void SpriteBatch::End()
 {
     if (!_beginCalled)
-        throw "在成功调用 Begin 之前，无法再次调用 End。";
+        throw std::runtime_error("在成功调用 Begin 之前，无法再次调用 End。");
     _beginCalled = false;
 
-    if (_sortMode != SpriteSortMode::Immediate)
+    if (_spriteSortMode != SpriteSortMode::Immediate)
         FlushBatch();
 }
 
 void SpriteBatch::CheckBegin(const std::string& method) const
 {
     if (!_beginCalled)
-        throw method + " was called, but Begin has" +
-              " not yet been called. Begin must be" +
-              " called successfully before you can" +
-              " call " + method + ".";
+        throw std::runtime_error(
+            method + " was called, but Begin has" +
+            " not yet been called. Begin must be" +
+            " called successfully before you can" +
+            " call " + method + "."
+        );
 }
 
 void SpriteBatch::PushSprite(
@@ -327,7 +345,7 @@ void SpriteBatch::PushSprite(
     const SpriteEffects effects
 )
 {
-    if (_sortMode == SpriteSortMode::Deferred)
+    if (_spriteSortMode == SpriteSortMode::Deferred)
     {
         if (_numSprites >= MAX_SPRITES)
             FlushBatch();
@@ -500,6 +518,7 @@ void SpriteBatch::DrawPrimitives(Texture2D* texture2D, const int primitiveOffset
 void SpriteBatch::PrepRenderState()
 {
     _graphicsDevice->observeMatrix = _matrix;
+    _graphicsDevice->samplerState = _samplerState;
     _graphicsDevice->SetBufferManager(&_bufferManager);
 }
 

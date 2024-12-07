@@ -83,7 +83,7 @@ function(LoadStb)
 
     set(DIR ${THIRDPARTY_DIR}/stb)
     include_directories(${DIR})
-    add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
+#    add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
 
 endfunction()
 

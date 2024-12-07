@@ -39,10 +39,10 @@ namespace HexMetrics
 class HexManager
 {
 public:
-    float hexWidth, hexHeight;
+    int hexWidth, hexHeight;
     int tileWidth, tileHeight, sideLength;
     float outerRadius, innerRadius;
-    HexManager(float hexWidth, float hexHeight, int tileWidth, int tileHeight);
+    HexManager(int hexWidth, int hexHeight, int tileWidth, int tileHeight);
 
     [[nodiscard]] glm::vec2 HexToPixel(const glm::ivec2& hex) const;
     [[nodiscard]] glm::ivec2 PixelToHex(const glm::vec2& pixel) const;

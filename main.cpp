@@ -6,6 +6,7 @@
 #include <iostream>
 #include <windows.h>
 
+#define STB_IMAGE_IMPLEMENTATION
 # ifdef BUILD_TIME
 #include "font.h"
 # endif

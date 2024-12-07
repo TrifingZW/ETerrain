@@ -71,6 +71,13 @@ add_executable(ETerrain
         core/scene/panel/hex_manager.h
         core/scene/panel/hex_panel.cpp
         core/scene/panel/hex_panel.h
+        core/math/math_funcs.h
+        core/helpers/helper.h
+        core/graphics/sampler_state.cpp
+        core/graphics/sampler_state.h
+        core/graphics/graphics_resource.cpp
+        core/graphics/graphics_resource.h
+        core/graphics/graphics_helper.h
 )
 
 # 设置核心件路径

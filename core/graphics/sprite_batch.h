@@ -13,8 +13,10 @@
 #include "glm/fwd.hpp"
 #include "glm/gtx/associated_min_max.hpp"
 #include "scene/resources/texture_2d.h"
+#include "graphics_resource.h"
+#include "sampler_state.h"
 
-class SpriteBatch
+class SpriteBatch : public GraphicsResource
 {
 public:
     static constexpr int MAX_SPRITES = 4096;
@@ -31,7 +33,8 @@ private:
     Texture2D* _textureInfo[MAX_SPRITES] = {};
     short* _indices = new short[MAX_INDICES];
 
-    SpriteSortMode _sortMode = SpriteSortMode::Deferred;
+    Graphics::SpriteSortMode _spriteSortMode = Graphics::SpriteSortMode::Deferred;
+    SamplerState _samplerState{};
     glm::mat4 _matrix = glm::mat4(0.1f);
     bool _beginCalled = false;
     int _numSprites = 0;
@@ -41,7 +44,9 @@ public:
     explicit SpriteBatch(GraphicsDevice* graphicsDevice);
 
     void Begin();
-    void Begin(SpriteSortMode sortMode, const glm::mat4& matrix);
+    void Begin(Graphics::SpriteSortMode spriteSortMode, const glm::mat4& matrix);
+    void Begin(SamplerState samplerState, const glm::mat4& matrix);
+    void Begin(Graphics::SpriteSortMode spriteSortMode, SamplerState samplerState, const glm::mat4& matrix);
 
     void Draw(Texture2D* texture, glm::vec2 position, Color color);
     void DrawCenter(Texture2D* texture, glm::vec2 position, Color color);
@@ -55,7 +60,7 @@ public:
         float rotation,
         glm::vec2 origin,
         float scale,
-        SpriteEffects effects
+        Graphics::SpriteEffects effects
     );
     void Draw(
         Texture2D* texture,
@@ -65,7 +70,7 @@ public:
         float rotation,
         glm::vec2 origin,
         glm::vec2 scale,
-        SpriteEffects effects
+        Graphics::SpriteEffects effects
     );
     void Draw(Texture2D* texture, Rect TargetRect, Color color);
     void Draw(Texture2D* texture, Rect SourceRect, Rect TargetRect, Color color);
@@ -76,7 +81,7 @@ public:
         Color color,
         float rotation,
         glm::vec2 origin,
-        SpriteEffects effects
+        Graphics::SpriteEffects effects
     );
 
     void End();
@@ -97,7 +102,7 @@ private:
         float originX,
         float originY,
         float rotation,
-        SpriteEffects effects
+        Graphics::SpriteEffects effects
     );
     void FlushBatch();
     int UpdateVertexBuffer(int start, int count);
@@ -119,6 +124,6 @@ private:
         float originX,
         float originY,
         float rotation,
-        SpriteEffects effects
+        Graphics::SpriteEffects effects
     );
 };

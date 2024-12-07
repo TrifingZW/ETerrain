@@ -6,8 +6,11 @@
 
 #include <ostream>
 
+#include "graphics_helper.h"
 #include "glm/gtx/associated_min_max.hpp"
 #include "glm/gtx/string_cast.hpp"
+
+using namespace Graphics;
 
 void GraphicsDevice::SetRenderTarget(RenderTarget* renderTarget)
 {
@@ -30,11 +33,16 @@ void GraphicsDevice::DrawIndexedPrimitives(
     glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 4, sizeof(short) * 6, &testMatrix);
     std::cout << testMatrix[0] << std::endl;*/
 
-    glBindVertexArray(_bufferManager->VAO);
     _shader.Use();
     _shader.SetMatrix4("projection", observeMatrix);
-    texture2D->Bind(GL_TEXTURE0);
 
+    texture2D->Bind(GL_TEXTURE0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ToOpenGLAddressMode(samplerState.AddressU));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ToOpenGLAddressMode(samplerState.AddressV));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToOpenGLFilter(samplerState.Filter));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToOpenGLFilter(samplerState.Filter));
+
+    glBindVertexArray(_bufferManager->VAO);
     glDrawElementsBaseVertex(mode, numVertices, GL_UNSIGNED_SHORT, nullptr, baseVertex);
     // glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr, 1);
 }
