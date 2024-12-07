@@ -8,6 +8,7 @@
 
 #include <iostream>
 
+#include "core.h"
 #include "editor.h"
 #include "glm/fwd.hpp"
 #include "glm/ext/matrix_transform.hpp"
@@ -42,11 +43,9 @@ constexpr vec3 cubePositions[] = {
 
 void GamePanel3D::Rendering(SpriteBatch& spriteBatch)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    glViewport(0, 0, width, height);
-    glClearColor(1.0f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+    Core::GetGraphicsDevice()->SetRenderTarget(renderTarget);
+    Core::GetGraphicsDevice()->Clear();
+    // glEnable(GL_DEPTH_TEST);
 
     mat4 transform = rotate(translate(mat4(1.0f), vec3(0.5f, -0.5f, 0.0f)), static_cast<float>(glfwGetTime()), vec3(0.0f, 1.0f, 1.0f));
     shader.Use();
@@ -78,8 +77,8 @@ void GamePanel3D::Rendering(SpriteBatch& spriteBatch)
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
-    // glBindVertexArray(0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    Core::GetGraphicsDevice()->ResetBuffer();
+    Core::GetGraphicsDevice()->ResetRenderTarget();
 }
 
 void GamePanel3D::Gui()
@@ -98,7 +97,7 @@ void GamePanel3D::Gui()
         NewFramebuffer();
     }
 
-    ImGui::Image(static_cast<ImTextureID>(static_cast<intptr_t>(textureBuffer)), panelSize, ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image(static_cast<ImTextureID>(static_cast<intptr_t>(renderTarget->textureBuffer)), panelSize, ImVec2(0, 1), ImVec2(1, 0));
 
     ImGui::End();
     ImGui::PopStyleVar(2);
@@ -147,45 +146,13 @@ void GamePanel3D::Input(int key)
 
 void GamePanel3D::NewFramebuffer()
 {
-    // 设置相机纵横比
+    // 设置相机视口大小
     camera3d->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
 
-    // 生成新缓冲前先删除
-    if (framebuffer)
-    {
-        glDeleteFramebuffers(1, &framebuffer);
-        framebuffer = 0; // 清空 ID，避免重复删除
-    }
-    if (depthRenderbuffer)
-    {
-        glDeleteRenderbuffers(1, &depthRenderbuffer);
-        depthRenderbuffer = 0;
-    }
-    if (textureBuffer)
-    {
-        glDeleteTextures(1, &textureBuffer);
-        textureBuffer = 0;
-    }
-
-    glGenFramebuffers(1, &framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-    glGenRenderbuffers(1, &depthRenderbuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER, depthRenderbuffer);
-
-    glGenTextures(1, &textureBuffer);
-    glBindTexture(GL_TEXTURE_2D, textureBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0,GL_RGB,GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, textureBuffer, 0);
-
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cerr << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    if (renderTarget)
+        renderTarget->Reinitialize(width, height, true);
+    else
+        renderTarget = new RenderTarget(width, height, true);
 }
 
 void GamePanel3D::InitOpenGlResources()

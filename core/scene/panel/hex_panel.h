@@ -3,20 +3,20 @@
 //
 
 #pragma once
-#include "scene/2d/camera_2d.h"
+#include "scene/3d/camera_3d.h"
 
 
 class HexPanel : public Node
 {
 public:
-    Camera2D* camera2d = nullptr;
+    Camera3D* camera3d = nullptr;
     RenderTarget* renderTarget = nullptr;
 
 
     explicit HexPanel()
     {
-        auto* camera = new Camera2D();
-        camera2d = camera;
+        auto* camera = new Camera3D();
+        camera3d = camera;
         AddChild(std::unique_ptr<Node>(camera));
     }
 
@@ -24,8 +24,11 @@ public:
     void Ready() override;
     void Rendering(SpriteBatch& spriteBatch) override;
     void Gui() override;
+    void Input(int key) override;
 
+    GLuint VAO{}, VBO{}, EBO{};
     int width = 1, height = 1;
+    Shader shader{};
 
     void NewFramebuffer(int width, int height);
 };

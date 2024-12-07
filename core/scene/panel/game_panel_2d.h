@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "hex_manager.h"
 #include "node.h"
 #include "parser/bin_parser.h"
 #include "scene/2d/camera_2d.h"
@@ -16,6 +17,7 @@ public:
     RenderTarget* renderTarget = nullptr;
 
     BinParser binParser = {};
+    HexManager* hexManager = nullptr;
 
     explicit GamePanel2D()
     {

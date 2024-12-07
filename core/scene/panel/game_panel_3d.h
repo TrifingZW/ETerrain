@@ -14,6 +14,7 @@
 class GamePanel3D : public Node {
 public:
     Camera3D *camera3d = nullptr;
+    RenderTarget* renderTarget = nullptr;
 
     explicit GamePanel3D() {
         auto *camera = new Camera3D();
@@ -30,7 +31,6 @@ public:
 private:
     GLuint VAO{}, VBO{}, EBO{};
     GLuint VAO2{}, VBO2{}, EBO2{};
-    GLuint framebuffer = {}, depthRenderbuffer{}, textureBuffer{};
     int width = 1, height = 1;
     Shader shader{}, shader2{};
     GLuint texture1{}, texture2{};

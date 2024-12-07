@@ -30,10 +30,6 @@ public:
         gamePanel2d = panel2d;
         AddChild(std::unique_ptr<Node>(panel2d));
 
-        auto* panel3d = new GamePanel3D();
-        gamePanel3d = panel3d;
-        AddChild(std::unique_ptr<Node>(panel3d));
-
         auto* load_resources = new LoadResources();
         loadResources = load_resources;
         AddChild(std::unique_ptr<Node>(load_resources));

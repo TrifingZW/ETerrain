@@ -7,18 +7,74 @@
 #include <imgui.h>
 
 #include "core.h"
+#include "hex_manager.h"
 
 void HexPanel::Init()
 {
     NewFramebuffer(width, height);
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    // glGenBuffers(1, &EBO);
+    // 绑定 VAO
+    glBindVertexArray(VAO);
+    // 绑定 VBO 并上传数据
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(HexMetrics::Corners), HexMetrics::Corners,GL_STATIC_DRAW);
+    /*// 绑定 EBO 并上传数据
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,GL_STATIC_DRAW);*/
+    // 位置属性
+    glVertexAttribPointer(0, 3,GL_FLOAT,GL_FALSE, 3 * sizeof(float), static_cast<void *>(nullptr));
+    glEnableVertexAttribArray(0);
+
+    Core::GetGraphicsDevice()->ResetBuffer();
+
+
+    // 顶点着色器
+    constexpr auto vertexShaderSource = R"(
+        #version 330 core
+        layout(location = 0) in vec3 aPos;
+
+        uniform mat4 model;
+        uniform mat4 view;
+        uniform mat4 projection;
+
+        void main() {
+            gl_Position =  projection * view * model * vec4(aPos, 1.0);
+        }
+    )";
+
+    // 片段着色器
+    constexpr auto* fragmentShaderSource = R"(
+        #version 330 core
+        out vec4 FragColor;
+
+        void main() {
+            FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+        }
+    )";
+
+    shader = Shader(vertexShaderSource, fragmentShaderSource, Shader::ShaderSourceType::Code);
 }
 
-void HexPanel::Ready() {}
+void HexPanel::Ready()
+{
+}
 
 void HexPanel::Rendering(SpriteBatch& spriteBatch)
 {
     Core::GetGraphicsDevice()->SetRenderTarget(renderTarget);
     Core::GetGraphicsDevice()->Clear();
+
+    const auto model = glm::mat4(1.0f);
+    shader.Use();
+    shader.SetMatrix4("model", model);
+    shader.SetMatrix4("view", camera3d->Transform3D.GetViewMatrix());
+    shader.SetMatrix4("projection", camera3d->GetProjectionMatrix());
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+
 
     Core::GetGraphicsDevice()->ResetRenderTarget();
 }
@@ -49,11 +105,27 @@ void HexPanel::Gui()
     ImGui::PopStyleVar(2);
 }
 
+void HexPanel::Input(int key)
+{
+    if (ImGui::IsKeyDown(ImGuiKey_W))
+        camera3d->Transform3D.Translate(normalize(camera3d->Transform3D.Forward()) * 0.01f);
+    if (ImGui::IsKeyDown(ImGuiKey_S))
+        camera3d->Transform3D.Translate(-normalize(camera3d->Transform3D.Forward()) * 0.01f);
+    if (ImGui::IsKeyDown(ImGuiKey_A))
+        camera3d->Transform3D.Translate(-normalize(camera3d->Transform3D.RightAxis()) * 0.01f);
+    if (ImGui::IsKeyDown(ImGuiKey_D))
+        camera3d->Transform3D.Translate(normalize(camera3d->Transform3D.RightAxis()) * 0.01f);
+    if (ImGui::IsKeyDown(ImGuiKey_Space))
+        camera3d->Transform3D.Translate(normalize(camera3d->Transform3D.UpAxis()) * 0.1f);
+    if (ImGui::IsKeyDown(ImGuiKey_Q))
+        camera3d->Transform3D.RotateEuler(glm::vec3(-0.1f, 0.0f, 0.0f));
+
+}
+
 void HexPanel::NewFramebuffer(const int width, const int height)
 {
     // 设置相机视口大小
-    camera2d->SetViewportSize(glm::vec2(static_cast<float>(width), static_cast<float>(height)));
-    camera2d->SetZoom(1.0f);
+    camera3d->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
 
     if (renderTarget)
         renderTarget->Reinitialize(width, height, true);
