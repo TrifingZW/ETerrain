@@ -10,8 +10,6 @@
 
 namespace ETerrain
 {
-    constexpr float Epsilon = std::numeric_limits<float>::epsilon();
-
     // 读取数据到类数组（模板函数）
     template<typename T>
     std::vector<T> ReadToClassArray(std::ifstream& stream, int count)
