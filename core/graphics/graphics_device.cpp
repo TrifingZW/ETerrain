@@ -33,27 +33,43 @@ void GraphicsDevice::DrawIndexedPrimitives(
     glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 4, sizeof(short) * 6, &testMatrix);
     std::cout << testMatrix[0] << std::endl;*/
 
-    if (currentShaderId == 0)
-        _shader.Apply();
-    if (currentShaderId == _shader.shaderId)
-        _shader.SetMatrix4("uTransform", observeMatrix);
-
-    texture2D->Bind(GL_TEXTURE0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ToOpenGLAddressMode(samplerState.AddressU));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ToOpenGLAddressMode(samplerState.AddressV));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToOpenGLFilter(samplerState.Filter));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToOpenGLFilter(samplerState.Filter));
+    ApplyState();
 
     glBindVertexArray(_bufferManager->VAO);
     glDrawElementsBaseVertex(mode, numVertices, GL_UNSIGNED_SHORT, nullptr, baseVertex);
-    // glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr, 1);
 
-    if (currentShaderId != _shader.shaderId)
-        currentShaderId = 0;
+    // glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr, 1);
 }
 
 template<typename T>
 void GraphicsDevice::DrawUserPrimitives(GLenum mode, T* vertices, int vertexOffset, int primitiveCount) const {}
+
+void GraphicsDevice::ApplyState()
+{
+    if (currentShaderId == 0)
+        _shader.Apply();
+    if (currentShaderId == _shader.shaderId)
+    {
+        _shader.SetMatrix4("uTransform", observeMatrix);
+        _shader.SetInt("image", 0);
+    }
+
+    if (currentShaderId != _shader.shaderId)
+        currentShaderId = 0;
+
+    for (int index = 0; index < textures.slots; index++)
+    {
+        if (textures[index])
+        {
+            textures[index]->Bind(GL_TEXTURE0 + index);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ToOpenGLAddressMode(samplerState.AddressU));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ToOpenGLAddressMode(samplerState.AddressV));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToOpenGLFilter(samplerState.Filter));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToOpenGLFilter(samplerState.Filter));
+            textures[index] = nullptr;
+        }
+    }
+}
 
 void GraphicsDevice::Clear()
 {

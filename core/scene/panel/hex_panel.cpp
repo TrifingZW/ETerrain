@@ -68,7 +68,7 @@ void HexPanel::Rendering(SpriteBatch& spriteBatch)
     Core::GetGraphicsDevice()->Clear();
 
     const auto model = glm::mat4(1.0f);
-    shader.Use();
+    shader.Apply();
     shader.SetMatrix4("model", model);
     shader.SetMatrix4("view", camera3d->Transform3D.GetViewMatrix());
     shader.SetMatrix4("projection", camera3d->GetProjectionMatrix());

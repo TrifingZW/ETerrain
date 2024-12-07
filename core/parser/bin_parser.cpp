@@ -8,6 +8,7 @@
 
 int BinParser::GetWidth() const { return binInfo.Width; }
 int BinParser::GetHeight() const { return binInfo.Height; }
+int BinParser::GetSize() const { return binInfo.Width + binInfo.Height; }
 int BinParser::GetCount() const { return GetWidth() * GetHeight(); }
 
 BinParser& BinParser::Parse(const std::string& name)
@@ -29,7 +30,8 @@ BinParser& BinParser::Parse(const std::string& name)
 
         // 读取 Topographies 数组
         topographies = ETerrain::ReadToClassArray<Topography>(stream, GetCount());
-    } catch (const std::exception& e)
+    }
+    catch (const std::exception& e)
     {
         throw std::runtime_error("解析Bin错误: " + std::string(e.what()));
     }

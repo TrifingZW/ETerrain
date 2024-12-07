@@ -18,7 +18,16 @@ SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphi
     _bufferManager.SetIndexPointerEXT(_indices, MAX_INDICES_SIZE);
 }
 
-void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred, glm::mat4(1.0f)); }
+void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred); }
+
+void SpriteBatch::Begin(const SpriteSortMode spriteSortMode)
+{
+    if (_beginCalled)
+        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
+    _beginCalled = true;
+
+    _spriteSortMode = spriteSortMode;
+}
 
 void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, const glm::mat4& matrix)
 {
@@ -31,7 +40,26 @@ void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, const glm::mat4& ma
     _matrix = matrix;
 }
 
-void SpriteBatch::Begin(SamplerState samplerState, const glm::mat4& matrix) {}
+void SpriteBatch::Begin(SamplerState samplerState, const glm::mat4& matrix)
+{
+    if (_beginCalled)
+        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
+    _beginCalled = true;
+
+    _spriteSortMode = SpriteSortMode::Deferred;
+    _samplerState = std::move(samplerState);
+    _matrix = matrix;
+}
+
+void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, SamplerState samplerState)
+{
+    if (_beginCalled)
+        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
+    _beginCalled = true;
+
+    _spriteSortMode = spriteSortMode;
+    _samplerState = std::move(samplerState);
+}
 
 void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, SamplerState samplerState, const glm::mat4& matrix)
 {
@@ -40,7 +68,7 @@ void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, SamplerState sample
     _beginCalled = true;
 
     _spriteSortMode = spriteSortMode;
-    _samplerState = samplerState;
+    _samplerState = std::move(samplerState);
     _matrix = matrix;
 }
 
@@ -511,7 +539,7 @@ int SpriteBatch::UpdateVertexBuffer(const int start, const int count)
 
 void SpriteBatch::DrawPrimitives(Texture2D* texture2D, const int primitiveOffset, const int primitiveSize) const
 {
-    _graphicsDevice->texture2D = texture2D;
+    _graphicsDevice->textures[0] = texture2D;
     _graphicsDevice->DrawIndexedPrimitives(GL_TRIANGLES, primitiveOffset * 4, primitiveSize * 6);
 }
 

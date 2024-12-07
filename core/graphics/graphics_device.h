@@ -9,9 +9,9 @@
 #include "render_target.h"
 #include "glm/detail/func_packing_simd.inl"
 #include "scene/resources/shader.h"
-#include "scene/resources/texture_2d.h"
 #include "graphics_resource.h"
 #include "sampler_state.h"
+#include "texture_collection.h"
 
 class GraphicsDevice : public GraphicsResource
 {
@@ -22,7 +22,7 @@ class GraphicsDevice : public GraphicsResource
 public:
     GLuint currentShaderId = 0;
 
-    Texture2D* texture2D = nullptr;
+    TextureCollection textures{32};
     glm::mat4 observeMatrix{};
     SamplerState samplerState{};
 
@@ -33,7 +33,6 @@ public:
         int baseVertex,
         int numVertices
     );
-
     template<typename T>
     void DrawUserPrimitives(
         GLenum mode,
@@ -42,6 +41,7 @@ public:
         int primitiveCount
     ) const;
 
+    void ApplyState();
     void Clear();
     void Clear(glm::vec4 color);
     void ResetBuffer();

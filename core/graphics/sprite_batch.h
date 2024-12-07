@@ -44,8 +44,10 @@ public:
     explicit SpriteBatch(GraphicsDevice* graphicsDevice);
 
     void Begin();
+    void Begin(Graphics::SpriteSortMode spriteSortMode);
     void Begin(Graphics::SpriteSortMode spriteSortMode, const glm::mat4& matrix);
     void Begin(SamplerState samplerState, const glm::mat4& matrix);
+    void Begin(Graphics::SpriteSortMode spriteSortMode, SamplerState samplerState);
     void Begin(Graphics::SpriteSortMode spriteSortMode, SamplerState samplerState, const glm::mat4& matrix);
 
     void Draw(Texture2D* texture, glm::vec2 position, Color color);

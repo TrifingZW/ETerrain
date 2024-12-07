@@ -48,7 +48,7 @@ void GamePanel3D::Rendering(SpriteBatch& spriteBatch)
     // glEnable(GL_DEPTH_TEST);
 
     mat4 transform = rotate(translate(mat4(1.0f), vec3(0.5f, -0.5f, 0.0f)), static_cast<float>(glfwGetTime()), vec3(0.0f, 1.0f, 1.0f));
-    shader.Use();
+    shader.Apply();
     shader.SetInt("texture1", 0);
     shader.SetInt("texture2", 1);
     const GLint transformLoc = glGetUniformLocation(shader.shaderId, "transform");
@@ -60,7 +60,7 @@ void GamePanel3D::Rendering(SpriteBatch& spriteBatch)
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-    shader2.Use();
+    shader2.Apply();
     glBindVertexArray(VAO2);
     for (unsigned int i = 0; i < 10; i++)
     {
@@ -101,7 +101,6 @@ void GamePanel3D::Gui()
 
     ImGui::End();
     ImGui::PopStyleVar(2);
-
 
     static float fov = 45.0f;
     static float f1 = 0.0f;

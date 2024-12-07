@@ -22,9 +22,9 @@ public:
 
     explicit Editor()
     {
-        auto* panelHex = new HexPanel();
+        /*auto* panelHex = new HexPanel();
         hexPanel = panelHex;
-        AddChild(std::unique_ptr<Node>(panelHex));
+        AddChild(std::unique_ptr<Node>(panelHex));*/
 
         auto* panel2d = new GamePanel2D();
         gamePanel2d = panel2d;

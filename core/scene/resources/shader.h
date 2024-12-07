@@ -22,7 +22,7 @@ public:
     Shader();
     Shader(const char *source1, const char *source2, ShaderSourceType type);
     // 使用/激活程序
-    void Use() const;
+    void Apply() const;
     // uniform工具函数
     void SetBool(const std::string &name, bool value) const;
     void SetInt(const std::string &name, int value) const;

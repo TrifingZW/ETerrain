@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "core.h"
 #include "glm/gtc/type_ptr.inl"
 
 Shader::Shader()
@@ -20,16 +21,16 @@ Shader::Shader()
 
         out vec2 TexCoords;
 
-        uniform mat4 projection;
+        uniform mat4 uTransform;
 
         void main()
         {
             TexCoords = textureCoord;
-            gl_Position = projection * vertex;
+            gl_Position = uTransform * vertex;
         }
     )";
     // 片段着色器
-    constexpr auto* fShaderCode = R"(
+    constexpr auto fShaderCode = R"(
         #version 330 core
         in vec2 TexCoords;
         out vec4 color;
@@ -71,7 +72,8 @@ Shader::Shader(const char* source1, const char* source2, ShaderSourceType type)
             // 转换数据流到string
             vertexCode = vShaderStream.str();
             fragmentCode = fShaderStream.str();
-        } catch (const std::ifstream::failure& e)
+        }
+        catch (const std::ifstream::failure& e)
         {
             std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: "
                     << e.what() << " (vertexPath: " << source1
@@ -81,14 +83,16 @@ Shader::Shader(const char* source1, const char* source2, ShaderSourceType type)
         const char* fShaderCode = fragmentCode.c_str();
 
         shaderId = LinkShader(vShaderCode, fShaderCode);
-    } else if (type == ShaderSourceType::Code)
+    }
+    else if (type == ShaderSourceType::Code)
     {
         shaderId = LinkShader(source1, source2);
     }
 }
 
-void Shader::Use() const
+void Shader::Apply() const
 {
+    Core::GetGraphicsDevice()->currentShaderId = shaderId;
     glUseProgram(shaderId);
 }
 

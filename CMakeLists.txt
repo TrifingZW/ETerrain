@@ -78,6 +78,8 @@ add_executable(ETerrain
         core/graphics/graphics_resource.cpp
         core/graphics/graphics_resource.h
         core/graphics/graphics_helper.h
+        core/graphics/texture_collection.cpp
+        core/graphics/texture_collection.h
 )
 
 # 设置核心件路径

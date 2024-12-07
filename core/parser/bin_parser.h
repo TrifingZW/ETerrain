@@ -18,6 +18,7 @@ public:
     // 计算宽度和高度
     [[nodiscard]] int GetWidth() const;
     [[nodiscard]] int GetHeight() const;
+    [[nodiscard]] int GetSize() const;
     [[nodiscard]] int GetCount() const;
 
     // 解析Bin文件
