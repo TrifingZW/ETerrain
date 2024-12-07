@@ -20,6 +20,8 @@ class GraphicsDevice : public GraphicsResource
     BufferManager* _bufferManager = nullptr;
 
 public:
+    GLuint currentShaderId = 0;
+
     Texture2D* texture2D = nullptr;
     glm::mat4 observeMatrix{};
     SamplerState samplerState{};
@@ -30,6 +32,14 @@ public:
         GLenum mode,
         int baseVertex,
         int numVertices
+    );
+
+    template<typename T>
+    void DrawUserPrimitives(
+        GLenum mode,
+        T* vertices,
+        int vertexOffset,
+        int primitiveCount
     ) const;
 
     void Clear();

@@ -26,15 +26,17 @@ void GraphicsDevice::DrawIndexedPrimitives(
     const GLenum mode,
     const int baseVertex,
     const int numVertices
-) const
+)
 {
     /*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferManager->EBO);
     short testMatrix[6];
     glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 4, sizeof(short) * 6, &testMatrix);
     std::cout << testMatrix[0] << std::endl;*/
 
-    _shader.Use();
-    _shader.SetMatrix4("projection", observeMatrix);
+    if (currentShaderId == 0)
+        _shader.Apply();
+    if (currentShaderId == _shader.shaderId)
+        _shader.SetMatrix4("uTransform", observeMatrix);
 
     texture2D->Bind(GL_TEXTURE0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ToOpenGLAddressMode(samplerState.AddressU));
@@ -45,7 +47,13 @@ void GraphicsDevice::DrawIndexedPrimitives(
     glBindVertexArray(_bufferManager->VAO);
     glDrawElementsBaseVertex(mode, numVertices, GL_UNSIGNED_SHORT, nullptr, baseVertex);
     // glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr, 1);
+
+    if (currentShaderId != _shader.shaderId)
+        currentShaderId = 0;
 }
+
+template<typename T>
+void GraphicsDevice::DrawUserPrimitives(GLenum mode, T* vertices, int vertexOffset, int primitiveCount) const {}
 
 void GraphicsDevice::Clear()
 {
