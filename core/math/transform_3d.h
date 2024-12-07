@@ -9,9 +9,9 @@
 #include <glm/gtc/quaternion.hpp>
 
 class Transform3D {
-    glm::vec3 position;
-    glm::quat rotation;
-    glm::vec3 scale;
+    glm::vec3 _position;
+    glm::quat _rotation;
+    glm::vec3 _scale;
 
 public:
     // Constructor
@@ -29,7 +29,7 @@ public:
     void SetScale(const glm::vec3 &scl);
 
     // Utility methods
-    [[nodiscard]] glm::mat4 GetMatrix() const;
+    [[nodiscard]] glm::mat4 GetModelMatrix() const;
     [[nodiscard]] glm::mat4 GetViewMatrix() const;
     [[nodiscard]] glm::vec3 Forward() const;
     [[nodiscard]] glm::vec3 UpAxis() const;

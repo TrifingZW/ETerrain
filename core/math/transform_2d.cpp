@@ -17,7 +17,7 @@ vec2 Transform2D::GetScale() const { return scale; }
 
 // Setters
 void Transform2D::SetPosition(const vec2 &pos) { position = pos; }
-void Transform2D::SetRotation(float rot) { rotation = rot; }
+void Transform2D::SetRotation(const float rot) { rotation = rot; }
 void Transform2D::SetScale(const vec2 &scl) { scale = scl; }
 
 // 获取变换矩阵
@@ -44,7 +44,7 @@ void Transform2D::Translate(const vec2 &delta) {
 }
 
 // 旋转
-void Transform2D::Rotate(float delta) {
+void Transform2D::Rotate(const float delta) {
     rotation += delta;
 }
 
