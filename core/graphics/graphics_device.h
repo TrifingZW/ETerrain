@@ -11,6 +11,7 @@
 #include "scene/resources/shader.h"
 #include "graphics_resource.h"
 #include "sampler_state.h"
+#include "sampler_state_collection.h"
 #include "texture_collection.h"
 
 class GraphicsDevice : public GraphicsResource
@@ -23,8 +24,8 @@ public:
     GLuint currentShaderId = 0;
 
     TextureCollection textures{32};
+    SamplerStateCollection samplerStates{32};
     glm::mat4 observeMatrix{};
-    SamplerState samplerState{};
 
     void SetRenderTarget(RenderTarget* renderTarget);
     void SetBufferManager(BufferManager* bufferManager);

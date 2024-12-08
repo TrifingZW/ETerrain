@@ -8,7 +8,7 @@
 
 int BinParser::GetWidth() const { return binInfo.Width; }
 int BinParser::GetHeight() const { return binInfo.Height; }
-int BinParser::GetSize() const { return binInfo.Width + binInfo.Height; }
+int BinParser::GetSize() const { return binInfo.Width * binInfo.Height; }
 int BinParser::GetCount() const { return GetWidth() * GetHeight(); }
 
 BinParser& BinParser::Parse(const std::string& name)

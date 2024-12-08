@@ -59,11 +59,11 @@ void GamePanel2D::Ready()
     {
         for (size_t x = 0; x < binParser.GetWidth(); x++)
         {
-            const size_t index = (y * width + x) * 4;
+            const size_t index = (y * binParser.GetWidth() + x) * 4;
             data[index] = 0; // 红色通道
             data[index + 1] = 0; // 绿色通道
             data[index + 2] = 0; // 蓝色通道
-            data[index + 3] = binParser.topographies[y * binParser.GetWidth() + x].地块类型 == 1 ? 0 : 1; // alpha通道，完全不透明
+            data[index + 3] = binParser.topographies[y * binParser.GetWidth() + x].地块类型 == 1 ? 0 : 255; // alpha通道，完全不透明
         }
     }
     colorUV = new Texture2D();
@@ -85,6 +85,7 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     shader->SetInt("image", 0);
     shader->SetInt("colorUV", 1);
     Core::GetGraphicsDevice()->textures[1] = colorUV;
+    Core::GetGraphicsDevice()->samplerStates[1] = SamplerState::PointClamp;
 
     spriteBatch.Draw(
         Editor::loadResources->mapLand,

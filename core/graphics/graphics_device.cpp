@@ -4,8 +4,6 @@
 
 #include "graphics_device.h"
 
-#include <ostream>
-
 #include "graphics_helper.h"
 #include "glm/gtx/associated_min_max.hpp"
 #include "glm/gtx/string_cast.hpp"
@@ -61,6 +59,7 @@ void GraphicsDevice::ApplyState()
     {
         if (textures[index])
         {
+            const SamplerState samplerState = samplerStates[index];
             textures[index]->Bind(GL_TEXTURE0 + index);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ToOpenGLAddressMode(samplerState.AddressU));
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ToOpenGLAddressMode(samplerState.AddressV));

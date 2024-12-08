@@ -545,8 +545,8 @@ void SpriteBatch::DrawPrimitives(Texture2D* texture2D, const int primitiveOffset
 
 void SpriteBatch::PrepRenderState()
 {
+    _graphicsDevice->samplerStates[0] = _samplerState;
     _graphicsDevice->observeMatrix = _matrix;
-    _graphicsDevice->samplerState = _samplerState;
     _graphicsDevice->SetBufferManager(&_bufferManager);
 }
 
