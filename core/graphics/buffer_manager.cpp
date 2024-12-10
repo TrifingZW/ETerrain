@@ -9,6 +9,20 @@
 
 using namespace Graphics;
 
+BufferManager::BufferManager()
+{
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
 BufferManager::BufferManager(
     const GLsizeiptr vertexSize,
     const GLsizeiptr indexSize
@@ -34,9 +48,21 @@ BufferManager::BufferManager(
     Core::GetGraphicsDevice()->ResetBuffer();
 }
 
+void BufferManager::Apply() const
+{
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+}
+
+/*
+// 在 cpp 文件中显式实例化
+template void BufferManager::SetDataPointerEXT<PositionTexture4>(int, const PositionTexture4*, int, Graphics::SetDataOptions) const;
+
+template <typename T>
 void BufferManager::SetDataPointerEXT(
     const int offset,
-    const PositionTexture4* positionColorTexture4,
+    const T* data,
     const int count,
     const SetDataOptions options
 ) const
@@ -46,7 +72,7 @@ void BufferManager::SetDataPointerEXT(
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     if (options == SetDataOptions::Discard)
-        glBufferData(GL_ARRAY_BUFFER, _vertexSize, positionColorTexture4, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, _vertexSize, data, GL_DYNAMIC_DRAW);
     else
     {
         // 映射缓冲区并更新部分数据
@@ -58,13 +84,14 @@ void BufferManager::SetDataPointerEXT(
         );
         if (ptr)
         {
-            memcpy(ptr, positionColorTexture4, memoryLength);
+            memcpy(ptr, data, memoryLength);
             glUnmapBuffer(GL_ARRAY_BUFFER);
         }
     }
 
     Core::GetGraphicsDevice()->ResetBuffer();
-}
+}*/
+
 
 void BufferManager::SetIndexPointerEXT(const short* indices, const GLsizeiptr size) const
 {

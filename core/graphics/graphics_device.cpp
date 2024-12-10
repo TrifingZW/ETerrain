@@ -10,6 +10,8 @@
 
 using namespace Graphics;
 
+GraphicsDevice::GraphicsDevice() {}
+
 void GraphicsDevice::SetRenderTarget(RenderTarget* renderTarget)
 {
     _renderTarget = renderTarget;
@@ -18,7 +20,6 @@ void GraphicsDevice::SetRenderTarget(RenderTarget* renderTarget)
 }
 
 void GraphicsDevice::SetBufferManager(BufferManager* bufferManager) { _bufferManager = bufferManager; }
-
 
 void GraphicsDevice::DrawIndexedPrimitives(
     const GLenum mode,
@@ -33,14 +34,42 @@ void GraphicsDevice::DrawIndexedPrimitives(
 
     ApplyState();
 
-    glBindVertexArray(_bufferManager->VAO);
+
+    _bufferManager->Apply();
     glDrawElementsBaseVertex(mode, numVertices, GL_UNSIGNED_SHORT, nullptr, baseVertex);
 
+    ResetBuffer();
     // glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr, 1);
 }
 
-template<typename T>
-void GraphicsDevice::DrawUserPrimitives(GLenum mode, T* vertices, int vertexOffset, int primitiveCount) const {}
+void GraphicsDevice::DrawUserPrimitives(const GLenum mode, IVertexType* vertices, const int vertexOffset, const int vertexCount)
+{
+    ApplyState();
+
+    _userBufferManager.SetData(vertices->GetVertexDataPtr(), vertices->GetVertexMemorySize() * vertexCount);
+    _userBufferManager.Apply();
+
+    // 计算图形的数量
+    const GLsizei drawCount = vertexCount / 6; // 每个图形由 6 个顶点组成
+
+    // 创建数组来存储起始顶点索引和每个图形的顶点数
+    const auto first = new GLint[drawCount];
+    const auto count = new GLsizei[drawCount];
+
+    // 填充 first 和 count 数组
+    for (int i = 0; i < drawCount; ++i)
+    {
+        first[i] = i * 6; // 每个图形的起始顶点是 6 的倍数
+        count[i] = 6; // 每个图形有 6 个顶点
+    }
+
+    ApplyAttribPointer(vertices->GetVertexDeclaration());
+    glMultiDrawArrays(mode, first, count, drawCount);
+
+    // 释放内存
+    delete[] first;
+    delete[] count;
+}
 
 void GraphicsDevice::ApplyState()
 {
@@ -67,6 +96,23 @@ void GraphicsDevice::ApplyState()
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToOpenGLFilter(samplerState.Filter));
             textures[index] = nullptr;
         }
+    }
+}
+
+void GraphicsDevice::ApplyAttribPointer(const VertexDeclaration& vertexDeclaration)
+{
+    for (size_t index = 0; index < vertexDeclaration.NumElements; index++)
+    {
+        const VertexElement element = vertexDeclaration.Elements[index];
+        glVertexAttribPointer(
+            element.Index,
+            element.Size,
+            GL_FLOAT,
+            GL_FALSE,
+            vertexDeclaration.Stride,
+            reinterpret_cast<void *>(element.Offset * element.Type)
+        );
+        glEnableVertexAttribArray(element.Index);
     }
 }
 

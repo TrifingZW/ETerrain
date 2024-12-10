@@ -117,4 +117,9 @@ namespace Graphics
         /// </summary>
         MinPointMagLinearMipPoint,
     };
+
+    enum class VertexAttributeType
+    {
+        Float = 4
+    };
 }

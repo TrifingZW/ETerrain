@@ -35,3 +35,4 @@ struct PositionTexture4
 
     static constexpr PositionTexture4 Default() { return {}; }
 };
+

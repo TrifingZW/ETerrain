@@ -10,15 +10,16 @@
 #include "glm/detail/func_packing_simd.inl"
 #include "scene/resources/shader.h"
 #include "graphics_resource.h"
-#include "sampler_state.h"
 #include "sampler_state_collection.h"
 #include "texture_collection.h"
+#include "vertex_type.h"
 
 class GraphicsDevice : public GraphicsResource
 {
     Shader _shader{};
     RenderTarget* _renderTarget = nullptr;
     BufferManager* _bufferManager = nullptr;
+    BufferManager _userBufferManager{};
 
 public:
     GLuint currentShaderId = 0;
@@ -27,6 +28,8 @@ public:
     SamplerStateCollection samplerStates{32};
     glm::mat4 observeMatrix{};
 
+    GraphicsDevice();
+
     void SetRenderTarget(RenderTarget* renderTarget);
     void SetBufferManager(BufferManager* bufferManager);
     void DrawIndexedPrimitives(
@@ -34,15 +37,16 @@ public:
         int baseVertex,
         int numVertices
     );
-    template<typename T>
     void DrawUserPrimitives(
         GLenum mode,
-        T* vertices,
+        IVertexType* vertices,
         int vertexOffset,
-        int primitiveCount
-    ) const;
+        int vertexCount
+    );
 
     void ApplyState();
+    void ApplyAttribPointer(const VertexDeclaration& vertexDeclaration);
+
     void Clear();
     void Clear(glm::vec4 color);
     void ResetBuffer();
