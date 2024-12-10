@@ -10,12 +10,14 @@
 #include "scene/2d/camera_2d.h"
 #include "scene/resources/shader.h"
 
+
 class GamePanel2D : public Node
 {
 public:
     int width = 1, height = 1;
     Shader* shader = nullptr;
     Texture2D* colorUV = nullptr;
+    HexVertexType* vertexInfo = nullptr;
 
     Camera2D* camera2d = nullptr;
     RenderTarget* renderTarget = nullptr;
@@ -35,6 +37,6 @@ public:
     void Rendering(SpriteBatch& spriteBatch) override;
     void Gui() override;
 
-
     void NewFramebuffer(int width, int height);
+    void GenerateOceanVertex() const;
 };

@@ -7,6 +7,7 @@
 #include <imgui.h>
 #include <random>
 
+#include "game_shader.h"
 #include "core.h"
 #include "editor.h"
 #include "glm/gtx/string_cast.hpp"
@@ -14,45 +15,13 @@
 void GamePanel2D::Init()
 {
     NewFramebuffer(width, height);
-
-    // 顶点着色器
-    constexpr auto vShaderCode = R"(
-        #version 330 core
-        layout (location = 0) in vec4 vertex;
-        layout (location = 1) in vec2 textureCoord;
-
-        out vec2 TexCoords;
-
-        uniform mat4 uTransform;
-
-        void main()
-        {
-            TexCoords = textureCoord;
-            gl_Position = uTransform * vertex;
-        }
-    )";
-    // 片段着色器
-    constexpr auto fShaderCode = R"(
-        #version 330 core
-        in vec2 TexCoords;
-        out vec4 color;
-
-        uniform sampler2D image;
-        uniform sampler2D colorUV;
-
-        void main()
-        {
-            color = texture(image, TexCoords);
-        }
-    )";
-
-    shader = new Shader(vShaderCode, fShaderCode, Shader::ShaderSourceType::Code);
+    shader = new Shader(GLSL::game_vsh, GLSL::game_fsh, Shader::ShaderSourceType::Code);
 }
 
 void GamePanel2D::Ready()
 {
     binParser.Parse("world.bin");
-    hexManager = new HexManager(binParser.GetWidth(), binParser.GetHeight(), HexMetrics::TileWidth, HexMetrics::TileHeight);
+    hexManager = new HexManager(binParser.GetWidth(), binParser.GetHeight(), 74.0f);
 
     const auto data = new GLubyte[binParser.GetSize() * 4];
     for (size_t y = 0; y < binParser.GetHeight(); y++)
@@ -60,7 +29,7 @@ void GamePanel2D::Ready()
         for (size_t x = 0; x < binParser.GetWidth(); x++)
         {
             const size_t index = (y * binParser.GetWidth() + x) * 4;
-            data[index] = 0; // 红色通道
+            data[index] = 255; // 红色通道
             data[index + 1] = 0; // 绿色通道
             data[index + 2] = 0; // 蓝色通道
             data[index + 3] = binParser.topographies[y * binParser.GetWidth() + x].地块类型 == 1 ? 0 : 255; // alpha通道，完全不透明
@@ -69,6 +38,9 @@ void GamePanel2D::Ready()
     colorUV = new Texture2D();
     colorUV->Generate(binParser.GetHeight(), binParser.GetWidth());
     colorUV->SetData(data);
+
+    vertexInfo = new HexVertexType((binParser.GetSize() * 6));
+    GenerateOceanVertex();
 }
 
 void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
@@ -80,10 +52,6 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
 
     spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, SamplerState::LinearMirror);
 
-    shader->Apply();
-    shader->SetMatrix4("uTransform", camera2d->GetProjectionMatrix());
-    shader->SetInt("image", 0);
-    shader->SetInt("colorUV", 1);
     Core::GetGraphicsDevice()->textures[1] = colorUV;
     Core::GetGraphicsDevice()->samplerStates[1] = SamplerState::PointClamp;
 
@@ -112,6 +80,9 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     }
 
     spriteBatch.End();
+
+    Core::GetGraphicsDevice()->textures[0] = Editor::loadResources->mapLand;
+    Core::GetGraphicsDevice()->DrawUserPrimitives(GL_TRIANGLE_FAN, vertexInfo, 0, vertexInfo->PHexVertexData.size());
 
     Core::GetGraphicsDevice()->ResetRenderTarget();
 }
@@ -181,4 +152,34 @@ void GamePanel2D::NewFramebuffer(const int width, const int height)
         renderTarget->Reinitialize(width, height);
     else
         renderTarget = new RenderTarget(width, height);
+}
+
+void GamePanel2D::GenerateOceanVertex() const
+{
+    for (size_t y = 0; y < binParser.GetHeight(); y++)
+    {
+        for (size_t x = 0; x < binParser.GetWidth(); x++)
+        {
+            if (binParser.topographies[y * binParser.GetWidth() + x].地块类型 != 1)
+                continue;
+            const size_t index = (y * binParser.GetWidth() + x) * 6;
+            const glm::vec2 position = hexManager->HexToPixel({x, y});
+            glm::mat4 model(1.0f);
+            model = translate(
+                model,
+                glm::vec3(
+                    position.x,
+                    position.y,
+                    0.0f
+                )
+            );
+            model = scale(model, glm::vec3(glm::vec2(HexMetrics::TileWidth / 2.0f), 1.0f));
+            for (auto Corner: HexMetrics::Corners)
+                vertexInfo->PHexVertexData.push_back(
+                    {
+                        model * glm::vec4(Corner, 1.0f)
+                    }
+                );
+        }
+    }
 }
