@@ -8,6 +8,39 @@
 
 #include "glm/glm.hpp"
 
+namespace GLSL
+{
+    // 顶点着色器
+    constexpr auto DefaultVSH = R"(
+        #version 330 core
+        layout (location = 0) in vec4 vertex;
+        layout (location = 1) in vec2 textureCoord;
+
+        out vec2 TexCoords;
+
+        uniform mat4 uTransform;
+
+        void main()
+        {
+            TexCoords = textureCoord;
+            gl_Position = uTransform * vertex;
+        }
+    )";
+    // 片段着色器
+    constexpr auto DefaultFSH = R"(
+        #version 330 core
+        in vec2 TexCoords;
+        out vec4 color;
+
+        uniform sampler2D image;
+
+        void main()
+        {
+            color = texture(image, TexCoords);
+        }
+    )";
+}
+
 class Shader {
 public:
     enum class ShaderSourceType {

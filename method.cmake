@@ -83,7 +83,7 @@ function(LoadStb)
 
     set(DIR ${THIRDPARTY_DIR}/stb)
     include_directories(${DIR})
-#    add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
+    #    add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
 
 endfunction()
 
@@ -107,3 +107,26 @@ function(LoadFont)
     add_dependencies(ETerrain EmbedFont)
 
 endfunction()
+
+function(LoadShader ShaderName)
+    # 读取顶点着色器和片段着色器内容
+    file(READ "misc/glsl/${ShaderName}.vsh" SHADER_VSH_CONTENT)
+    file(READ "misc/glsl/${ShaderName}.fsh" SHADER_FSH_CONTENT)
+
+    # 设置依赖关系，确保当 GLSL 文件更改时强制更新
+    set(SHADER_DEPENDENCIES "misc/glsl/${ShaderName}.vsh" "misc/glsl/${ShaderName}.fsh")
+
+    # 生成shader头文件
+    configure_file(misc/glsl/shader_template.h.in ${ShaderName}_shader.h)
+
+    # 设置 shader 文件为依赖，确保在文件修改时重新生成
+    add_custom_command(
+            OUTPUT ${ShaderName}_shader.h
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "misc/glsl/${ShaderName}.vsh" "misc/glsl/${ShaderName}.fsh" ${ShaderName}_shader.h
+            DEPENDS ${SHADER_DEPENDENCIES}
+            COMMENT "Updating shader header for ${ShaderName}"
+    )
+
+endfunction()
+
+

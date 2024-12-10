@@ -80,6 +80,10 @@ add_executable(ETerrain
         core/graphics/graphics_helper.h
         core/graphics/texture_collection.cpp
         core/graphics/texture_collection.h
+        core/graphics/sampler_state_collection.cpp
+        core/graphics/sampler_state_collection.h
+        core/graphics/vertex_declaration.h
+        core/graphics/vertex_type.h
 )
 
 # 设置核心件路径
@@ -112,4 +116,4 @@ LoadImGui()
 LoadPugixml()
 LoadStb()
 LoadFont()
-
+LoadShader(game)
