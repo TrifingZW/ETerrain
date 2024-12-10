@@ -4,10 +4,14 @@
 
 #pragma once
 #include <cmath>
+#include <vector>
 
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
+#include "glm/vec4.hpp"
 #include "glm/detail/func_packing_simd.inl"
+#include "graphics/vertex_declaration.h"
+#include "graphics/vertex_type.h"
 
 namespace HexMetrics
 {
@@ -17,7 +21,7 @@ namespace HexMetrics
     constexpr float SideLength = 1.0f;
     constexpr float OuterRadius = SideLength;
     constexpr float InnerRadius = SideLength * 0.866025404f;
-    /*constexpr glm::vec3 Corners[] = {
+    constexpr glm::vec3 CornersXZ[] = {
         glm::vec3(0.0f, 0.0f, OuterRadius),
         glm::vec3(InnerRadius, 0.0f, 0.5f * OuterRadius),
         glm::vec3(InnerRadius, 0.0f, -0.5f * OuterRadius),
@@ -25,24 +29,59 @@ namespace HexMetrics
         glm::vec3(-InnerRadius, 0.0f, -0.5f * OuterRadius),
         glm::vec3(-InnerRadius, 0.0f, 0.5f * OuterRadius),
         glm::vec3(0.0f, 0.0f, OuterRadius)
-    };*/
+    };
+
     constexpr glm::vec3 Corners[] = {
-        glm::vec3(OuterRadius, 0.0f, 0.0f),
-        glm::vec3(OuterRadius * 0.5f, 0.0f, -InnerRadius),
-        glm::vec3(-OuterRadius * 0.5f, 0.0f, -InnerRadius),
         glm::vec3(-OuterRadius, 0.0f, 0.0f),
-        glm::vec3(-OuterRadius * 0.5f, 0.0f, InnerRadius),
-        glm::vec3(OuterRadius * 0.5f, 0.0f, InnerRadius),
+        glm::vec3(-0.5f * OuterRadius, InnerRadius, 0.0f),
+        glm::vec3(0.5f * OuterRadius, InnerRadius, 0.0f),
+        glm::vec3(OuterRadius, 0.0f, 0.0f),
+        glm::vec3(0.5f * OuterRadius, -InnerRadius, 0.0f),
+        glm::vec3(-0.5f * OuterRadius, -InnerRadius, 0.0f),
     };
 }
+
+struct HexVertexData
+{
+    glm::vec4 Position;
+    glm::vec2 Uv;
+};
+
+class HexVertexType final : public IVertexType
+{
+public:
+    int count{};
+    std::vector<HexVertexData> PHexVertexData{};
+
+    explicit HexVertexType(const int count): count(count){}
+
+    VertexDeclaration GetVertexDeclaration() override
+    {
+        return {
+            VertexElement(0, 0, 4, 4),
+            VertexElement(1, 4, 2, 4)
+        };
+    }
+
+    int GetVertexCount() override { return count; }
+
+    void* GetVertexDataPtr() override { return PHexVertexData.data(); }
+
+    int GetVertexMemorySize() override { return sizeof(HexVertexData); }
+
+    int GetDataMemorySize() override { return static_cast<int>(count * sizeof(HexVertexData)); };
+
+private:
+    ~HexVertexType() override = default;
+};
 
 class HexManager
 {
 public:
     int hexWidth, hexHeight;
-    int tileWidth, tileHeight, sideLength;
+    float tileWidth, tileHeight, sideLength;
     float outerRadius, innerRadius;
-    HexManager(int hexWidth, int hexHeight, int tileWidth, int tileHeight);
+    HexManager(int hexWidth, int hexHeight, float sideLength);
 
     [[nodiscard]] glm::vec2 HexToPixel(const glm::ivec2& hex) const;
     [[nodiscard]] glm::ivec2 PixelToHex(const glm::vec2& pixel) const;

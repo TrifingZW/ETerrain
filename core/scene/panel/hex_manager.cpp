@@ -7,29 +7,29 @@
 #include "glm/common.hpp"
 #include "math/math_funcs.h"
 
-HexManager::HexManager(const int hexWidth, const int hexHeight, const int tileWidth, const int tileHeight)
+HexManager::HexManager(const int hexWidth, const int hexHeight, const float sideLength)
     : hexWidth(hexWidth),
       hexHeight(hexHeight),
-      tileWidth(tileWidth),
-      tileHeight(tileHeight)
+      sideLength(sideLength)
 {
-    sideLength = tileWidth / 2;
-    outerRadius = static_cast<float>(sideLength);
-    innerRadius = static_cast<float>(sideLength) * 0.866025404f;
+    tileWidth = sideLength * 2.0f;
+    tileHeight = sideLength * 2.0f * (sqrt(3.0f) / 2.0f);
+    outerRadius = sideLength;
+    innerRadius = tileHeight / 2.0f;
 }
 
 glm::vec2 HexManager::HexToPixel(const glm::ivec2& hex) const
 {
     return {
         static_cast<float>(sideLength) + (static_cast<float>(hex.x) * (static_cast<float>(sideLength) * (3.0f / 2.0f))),
-        innerRadius + (static_cast<float>(hex.y) * static_cast<float>(tileHeight)) + static_cast<float>(hex.x % 2) * innerRadius
+        innerRadius + static_cast<float>(hex.y) * static_cast<float>(tileHeight) + static_cast<float>(hex.x % 2) * innerRadius
     };
 }
 
 glm::ivec2 HexManager::PixelToHex(const glm::vec2& pixel) const
 {
     glm::vec2 ret = pixel;
-    ret /= pixel;
+    ret /= glm::vec2(tileWidth, tileHeight);
 
     constexpr float overlapping_ratio = 0.75f;
     ret.x /= overlapping_ratio;
