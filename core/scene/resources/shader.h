@@ -54,6 +54,7 @@ public:
     // 构造器读取并构建着色器
     Shader();
     Shader(const char *source1, const char *source2, ShaderSourceType type);
+    ~Shader();
     // 使用/激活程序
     void Apply() const;
     // uniform工具函数

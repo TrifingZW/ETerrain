@@ -53,7 +53,8 @@ public:
     int count{};
     std::vector<HexVertexData> PHexVertexData{};
 
-    explicit HexVertexType(const int count): count(count){}
+    explicit HexVertexType(const int count): count(count) {}
+    ~HexVertexType() override = default;
 
     VertexDeclaration GetVertexDeclaration() override
     {
@@ -70,9 +71,6 @@ public:
     int GetVertexMemorySize() override { return sizeof(HexVertexData); }
 
     int GetDataMemorySize() override { return static_cast<int>(count * sizeof(HexVertexData)); };
-
-private:
-    ~HexVertexType() override = default;
 };
 
 class HexManager

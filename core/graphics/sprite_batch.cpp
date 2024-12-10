@@ -18,6 +18,8 @@ SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphi
     _bufferManager.SetIndexPointerEXT(_indices, MAX_INDICES_SIZE);
 }
 
+SpriteBatch::~SpriteBatch() {}
+
 void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred); }
 
 void SpriteBatch::Begin(const SpriteSortMode spriteSortMode)

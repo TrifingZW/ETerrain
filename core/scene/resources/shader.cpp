@@ -61,6 +61,11 @@ Shader::Shader(const char* source1, const char* source2, ShaderSourceType type)
     }
 }
 
+Shader::~Shader()
+{
+    glDeleteProgram(shaderId);
+}
+
 void Shader::Apply() const
 {
     Core::GetGraphicsDevice()->currentShaderId = shaderId;

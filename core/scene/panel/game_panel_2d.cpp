@@ -12,6 +12,22 @@
 #include "editor.h"
 #include "glm/gtx/string_cast.hpp"
 
+GamePanel2D::GamePanel2D() {
+    auto* camera = new Camera2D();
+    camera2d = camera;
+    AddChild(std::unique_ptr<Node>(camera));
+}
+
+GamePanel2D::~GamePanel2D()
+{
+    delete shader;
+    delete colorUV;
+    delete vertexInfo;
+    delete hexManager;
+    delete camera2d;
+    delete renderTarget;
+}
+
 void GamePanel2D::Init()
 {
     NewFramebuffer(width, height);
@@ -45,7 +61,7 @@ void GamePanel2D::Ready()
 
 void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
 {
-    ResourceTextureParser resource_texture_parser = Editor::loadResources->plantResourceTextureParser;
+    ResourceTextureParser& resource_texture_parser = Editor::loadResources->plantResourceTextureParser;
 
     Core::GetGraphicsDevice()->SetRenderTarget(renderTarget);
     Core::GetGraphicsDevice()->Clear();

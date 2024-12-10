@@ -20,22 +20,8 @@ public:
     GamePanel3D* gamePanel3d = nullptr;
     static LoadResources* loadResources;
 
-    explicit Editor()
-    {
-        /*auto* panelHex = new HexPanel();
-        hexPanel = panelHex;
-        AddChild(std::unique_ptr<Node>(panelHex));*/
-
-        auto* panel2d = new GamePanel2D();
-        gamePanel2d = panel2d;
-        AddChild(std::unique_ptr<Node>(panel2d));
-
-        auto* load_resources = new LoadResources();
-        loadResources = load_resources;
-        AddChild(std::unique_ptr<Node>(load_resources));
-    }
-
-    ~Editor() override = default;
+    explicit Editor();
+    ~Editor() override;
 
     void Gui() override;
 };

@@ -48,6 +48,13 @@ BufferManager::BufferManager(
     Core::GetGraphicsDevice()->ResetBuffer();
 }
 
+BufferManager::~BufferManager()
+{
+    glDeleteVertexArrays(0, &VAO);
+    glDeleteBuffers(0, &VBO);
+    glDeleteBuffers(0, &EBO);
+}
+
 void BufferManager::Apply() const
 {
     glBindVertexArray(VAO);

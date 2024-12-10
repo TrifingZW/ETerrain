@@ -18,6 +18,7 @@ public:
 
     BufferManager();
     BufferManager(GLsizeiptr vertexSize, GLsizeiptr indexSize);
+    ~BufferManager();
 
     void Apply() const;
 

@@ -17,9 +17,10 @@
 class GraphicsDevice : public GraphicsResource
 {
     Shader _shader{};
+    BufferManager _userBufferManager{};
+
     RenderTarget* _renderTarget = nullptr;
     BufferManager* _bufferManager = nullptr;
-    BufferManager _userBufferManager{};
 
 public:
     GLuint currentShaderId = 0;

@@ -4,6 +4,23 @@
 
 #include "node.h"
 
+void Node::AddChild(std::unique_ptr<Node> object) {
+    object->parent = this;
+    if (IsInit)
+        object->InitTree();
+    if (IsReady)
+        object->ReadyTree();
+    children.push_back(std::move(object));
+}
+
+const std::vector<std::unique_ptr<Node>>& Node::GetChildren() const {
+    return children;
+}
+
+Node* Node::GetParent() const {
+    return parent;
+}
+
 void Node::InitTree() {
     Init();
     IsInit = true;

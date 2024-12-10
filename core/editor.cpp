@@ -4,14 +4,38 @@
 
 #include "editor.h"
 
-LoadResources *Editor::loadResources = nullptr;
+LoadResources* Editor::loadResources = nullptr;
 
-void Editor::Gui() {
+Editor::Editor()
+{
+    /*auto* panelHex = new HexPanel();
+        hexPanel = panelHex;
+        AddChild(std::unique_ptr<Node>(panelHex));*/
+
+    auto* panel2d = new GamePanel2D();
+    gamePanel2d = panel2d;
+    AddChild(std::unique_ptr<Node>(panel2d));
+
+    auto* load_resources = new LoadResources();
+    loadResources = load_resources;
+    AddChild(std::unique_ptr<Node>(load_resources));
+}
+
+Editor::~Editor()
+{
+    /*delete hexPanel;
+    delete gamePanel2d;
+    delete gamePanel3d;
+    delete loadResources;*/
+}
+
+void Editor::Gui()
+{
     static ImGuiDockNodeFlags docks_pace_flags = ImGuiDockNodeFlags_None;
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 
     // 全屏
-    const ImGuiViewport *viewport = ImGui::GetMainViewport();
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->WorkPos);
     ImGui::SetNextWindowSize(viewport->WorkSize);
     ImGui::SetNextWindowViewport(viewport->ID);
@@ -30,9 +54,11 @@ void Editor::Gui() {
     dockSpaceId = ImGui::GetID("DockSpace");
     ImGui::DockSpace(dockSpaceId, ImVec2(0.0f, 0.0f), docks_pace_flags);
 
-    if (ImGui::BeginMenuBar()) {
+    if (ImGui::BeginMenuBar())
+    {
         //增加主题切换
-        if (ImGui::BeginMenu("主题（Other）")) {
+        if (ImGui::BeginMenu("主题（Other）"))
+        {
             if (ImGui::MenuItem("暗黑（Dark）")) { ImGui::StyleColorsDark(); }
             if (ImGui::MenuItem("明亮（Light）")) { ImGui::StyleColorsLight(); }
             if (ImGui::MenuItem("经典（Classic）")) { ImGui::StyleColorsClassic(); }

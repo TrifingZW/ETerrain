@@ -25,12 +25,8 @@ public:
     BinParser binParser = {};
     HexManager* hexManager = nullptr;
 
-    explicit GamePanel2D()
-    {
-        auto* camera = new Camera2D();
-        camera2d = camera;
-        AddChild(std::unique_ptr<Node>(camera));
-    }
+    explicit GamePanel2D();
+    ~GamePanel2D() override;
 
     void Init() override;
     void Ready() override;

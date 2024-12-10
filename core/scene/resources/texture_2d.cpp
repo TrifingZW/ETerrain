@@ -4,6 +4,13 @@
 
 #include "texture_2d.h"
 
+Texture2D::Texture2D() = default;
+
+Texture2D::~Texture2D()
+{
+    glDeleteTextures(1, &Id);
+}
+
 void Texture2D::Generate(const int width, const int height, const int channels, const unsigned char* data)
 {
     Width = width;

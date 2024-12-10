@@ -19,7 +19,11 @@ public:
     GLint FilterMin = GL_LINEAR;
     GLint FilterMax = GL_LINEAR;
     // 从图像数据生成纹理
-    void Generate(int width, int height, int channels=4, const unsigned char* data=nullptr);
+
+    Texture2D();
+    ~Texture2D();
+
+    void Generate(int width, int height, int channels = 4, const unsigned char* data = nullptr);
     // 将纹理绑定为当前活动的 GL_TEXTURE_2D 纹理对象
     void Bind(GLenum target) const;
     void SetData(const unsigned char* data) const;

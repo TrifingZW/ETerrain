@@ -9,6 +9,17 @@
 GraphicsDevice* Core::_graphicsDevice = nullptr;
 SpriteBatch* Core::_spriteBatch = nullptr;
 
+Core::~Core()
+{
+    delete _spriteBatch;
+    delete _graphicsDevice;
+}
+
+Core& Core::Instance() {
+    static Core core;
+    return core;
+}
+
 void Core::Renderings()
 {
     RootNode.RenderingTree(_spriteBatch);

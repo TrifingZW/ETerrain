@@ -22,7 +22,7 @@ public:
     [[nodiscard]] int GetCount() const;
 
     // 解析Bin文件
-    BinParser& Parse(const std::string& name);
+    void Parse(const std::string& name);
 
 private:
     std::string AssetsPath = "assets"; // 资产路径

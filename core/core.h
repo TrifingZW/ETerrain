@@ -17,13 +17,8 @@ public:
     Editor RootNode{};
 
     // 静态方法，获取单例实例
-    static Core& Instance()
-    {
-        static Core core;
-        return core;
-    }
-
-    ~Core() = default;
+    static Core& Instance();
+    ~Core();
 
     void Renderings();
     void ImGuiAll();

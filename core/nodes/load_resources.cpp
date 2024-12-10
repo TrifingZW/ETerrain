@@ -4,6 +4,12 @@
 
 #include "load_resources.h"
 
+LoadResources::~LoadResources()
+{
+    delete mapLand;
+    delete mapSea;
+}
+
 void LoadResources::Init()
 {
     mapConfigParser.loadFromXml("assets/config/def_map.xml");

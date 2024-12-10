@@ -11,7 +11,7 @@ int BinParser::GetHeight() const { return binInfo.Height; }
 int BinParser::GetSize() const { return binInfo.Width * binInfo.Height; }
 int BinParser::GetCount() const { return GetWidth() * GetHeight(); }
 
-BinParser& BinParser::Parse(const std::string& name)
+void BinParser::Parse(const std::string& name)
 {
     try
     {
@@ -35,6 +35,4 @@ BinParser& BinParser::Parse(const std::string& name)
     {
         throw std::runtime_error("解析Bin错误: " + std::string(e.what()));
     }
-
-    return *this;
 }

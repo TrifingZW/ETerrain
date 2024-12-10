@@ -3,37 +3,26 @@
 //
 #pragma once
 
-#include <iostream>
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "graphics/sprite_batch.h"
 
-class Node {
+class Node
+{
 public:
     bool IsInit = false;
     bool IsReady = false;
     std::string Name = "Node";;
 
+    // TODO 节点系统的内存管理不合理
     virtual ~Node() = default;
 
-    void AddChild(std::unique_ptr<Node> object) {
-        object->parent = this;
-        children.push_back(std::move(object));
-        if (IsInit)
-            object->InitTree();
-        if (IsReady)
-            object->ReadyTree();
-    }
-
-    [[nodiscard]] const std::vector<std::unique_ptr<Node> > &GetChildren() const {
-        return children;
-    }
-
-    [[nodiscard]] Node *GetParent() const {
-        return parent;
-    }
+    // TODO 字节的内存管理不合理
+    void AddChild(std::unique_ptr<Node> object);
+    [[nodiscard]] const std::vector<std::unique_ptr<Node> >& GetChildren() const;
+    [[nodiscard]] Node* GetParent() const;
 
     void InitTree();
     void ReadyTree();
@@ -49,6 +38,6 @@ public:
     virtual void Input(int key);
 
 private:
-    Node *parent = nullptr;
+    Node* parent = nullptr;
     std::vector<std::unique_ptr<Node> > children;
 };

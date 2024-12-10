@@ -42,6 +42,7 @@ private:
 
 public:
     explicit SpriteBatch(GraphicsDevice* graphicsDevice);
+    ~SpriteBatch();
 
     void Begin();
     void Begin(Graphics::SpriteSortMode spriteSortMode);

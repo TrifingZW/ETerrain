@@ -19,6 +19,8 @@ public:
     Texture2D* mapLand = new Texture2D();
     Texture2D* mapSea = new Texture2D();
 
+    ~LoadResources() override;
+
     void Init() override;
     void LoadTexture2D() const;
 };
