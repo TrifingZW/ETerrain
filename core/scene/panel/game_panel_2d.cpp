@@ -81,6 +81,8 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
 
     spriteBatch.End();
 
+    shader->Apply();
+    shader->SetMatrix4("uTransform", camera2d->GetProjectionMatrix());
     Core::GetGraphicsDevice()->textures[0] = Editor::loadResources->mapLand;
     Core::GetGraphicsDevice()->DrawUserPrimitives(GL_TRIANGLE_FAN, vertexInfo, 0, vertexInfo->PHexVertexData.size());
 
