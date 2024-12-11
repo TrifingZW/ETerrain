@@ -41,8 +41,8 @@ public:
     void DrawUserPrimitives(
         GLenum mode,
         IVertexType* vertices,
-        int vertexOffset,
-        int vertexCount
+        size_t vertexOffset,
+        size_t vertexCount
     );
 
     void ApplyState();

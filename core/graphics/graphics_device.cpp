@@ -39,7 +39,7 @@ void GraphicsDevice::DrawIndexedPrimitives(
     // glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr, 1);
 }
 
-void GraphicsDevice::DrawUserPrimitives(const GLenum mode, IVertexType* vertices, const int vertexOffset, const int vertexCount)
+void GraphicsDevice::DrawUserPrimitives(const GLenum mode, IVertexType* vertices, const size_t vertexOffset, const size_t vertexCount)
 {
     ApplyState();
 

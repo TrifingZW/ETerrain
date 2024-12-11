@@ -21,7 +21,6 @@ GamePanel2D::GamePanel2D()
 GamePanel2D::~GamePanel2D()
 {
     delete shader;
-    delete colorUV;
     delete vertexInfo;
     delete hexManager;
     delete camera2d;
@@ -39,23 +38,7 @@ void GamePanel2D::Ready()
     binParser.Parse("world.bin");
     hexManager = new HexManager(binParser.GetWidth(), binParser.GetHeight(), 74.0f);
 
-    const auto data = new GLubyte[binParser.GetSize() * 4];
-    for (size_t y = 0; y < binParser.GetHeight(); y++)
-    {
-        for (size_t x = 0; x < binParser.GetWidth(); x++)
-        {
-            const size_t index = (y * binParser.GetWidth() + x) * 4;
-            data[index] = 255; // 红色通道
-            data[index + 1] = 0; // 绿色通道
-            data[index + 2] = 0; // 蓝色通道
-            data[index + 3] = binParser.topographies[y * binParser.GetWidth() + x].地块类型 == 1 ? 0 : 255; // alpha通道，完全不透明
-        }
-    }
-    colorUV = new Texture2D();
-    colorUV->Generate(binParser.GetHeight(), binParser.GetWidth());
-    colorUV->SetData(data);
-
-    vertexInfo = new HexVertexType((binParser.GetSize() * 6));
+    vertexInfo = new HexVertexType();
     GenerateOceanVertex();
 }
 
@@ -67,9 +50,6 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     Core::GetGraphicsDevice()->Clear();
 
     spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, SamplerState::LinearMirror);
-
-    Core::GetGraphicsDevice()->textures[1] = colorUV;
-    Core::GetGraphicsDevice()->samplerStates[1] = SamplerState::PointClamp;
 
     spriteBatch.Draw(
         Editor::loadResources->mapLand,
@@ -201,3 +181,4 @@ void GamePanel2D::GenerateOceanVertex() const
         }
     }
 }
+

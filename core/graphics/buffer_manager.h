@@ -53,7 +53,7 @@ public:
     }
 
     template<typename T>
-    void SetData(const T* data, const int memoryLength)
+    void SetData(const T* data, const size_t memoryLength)
     {
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, memoryLength, data, GL_DYNAMIC_DRAW);

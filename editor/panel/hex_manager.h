@@ -50,10 +50,9 @@ struct HexVertexData
 class HexVertexType final : public IVertexType
 {
 public:
-    int count{};
     std::vector<HexVertexData> PHexVertexData{};
+    std::vector<float> PHexVertexIndices{};
 
-    explicit HexVertexType(const int count): count(count) {}
     ~HexVertexType() override = default;
 
     VertexDeclaration GetVertexDeclaration() override
@@ -64,13 +63,14 @@ public:
         };
     }
 
-    int GetVertexCount() override { return count; }
-
+    size_t GetVertexCount() override { return PHexVertexData.size(); }
     void* GetVertexDataPtr() override { return PHexVertexData.data(); }
+    size_t GetVertexMemorySize() override { return sizeof(HexVertexData); }
+    size_t GetVertexDataMemorySize() override { return PHexVertexData.size() * sizeof(HexVertexData); };
 
-    int GetVertexMemorySize() override { return sizeof(HexVertexData); }
-
-    int GetDataMemorySize() override { return static_cast<int>(count * sizeof(HexVertexData)); };
+    size_t GetIndicesCount() override { return PHexVertexIndices.size(); };
+    void* GetIndicesDataPtr() override { return PHexVertexIndices.data(); };
+    size_t GetIndicesDataMemorySize() override { return PHexVertexIndices.size() * sizeof(float); };
 };
 
 class HexManager
