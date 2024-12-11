@@ -4,9 +4,7 @@
 
 #pragma once
 
-#include <stb_image.h>
-
-#include <stdexcept>
+#include <stb/stb_image.h>
 #include <string>
 
 #include "scene/resources/texture_2d.h"

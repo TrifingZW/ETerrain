@@ -3,10 +3,12 @@
 //
 
 #pragma once
+
 #include <glad/glad.h>
+
 #include "graphics_resource.h"
 
-class RenderTarget: public GraphicsResource
+class RenderTarget : public GraphicsResource
 {
 public:
     bool depth;

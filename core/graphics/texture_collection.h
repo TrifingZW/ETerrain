@@ -3,10 +3,10 @@
 //
 
 #pragma once
+
 #include <stdexcept>
 
 #include "scene/resources/texture_2d.h"
-
 
 class TextureCollection
 {

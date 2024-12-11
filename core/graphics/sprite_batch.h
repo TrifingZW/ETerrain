@@ -6,13 +6,11 @@
 
 #include <string>
 
+#include "scene/resources/texture_2d.h"
 #include "buffer_manager.h"
 #include "graphics_device.h"
 #include "graphics_enum.h"
 #include "graphics_structure.h"
-#include "glm/fwd.hpp"
-#include "glm/gtx/associated_min_max.hpp"
-#include "scene/resources/texture_2d.h"
 #include "graphics_resource.h"
 #include "sampler_state.h"
 

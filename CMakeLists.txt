@@ -17,62 +17,18 @@ include_directories(${CMAKE_BINARY_DIR})
 # 添加文件
 add_executable(ETerrain
         main.cpp
-        misc/fonts/font.h
-        core/Core.cpp
-        core/Core.h
-        core/editor.cpp
-        core/editor.h
-        core/Node.cpp
-        core/Node.h
-        core/scene/panel/game_panel_3D.cpp
-        core/scene/panel/game_panel_3D.h
-        core/nodes/load_resources.cpp
-        core/nodes/load_resources.h
-        core/btl_structure.h
-        core/parser/map_config_parser.cpp
-        core/parser/map_config_parser.h
-        core/parser/terrain_config_parser.cpp
-        core/parser/terrain_config_parser.h
-        core/parser/resource_texture_parser.cpp
-        core/parser/resource_texture_parser.h
-        core/scene/resources/shader.cpp
-        core/scene/resources/shader.h
-        core/scene/2d/camera_2d.cpp
-        core/scene/2d/camera_2d.h
-        core/scene/3d/camera_3d.cpp
-        core/scene/3d/camera_3d.h
-        core/math/transform_2d.cpp
-        core/math/transform_2d.h
-        core/math/transform_3d.cpp
-        core/math/transform_3d.h
-        core/scene/panel/game_panel_2d.cpp
-        core/scene/panel/game_panel_2d.h
-        core/scene/resources/texture_2d.cpp
-        core/scene/resources/texture_2d.h
-        core/scene/3d/node_3d.cpp
-        core/scene/3d/node_3d.h
-        core/scene/2d/node_2d.cpp
-        core/scene/2d/node_2d.h
-        core/graphics/sprite_batch.cpp
-        core/graphics/sprite_batch.h
+
+        # 渲染器后端
         core/graphics/graphics_device.cpp
         core/graphics/graphics_device.h
+        core/graphics/sprite_batch.cpp
+        core/graphics/sprite_batch.h
         core/graphics/buffer_manager.cpp
         core/graphics/buffer_manager.h
         core/graphics/render_target.cpp
         core/graphics/render_target.h
         core/graphics/graphics_structure.h
         core/graphics/graphics_enum.h
-        e_terrain.h
-        core/parser/btl_structure.h
-        core/parser/bin_parser.cpp
-        core/parser/bin_parser.h
-        core/scene/panel/hex_manager.cpp
-        core/scene/panel/hex_manager.h
-        core/scene/panel/hex_panel.cpp
-        core/scene/panel/hex_panel.h
-        core/math/math_funcs.h
-        core/helpers/helper.h
         core/graphics/sampler_state.cpp
         core/graphics/sampler_state.h
         core/graphics/graphics_resource.cpp
@@ -84,18 +40,81 @@ add_executable(ETerrain
         core/graphics/sampler_state_collection.h
         core/graphics/vertex_declaration.h
         core/graphics/vertex_type.h
+
+        # 核心
+        core/core.cpp
+        core/core.h
+
+        # 数学
+        core/math/transform_2d.cpp
+        core/math/transform_2d.h
+        core/math/transform_3d.cpp
+        core/math/transform_3d.h
+        core/math/math_funcs.h
+
+        # 场景
+        scene/node.cpp
+        scene/node.h
+        scene/2d/node_2d.cpp
+        scene/2d/node_2d.h
+        scene/2d/camera_2d.cpp
+        scene/2d/camera_2d.h
+        scene/3d/node_3d.cpp
+        scene/3d/node_3d.h
+        scene/3d/camera_3d.cpp
+        scene/3d/camera_3d.h
+        scene/resources/shader.cpp
+        scene/resources/shader.h
+        scene/resources/texture_2d.cpp
+        scene/resources/texture_2d.h
+
+        # 辅助函数
+        e_terrain.h
+        core/helpers/helper.h
+
+        # 编辑器
+        editor/editor.cpp
+        editor/editor.h
+        editor/load_resources.cpp
+        editor/load_resources.h
+        editor/panel/game_panel_2d.cpp
+        editor/panel/game_panel_2d.h
+        editor/panel/game_panel_3D.cpp
+        editor/panel/game_panel_3D.h
+        editor/panel/hex_manager.cpp
+        editor/panel/hex_manager.h
+        editor/panel/hex_panel.cpp
+        editor/panel/hex_panel.h
+        editor/parser/map_config_parser.cpp
+        editor/parser/map_config_parser.h
+        editor/parser/terrain_config_parser.cpp
+        editor/parser/terrain_config_parser.h
+        editor/parser/resource_texture_parser.cpp
+        editor/parser/resource_texture_parser.h
+        editor/parser/bin_parser.cpp
+        editor/parser/bin_parser.h
+        editor/parser/btl_structure.h
+
+        # 杂项
+        misc/fonts/font.h
 )
 
 # 设置核心件路径
 set(CORE_DIR ${CMAKE_SOURCE_DIR}/core)
+set(SCENE_DIR ${CMAKE_SOURCE_DIR}/scene)
+set(EDITOR_DIR ${CMAKE_SOURCE_DIR}/editor)
 # 设置模块路径
 set(MODULE_DIR ${CMAKE_SOURCE_DIR}/modules)
 # 设置第三方库路径
 set(THIRDPARTY_DIR ${CMAKE_SOURCE_DIR}/thirdparty)
 
 # 导入核心和第三方库文件夹
-include_directories(${CORE_DIR})
+target_include_directories(ETerrain PRIVATE ${CMAKE_SOURCE_DIR})
+#[[target_include_directories(ETerrain PRIVATE ${CORE_DIR})
+target_include_directories(ETerrain PRIVATE ${SCENE_DIR})
+target_include_directories(ETerrain PRIVATE ${EDITOR_DIR})]]
 #include_directories(${THIRDPARTY_DIR})
+
 # 导入glad
 include_directories(${THIRDPARTY_DIR}/glad/include)
 add_library(glad STATIC thirdparty/glad/src/glad.c)

@@ -7,6 +7,8 @@
 #include <windows.h>
 
 #define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+
 # ifdef BUILD_TIME
 #include "font.h"
 # endif
@@ -16,7 +18,7 @@
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
-#include "core.h"
+#include "core/core.h"
 
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间

@@ -5,10 +5,10 @@
 #pragma once
 
 #include <glad/glad.h>
+
+#include "scene/resources/shader.h"
 #include "buffer_manager.h"
 #include "render_target.h"
-#include "glm/detail/func_packing_simd.inl"
-#include "scene/resources/shader.h"
 #include "graphics_resource.h"
 #include "sampler_state_collection.h"
 #include "texture_collection.h"

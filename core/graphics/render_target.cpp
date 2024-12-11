@@ -6,7 +6,6 @@
 
 #include <iostream>
 
-#include "core.h"
 #include "graphics_device.h"
 
 RenderTarget::RenderTarget(const int width, const int height, const bool depth): depth(depth), width(width), height(height)
@@ -32,8 +31,9 @@ RenderTarget::RenderTarget(const int width, const int height, const bool depth):
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cerr << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 
-    Core::GetGraphicsDevice()->ResetRenderTarget();
-    Core::GetGraphicsDevice()->ResetTexture();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 RenderTarget::~RenderTarget()
@@ -84,6 +84,7 @@ void RenderTarget::Reinitialize(const int width, const int height, const bool de
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureBuffer, 0);
 
     // 重置设备状态
-    Core::GetGraphicsDevice()->ResetRenderTarget();
-    Core::GetGraphicsDevice()->ResetTexture();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

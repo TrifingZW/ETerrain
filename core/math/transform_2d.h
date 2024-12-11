@@ -7,10 +7,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-class Transform2D {
-    glm::vec2 position;  // 位置
-    float rotation;      // 旋转角度（单位：弧度）
-    glm::vec2 scale;     // 缩放比例
+class Transform2D
+{
+    glm::vec2 position; // 位置
+    float rotation; // 旋转角度（单位：弧度）
+    glm::vec2 scale; // 缩放比例
 
 public:
     // 构造函数
@@ -22,13 +23,13 @@ public:
     [[nodiscard]] glm::vec2 GetScale() const;
 
     // Setters
-    void SetPosition(const glm::vec2 &pos);
+    void SetPosition(const glm::vec2& pos);
     void SetRotation(float rot);
-    void SetScale(const glm::vec2 &scl);
+    void SetScale(const glm::vec2& scl);
 
     // 工具方法
     [[nodiscard]] glm::mat3 GetMatrix() const;
-    void Translate(const glm::vec2 &delta);
+    void Translate(const glm::vec2& delta);
     void Rotate(float delta);
-    void ScaleBy(const glm::vec2 &factor);
+    void ScaleBy(const glm::vec2& factor);
 };

@@ -8,7 +8,7 @@
 #include <utility>
 
 #include "glm/ext/matrix_transform.hpp"
-#include "math/math_funcs.h"
+#include "core/math/math_funcs.h"
 
 using namespace Graphics;
 

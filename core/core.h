@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "editor.h"
+#include "editor/editor.h"
 #include "graphics/graphics_device.h"
 #include "graphics/sprite_batch.h"
 

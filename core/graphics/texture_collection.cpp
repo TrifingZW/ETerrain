@@ -6,5 +6,5 @@
 
 TextureCollection::TextureCollection(const int slots): slots(slots)
 {
-    textures = new Texture2D*[slots]();
+    textures = new Texture2D *[slots]();
 }

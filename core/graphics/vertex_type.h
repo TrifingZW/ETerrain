@@ -3,6 +3,7 @@
 //
 
 #pragma once
+
 #include "vertex_declaration.h"
 
 class IVertexType

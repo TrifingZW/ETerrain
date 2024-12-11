@@ -3,7 +3,6 @@
 //
 
 #include "transform_3d.h"
-#include <glm/gtx/quaternion.hpp>
 
 using namespace glm;
 

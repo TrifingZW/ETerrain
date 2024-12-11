@@ -3,10 +3,10 @@
 //
 
 #pragma once
+
 #include <stdexcept>
 
 #include "sampler_state.h"
-
 
 class SamplerStateCollection
 {

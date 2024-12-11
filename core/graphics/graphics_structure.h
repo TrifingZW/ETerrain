@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "glm/vec2.hpp"
-#include "glm/vec4.hpp"
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 struct Rect
 {
@@ -35,4 +35,3 @@ struct PositionTexture4
 
     static constexpr PositionTexture4 Default() { return {}; }
 };
-

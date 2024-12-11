@@ -3,10 +3,7 @@
 //
 
 #include "graphics_device.h"
-
 #include "graphics_helper.h"
-#include "glm/gtx/associated_min_max.hpp"
-#include "glm/gtx/string_cast.hpp"
 
 using namespace Graphics;
 

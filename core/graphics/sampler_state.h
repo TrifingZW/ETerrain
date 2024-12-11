@@ -3,9 +3,9 @@
 //
 
 #pragma once
+
 #include "graphics_enum.h"
 #include "graphics_resource.h"
-
 
 class SamplerState : public GraphicsResource
 {
@@ -30,4 +30,3 @@ public:
     static const SamplerState PointWrap;
     static const SamplerState PointMirror;
 };
-

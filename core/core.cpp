@@ -4,8 +4,6 @@
 
 #include "core.h"
 
-#include <random>
-
 GraphicsDevice* Core::_graphicsDevice = nullptr;
 SpriteBatch* Core::_spriteBatch = nullptr;
 
@@ -15,7 +13,8 @@ Core::~Core()
     delete _graphicsDevice;
 }
 
-Core& Core::Instance() {
+Core& Core::Instance()
+{
     static Core core;
     return core;
 }
