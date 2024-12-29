@@ -77,7 +77,6 @@ void initImGui(GLFWwindow* window, const char* glsl_version)
     large_font = ADD_FONT_FROM_MEMORY_TTF(io, 24.0f, &font_cfg);
 #endif
 
-    ImGui::StyleColorsDark(); // 使用暗色主题
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 }

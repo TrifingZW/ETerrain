@@ -31,7 +31,7 @@ Editor::~Editor()
 
 void Editor::Gui()
 {
-    static ImGuiDockNodeFlags docks_pace_flags = ImGuiDockNodeFlags_None;
+    ImGuiDockNodeFlags docks_pace_flags = ImGuiDockNodeFlags_None;
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 
     // 全屏
