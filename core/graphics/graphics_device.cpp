@@ -7,7 +7,7 @@
 
 using namespace Graphics;
 
-GraphicsDevice::GraphicsDevice() {}
+GraphicsDevice::GraphicsDevice() = default;
 
 void GraphicsDevice::SetRenderTarget(RenderTarget* renderTarget)
 {
@@ -39,11 +39,11 @@ void GraphicsDevice::DrawIndexedPrimitives(
     // glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr, 1);
 }
 
-void GraphicsDevice::DrawUserPrimitives(const GLenum mode, IVertexType* vertices, const size_t vertexOffset, const size_t vertexCount)
+void GraphicsDevice::DrawUserPrimitives(const GLenum mode, IVertexType* vertexType, const size_t vertexOffset, const size_t vertexCount)
 {
     ApplyState();
 
-    _userBufferManager.SetData(vertices->GetVertexDataPtr(), vertices->GetVertexMemorySize() * vertexCount);
+    _userBufferManager.SetData(nullptr, vertexType->GetVertexDataPtr(), vertexType->GetVertexMemorySize() * vertexCount);
     _userBufferManager.Apply();
 
     // 计算图形的数量
@@ -60,12 +60,32 @@ void GraphicsDevice::DrawUserPrimitives(const GLenum mode, IVertexType* vertices
         count[i] = 6; // 每个图形有 6 个顶点
     }
 
-    ApplyAttribPointer(vertices->GetVertexDeclaration());
+    ApplyAttribPointer(vertexType->GetVertexDeclaration());
     glMultiDrawArrays(mode, first, count, drawCount);
 
     // 释放内存
     delete[] first;
     delete[] count;
+}
+
+void GraphicsDevice::DrawUserPrimitivesIndexed(const GLenum mode, IVertexType* vertexType)
+{
+    ApplyState();
+
+    _userBufferManager.SetData(nullptr, vertexType->GetVertexDataPtr(), vertexType->GetVertexDataMemorySize());
+    _userBufferManager.SetIndexPointerEXT(nullptr, vertexType->GetIndicesDataPtr(), static_cast<GLsizei>(vertexType->GetIndicesDataMemorySize()));
+    _userBufferManager.Apply();
+
+    ApplyAttribPointer(vertexType->GetVertexDeclaration());
+
+    glDrawElementsInstanced(mode, 6, GL_UNSIGNED_SHORT, nullptr, 3);
+}
+
+void GraphicsDevice::DrawUserPrimitivesIndexed(const GLenum mode, const BufferManager* bufferManager, const int count, const int instanceCount)
+{
+    ApplyState();
+    glBindVertexArray(bufferManager->VAO);
+    glDrawArraysInstanced(mode, 0, count, instanceCount);
 }
 
 void GraphicsDevice::ApplyState()

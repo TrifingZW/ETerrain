@@ -50,9 +50,12 @@ BufferManager::BufferManager(
 
 BufferManager::~BufferManager()
 {
-    glDeleteVertexArrays(0, &VAO);
-    glDeleteBuffers(0, &VBO);
-    glDeleteBuffers(0, &EBO);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+
+    for (const auto& [name, id]: _buffers)
+        glDeleteBuffers(1, &id);
 }
 
 void BufferManager::Apply() const
@@ -60,6 +63,67 @@ void BufferManager::Apply() const
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+}
+
+void BufferManager::BindBuffer(const char* name)
+{
+    if (name)
+    {
+        if (const auto it = _buffers.find(name); it != _buffers.end())
+            glBindBuffer(GL_ARRAY_BUFFER, it->second); // 确保我们按名称绑定正确的缓冲区
+    }
+    else
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    }
+}
+
+void BufferManager::AddBuffer(const char* name, const GLenum type)
+{
+    GLuint buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(type, buffer);
+    _buffers[name] = buffer;
+    glBindBuffer(type, 0); // 创建缓冲区后立即解除绑定
+}
+
+void BufferManager::DeleteBuffer(const char* name)
+{
+    glDeleteBuffers(0, &_buffers[name]);
+    _buffers.erase(name);
+}
+
+void BufferManager::SetAttribute(const char* name, const int index, const int size, const int stride, const int offset, const int divisor)
+{
+    glBindVertexArray(VAO);
+    BindBuffer(name);
+    glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void *>(offset));
+    glEnableVertexAttribArray(index);
+    if (divisor != 0)
+        glVertexAttribDivisor(index, divisor);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void BufferManager::SetData(const char* name, const void* data, const size_t memoryLength)
+{
+    BindBuffer(name);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(memoryLength), data, GL_DYNAMIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void BufferManager::SetIndexPointerEXT(const char* name, const void* indices, const GLsizeiptr size)
+{
+    if (name)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffers[name]);
+    else
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices,GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 /*
@@ -98,12 +162,3 @@ void BufferManager::SetDataPointerEXT(
 
     Core::GetGraphicsDevice()->ResetBuffer();
 }*/
-
-
-void BufferManager::SetIndexPointerEXT(const short* indices, const GLsizeiptr size) const
-{
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices,GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}

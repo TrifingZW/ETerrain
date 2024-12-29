@@ -12,7 +12,7 @@ struct VertexElement
     int Type;
     bool Normalized;
 
-    VertexElement(): Index(0), Offset(0), Size(0), Type(0), Normalized(false) {};
+    VertexElement(): Index(0), Offset(0), Size(0), Type(0), Normalized(false) {}
 
     VertexElement(const int usageIndex, const int offset, const int size, const int type, const bool normalized = false)
         : Index(usageIndex), Offset(offset), Size(size), Type(type), Normalized(normalized) {}

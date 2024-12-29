@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -27,7 +28,7 @@ public:
 
     explicit ResourceTextureParser(std::string filePath);
 
-    Rect GetRect(const std::string& imageName);
+    std::optional<Rect> GetRect(const std::string& imageName);
     static Rect GetRect(const Image& image);
     [[nodiscard]] std::vector<float> GetVertices(const std::string& imageName);
 

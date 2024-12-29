@@ -33,6 +33,7 @@ public:
 
     void SetRenderTarget(RenderTarget* renderTarget);
     void SetBufferManager(BufferManager* bufferManager);
+
     void DrawIndexedPrimitives(
         GLenum mode,
         int baseVertex,
@@ -40,9 +41,19 @@ public:
     );
     void DrawUserPrimitives(
         GLenum mode,
-        IVertexType* vertices,
+        IVertexType* vertexType,
         size_t vertexOffset,
         size_t vertexCount
+    );
+    void DrawUserPrimitivesIndexed(
+        GLenum mode,
+        IVertexType* vertexType
+    );
+    void DrawUserPrimitivesIndexed(
+        GLenum mode,
+        const BufferManager* bufferManager,
+        int count,
+        int instanceCount
     );
 
     void ApplyState();

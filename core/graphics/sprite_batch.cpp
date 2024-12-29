@@ -15,7 +15,7 @@ using namespace Graphics;
 SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphicsDevice)
 {
     GenerateIndexArray(_indices);
-    _bufferManager.SetIndexPointerEXT(_indices, MAX_INDICES_SIZE);
+    _bufferManager.SetIndexPointerEXT(nullptr,_indices, MAX_INDICES_SIZE);
 }
 
 SpriteBatch::~SpriteBatch() {}

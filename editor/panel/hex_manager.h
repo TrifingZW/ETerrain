@@ -33,11 +33,11 @@ namespace HexMetrics
 
     constexpr glm::vec3 Corners[] = {
         glm::vec3(-OuterRadius, 0.0f, 0.0f),
-        glm::vec3(-0.5f * OuterRadius, InnerRadius, 0.0f),
-        glm::vec3(0.5f * OuterRadius, InnerRadius, 0.0f),
-        glm::vec3(OuterRadius, 0.0f, 0.0f),
-        glm::vec3(0.5f * OuterRadius, -InnerRadius, 0.0f),
         glm::vec3(-0.5f * OuterRadius, -InnerRadius, 0.0f),
+        glm::vec3(0.5f * OuterRadius, -InnerRadius, 0.0f),
+        glm::vec3(OuterRadius, 0.0f, 0.0f),
+        glm::vec3(0.5f * OuterRadius, InnerRadius, 0.0f),
+        glm::vec3(-0.5f * OuterRadius, InnerRadius, 0.0f),
     };
 }
 
@@ -51,7 +51,8 @@ class HexVertexType final : public IVertexType
 {
 public:
     std::vector<HexVertexData> PHexVertexData{};
-    std::vector<float> PHexVertexIndices{};
+    std::vector<short> PLineHexVertexIndices{};
+    std::vector<float> PSeaHexVertexIndices{};
 
     ~HexVertexType() override = default;
 
@@ -68,9 +69,9 @@ public:
     size_t GetVertexMemorySize() override { return sizeof(HexVertexData); }
     size_t GetVertexDataMemorySize() override { return PHexVertexData.size() * sizeof(HexVertexData); };
 
-    size_t GetIndicesCount() override { return PHexVertexIndices.size(); };
-    void* GetIndicesDataPtr() override { return PHexVertexIndices.data(); };
-    size_t GetIndicesDataMemorySize() override { return PHexVertexIndices.size() * sizeof(float); };
+    size_t GetIndicesCount() override { return PLineHexVertexIndices.size(); };
+    void* GetIndicesDataPtr() override { return PLineHexVertexIndices.data(); };
+    size_t GetIndicesDataMemorySize() override { return PLineHexVertexIndices.size() * sizeof(short); };
 };
 
 class HexManager

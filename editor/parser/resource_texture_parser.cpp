@@ -21,14 +21,18 @@ ResourceTextureParser::ResourceTextureParser(std::string filePath): FilePath(std
     loadTexture();
 }
 
-Rect ResourceTextureParser::GetRect(const std::string& imageName)
+std::optional<Rect> ResourceTextureParser::GetRect(const std::string& imageName)
 {
     const auto image = std::find_if(
         Images.begin(),
         Images.end(),
         [imageName](const Image& item) { return item.Name == imageName; }
     );
-    return GetRect(*image);
+
+    if (image == Images.end())
+        return std::nullopt; // 如果没有找到，返回空值
+
+    return GetRect(*image); // 找到时返回实际的 Rect
 }
 
 Rect ResourceTextureParser::GetRect(const Image& image)

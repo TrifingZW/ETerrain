@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <map>
 #include <glad/glad.h>
 
 #include "graphics_enum.h"
@@ -14,6 +15,7 @@ class BufferManager : public GraphicsResource
     GLsizeiptr _vertexSize{}, _indexSize{};
 
 public:
+    std::map<std::string, GLuint> _buffers;
     GLuint VAO{}, VBO{}, EBO{};
 
     BufferManager();
@@ -21,6 +23,10 @@ public:
     ~BufferManager();
 
     void Apply() const;
+    void BindBuffer(const char* name = nullptr);
+    void AddBuffer(const char* name, GLenum type);
+    void DeleteBuffer(const char* name);
+    void SetAttribute(const char* name, int index, int size, int stride, int offset, int divisor = 0);
 
     template<typename T>
     void SetDataPointerEXT(const int offset, const T* data, const int count, const Graphics::SetDataOptions options) const
@@ -52,14 +58,6 @@ public:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    template<typename T>
-    void SetData(const T* data, const size_t memoryLength)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, memoryLength, data, GL_DYNAMIC_DRAW);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
-
-    void SetIndexPointerEXT(const short* indices, GLsizeiptr size) const;
+    void SetData(const char* name, const void* data, size_t memoryLength);
+    void SetIndexPointerEXT(const char* name, const void* indices, GLsizeiptr size);
 };

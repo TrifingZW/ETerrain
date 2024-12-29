@@ -97,6 +97,8 @@ add_executable(ETerrain
 
         # 杂项
         misc/fonts/font.h
+        editor/world/land_unit.cpp
+        editor/world/land_unit.h
 )
 
 # 设置核心件路径
