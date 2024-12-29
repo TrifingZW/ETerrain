@@ -6,7 +6,6 @@
 
 #include <imgui.h>
 #include <iostream>
-#include <GLFW/glfw3.h>
 #include <glm/fwd.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.inl>
@@ -47,7 +46,7 @@ void GamePanel3D::Rendering(SpriteBatch& spriteBatch)
     Core::GetGraphicsDevice()->Clear();
     // glEnable(GL_DEPTH_TEST);
 
-    mat4 transform = rotate(translate(mat4(1.0f), vec3(0.5f, -0.5f, 0.0f)), static_cast<float>(glfwGetTime()), vec3(0.0f, 1.0f, 1.0f));
+    mat4 transform = rotate(translate(mat4(1.0f), vec3(0.5f, -0.5f, 0.0f)), 0.0f, vec3(0.0f, 1.0f, 1.0f));
     shader.Apply();
     shader.SetInt("texture1", 0);
     shader.SetInt("texture2", 1);

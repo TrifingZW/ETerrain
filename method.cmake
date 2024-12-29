@@ -1,3 +1,22 @@
+function(LoadPlatformDependencies)
+
+    # 当平台为 Windows 时，导入 glfw，当平台为 Android 时，导入 Android 相关库和文件夹并链接
+    if (PLATFORM STREQUAL "windows")
+        include_directories(${THIRDPARTY_DIR}/glfw/include)
+        target_link_libraries(ETerrain PRIVATE ${THIRDPARTY_DIR}/glfw/lib-vc2022/glfw3.lib)
+    elseif (PLATFORM STREQUAL "android")
+        target_include_directories(ETerrain PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
+        target_sources(ETerrain PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
+        target_link_libraries(ETerrain PRIVATE
+                android
+                EGL
+                GLESv3
+                log
+        )
+    endif ()
+
+endfunction()
+
 function(LoadModules)
 
     # 用于存储所有模块生成的目标
@@ -26,7 +45,7 @@ function(LoadModules)
     endforeach ()
 
     # 将模块库链接到主项目
-    target_link_libraries(ETerrain ${ALL_MODULE_LIBS})
+    target_link_libraries(ETerrain PRIVATE ${ALL_MODULE_LIBS})
 
 endfunction()
 
@@ -36,8 +55,8 @@ function(LoadImGui)
     set(DIR ${THIRDPARTY_DIR}/imgui)
 
     # 导入头文件所在目录
-    include_directories(${DIR})
-    include_directories(${DIR}/backends)
+    target_include_directories(imgui PUBLIC ${DIR})
+    target_include_directories(imgui PUBLIC ${DIR}/backends)
 
     # 源文件列表
     set(MODULE_SOURCES
@@ -51,15 +70,14 @@ function(LoadImGui)
 
     # 判断平台
     if (PLATFORM STREQUAL "windows")
-
         list(APPEND MODULE_SOURCES ${DIR}/backends/imgui_impl_glfw.cpp)
-
     elseif (PLATFORM STREQUAL "android")
-
+        target_compile_definitions(ETerrain PRIVATE IMGUI_IMPL_OPENGL_ES3)
+        list(APPEND MODULE_SOURCES ${DIR}/backends/imgui_impl_android.cpp)
     endif ()
 
     target_sources(imgui PRIVATE ${MODULE_SOURCES})
-    target_link_libraries(ETerrain imgui)
+    target_link_libraries(ETerrain PRIVATE imgui)
 
 endfunction()
 
@@ -69,20 +87,20 @@ function(LoadPugixml)
     set(DIR ${THIRDPARTY_DIR}/pugixml/src)
 
     # 导入头文件所在目录
-    include_directories(${DIR})
+    target_include_directories(ETerrain PRIVATE ${DIR})
 
     # 源文件列表
     set(MODULE_SOURCES ${DIR}/pugixml.cpp)
 
     target_sources(pugixml PRIVATE ${MODULE_SOURCES})
-    target_link_libraries(ETerrain pugixml)
+    target_link_libraries(ETerrain PRIVATE pugixml)
 
 endfunction()
 
 function(LoadStb)
 
     set(DIR ${THIRDPARTY_DIR}/stb)
-    include_directories(${DIR})
+    target_include_directories(ETerrain PRIVATE ${DIR})
     #    add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
 
 endfunction()
@@ -91,7 +109,7 @@ function(LoadFont)
 
     # 定义字体文件路径
     set(FONT_DIR ${CMAKE_SOURCE_DIR}/misc/fonts)
-    include_directories(${FONT_DIR})
+    target_include_directories(ETerrain PRIVATE ${FONT_DIR})
     set(FONT_SOURCE ${FONT_DIR}/HarmonyOS_Sans_SC_Bold.ttf)
     set(FONT_HEADER ${CMAKE_BINARY_DIR}/harmony_os_sans_sc_bold.h)
 
@@ -116,7 +134,7 @@ function(LoadShader ShaderName)
     # 设置依赖关系，确保当 GLSL 文件更改时强制更新
     set(SHADER_DEPENDENCIES "misc/glsl/${ShaderName}.vsh" "misc/glsl/${ShaderName}.fsh")
 
-    # 生成shader头文件
+    # 生成 shader 头文件
     configure_file(misc/glsl/shader_template.h.in ${ShaderName}_shader.h)
 
     # 设置 shader 文件为依赖，确保在文件修改时重新生成

@@ -1,21 +1,32 @@
 cmake_minimum_required(VERSION 3.29)
-project(ETerrain)
+set(PLATFORM "android")
 
+# 为平台设置工具链和参数并定义宏
+if (PLATFORM STREQUAL "windows")
+    add_definitions(-DPLATFORM_WINDOWS)
+elseif (PLATFORM STREQUAL "android")
+    add_definitions(-DPLATFORM_ANDROID)
+    set(ANDROID_NDK "C:/Users/TrifingZW/AppData/Local/Android/Sdk/ndk/27.2.12479018")
+    set(CMAKE_TOOLCHAIN_FILE "${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
+    set(ANDROID_ABI "arm64-v8a")
+    set(ANDROID_NATIVE_API_LEVEL 21)
+    set(ANDROID_STL c++_static)
+endif ()
+
+project(ETerrain)
 # 设置 C++ 标准
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 # 设置二进制文件输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
 # 导入方法
 include(method.cmake)
 
 #add_definitions(-DBUILD_TIME)
-set(PLATFORM "windows")
 
-# 包含生成的头文件路径，只在构建时包含
-include_directories(${CMAKE_BINARY_DIR})
-
-# 添加文件
-add_executable(ETerrain
+# 定义并添加源文件
+set(SOURCE_FILES
         main.cpp
 
         # 渲染器后端
@@ -94,12 +105,17 @@ add_executable(ETerrain
         editor/parser/bin_parser.cpp
         editor/parser/bin_parser.h
         editor/parser/btl_structure.h
+        editor/world/land_unit.cpp
+        editor/world/land_unit.h
 
         # 杂项
         misc/fonts/font.h
-        editor/world/land_unit.cpp
-        editor/world/land_unit.h
 )
+if (PLATFORM STREQUAL "windows")
+    add_executable(ETerrain ${SOURCE_FILES})
+elseif (PLATFORM STREQUAL "android")
+    add_library(ETerrain SHARED ${SOURCE_FILES})
+endif ()
 
 # 设置核心件路径
 set(CORE_DIR ${CMAKE_SOURCE_DIR}/core)
@@ -110,6 +126,8 @@ set(MODULE_DIR ${CMAKE_SOURCE_DIR}/modules)
 # 设置第三方库路径
 set(THIRDPARTY_DIR ${CMAKE_SOURCE_DIR}/thirdparty)
 
+# 包含生成的头文件路径，只在构建时包含
+target_include_directories(ETerrain PRIVATE ${CMAKE_BINARY_DIR})
 # 导入核心和第三方库文件夹
 target_include_directories(ETerrain PRIVATE ${CMAKE_SOURCE_DIR})
 #[[target_include_directories(ETerrain PRIVATE ${CORE_DIR})
@@ -118,20 +136,18 @@ target_include_directories(ETerrain PRIVATE ${EDITOR_DIR})]]
 #include_directories(${THIRDPARTY_DIR})
 
 # 导入glad
-include_directories(${THIRDPARTY_DIR}/glad/include)
 add_library(glad STATIC thirdparty/glad/src/glad.c)
-target_link_libraries(ETerrain glad)
-# 导入glfw
-include_directories(${THIRDPARTY_DIR}/glfw/include)
-target_link_libraries(ETerrain ${THIRDPARTY_DIR}/glfw/lib-vc2022/glfw3.lib)
+target_include_directories(glad PUBLIC ${THIRDPARTY_DIR}/glad/include)
+target_link_libraries(ETerrain PRIVATE glad)
+
 # 导入glm
 set(GLM_BUILD_LIBRARY ON)
 add_definitions(-DGLM_BUILD_LIBRARY)
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 add_subdirectory(${THIRDPARTY_DIR}/glm)
-target_link_libraries(ETerrain glm::glm)
+target_link_libraries(ETerrain PRIVATE glm::glm)
 
-
+LoadPlatformDependencies()
 LoadModules()
 LoadImGui()
 LoadPugixml()

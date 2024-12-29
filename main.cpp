@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <ostream>
 #include <iostream>
-#include <windows.h>
+// #include <windows.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -13,34 +13,39 @@
 #include "font.h"
 # endif
 
-#define GLFW_EXPOSE_NATIVE_WIN32
 #include <glad/glad.h>
+
+#ifdef PLATFORM_WINDOWS
+#define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
+#endif
 
 #include "core/core.h"
+#include <android_native_app_glue.h>
 
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间
 ImFont* large_font = nullptr; // 定义全局字体指针
 constexpr auto clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+/*
 // 创建窗口
-GLFWwindow* getGLFWWindow()
+GLFWwindow* GetGlfwWindow()
 {
     static GLFWwindow* window = glfwCreateWindow(1280, 720, "ETerrain", nullptr, nullptr);
     return window;
 }
 
 // 处理错误信息
-void glfwErrorCallback(const int error, const char* description)
+void GlfwErrorCallback(const int error, const char* description)
 {
     const int result = fprintf(stderr, "GLFW Error %d: %s\n", error, description);
     std::cout << result << '\n';
 }
 
 // 获取系统 DPI 缩放
-float getDpiScaleForWindow(HWND hwnd)
+float GetDpiScaleForWindow(HWND hwnd)
 {
     const UINT dpi = GetDpiForWindow(hwnd);
     constexpr UINT default_dpi = 96; // 标准 DPI 值为 96
@@ -48,13 +53,13 @@ float getDpiScaleForWindow(HWND hwnd)
 }
 
 // 设置所有控件的缩放
-void applyDpiScale(const float dpi_scale)
+void ApplyDpiScale(const float dpi_scale)
 {
     ImGui::GetStyle().ScaleAllSizes(dpi_scale);
 }
 
 // 初始化 Dear ImGui
-void initImGui(GLFWwindow* window, const char* glsl_version)
+void InitImGui(GLFWwindow* window, const char* glsl_version)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -66,8 +71,8 @@ void initImGui(GLFWwindow* window, const char* glsl_version)
 
     // 设置dpi为系统dpi
     HWND hwnd = glfwGetWin32Window(window);
-    const float dpi_scale = getDpiScaleForWindow(hwnd);
-    applyDpiScale(dpi_scale);
+    const float dpi_scale = GetDpiScaleForWindow(hwnd);
+    ApplyDpiScale(dpi_scale);
 
     // 加载字体
 #ifdef BUILD_TIME
@@ -82,7 +87,7 @@ void initImGui(GLFWwindow* window, const char* glsl_version)
 }
 
 // 渲染 ImGui 内容
-void renderImGui()
+void RenderImGui()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -95,7 +100,7 @@ void renderImGui()
 }
 
 // 渲染 OpenGL 内容
-void renderOpenGL()
+void RenderOpenGl()
 {
     glClearColor(1.0f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -103,7 +108,7 @@ void renderOpenGL()
 }
 
 // 退出程序时清理
-void clear(GLFWwindow* window)
+void Shutdown(GLFWwindow* window)
 {
     // 清理资源
     ImGui_ImplOpenGL3_Shutdown();
@@ -116,7 +121,7 @@ void clear(GLFWwindow* window)
 int main(int, char**)
 {
     // 初始化 GLFW
-    glfwSetErrorCallback(glfwErrorCallback);
+    glfwSetErrorCallback(GlfwErrorCallback);
     if (!glfwInit()) return 1;
 
     const auto glsl_version = "#version 130";
@@ -139,7 +144,7 @@ int main(int, char**)
     }
 
     // 初始化 OpenGL 和 ImGui 和 Core
-    initImGui(window, glsl_version);
+    InitImGui(window, glsl_version);
     Core::Instance().InitTree();
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -164,8 +169,8 @@ int main(int, char**)
         }
 
         // 渲染 OpenGL 和 ImGui 内容
-        renderOpenGL();
-        renderImGui();
+        RenderOpenGl();
+        RenderImGui();
 
         // 交换缓冲区
         glfwSwapBuffers(window);
@@ -174,6 +179,12 @@ int main(int, char**)
             std::cerr << "GL_ERROR:" << status << std::endl;
     }
 
-    clear(window);
+    Shutdown(window);
     return 0;
+}
+*/
+
+void android_main(struct android_app* app)
+{
+
 }
