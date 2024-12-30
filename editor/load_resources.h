@@ -14,8 +14,8 @@ class LoadResources : public Node
 public:
     MapConfigParser mapConfigParser{};
     TerrainConfigParser terrainConfigParser{};
-    ResourceTextureParser plantResourceTextureParser = ResourceTextureParser("assets/plant_hd");
-    ResourceTextureParser terrainResourceTextureParser = ResourceTextureParser("assets/terrain_hd");
+    ResourceTextureParser plantResourceTextureParser = ResourceTextureParser("plant_hd");
+    ResourceTextureParser terrainResourceTextureParser = ResourceTextureParser("terrain_hd");
 
     Texture2D* mapLand = new Texture2D();
     Texture2D* mapSea = new Texture2D();

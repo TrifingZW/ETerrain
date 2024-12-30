@@ -1,10 +1,25 @@
 function(LoadPlatformDependencies)
+    add_library(platform STATIC)
+    set(PLATFORM_SOURCES)
 
     # 当平台为 Windows 时，导入 glfw，当平台为 Android 时，导入 Android 相关库和文件夹并链接
     if (PLATFORM STREQUAL "windows")
+        set(DIR ${PLATFORM_DIR}/windows)
+        list(APPEND PLATFORM_SOURCES
+                ${DIR}/placeholder_class.cpp
+                ${DIR}/placeholder_class.h
+        )
+
         include_directories(${THIRDPARTY_DIR}/glfw/include)
         target_link_libraries(ETerrain PRIVATE ${THIRDPARTY_DIR}/glfw/lib-vc2022/glfw3.lib)
+
     elseif (PLATFORM STREQUAL "android")
+        set(DIR ${PLATFORM_DIR}/android)
+        list(APPEND PLATFORM_SOURCES
+                ${DIR}/android_out.cpp
+                ${DIR}/android_out.h
+        )
+
         target_include_directories(ETerrain PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
         target_sources(ETerrain PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
         target_link_libraries(ETerrain PRIVATE
@@ -15,6 +30,8 @@ function(LoadPlatformDependencies)
         )
     endif ()
 
+    target_sources(platform PRIVATE ${PLATFORM_SOURCES})
+    target_link_libraries(ETerrain PRIVATE platform)
 endfunction()
 
 function(LoadModules)

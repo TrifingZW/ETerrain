@@ -1,0 +1,249 @@
+<terrains>
+    <terrain name="平原" terrain="0" type="0" layerlowerdoodad="false" layerupperdoodad="false">
+        <tile idx="0"/>
+    </terrain>
+    <terrain name="" terrain="1" type="1" layerlowerdoodad="false" layerupperdoodad="false">
+        <tile idx="0"/>
+        <tile idx="1"/>
+    </terrain>
+    <terrain name="沙漠" terrain="2" type="2">
+        <tile idx="0" image="desert_1.png"/>
+        <tile idx="1" image="desert_2.png"/>
+        <tile idx="2" image="desert_3.png"/>
+        <tile idx="3" image="desert_4.png"/>
+        <tile idx="4" image="desert_5.png"/>
+        <tile idx="5" image="desert_6.png"/>
+        <tile idx="6" image="desert_7.png"/>
+        <tile idx="7" image="desert_8.png"/>
+        <tile idx="8" image="desert_9.png"/>
+    </terrain>
+    <terrain name="雪山-" terrain="3" type="3">
+        <tile idx="0" image="l1_mountain_1.png"/>
+        <tile idx="1" image="l1_mountain_2.png"/>
+        <tile idx="2" image="l1_mountain_3.png"/>
+        <tile idx="3" image="l1_mountain_4.png"/>
+        <tile idx="4" image="l1_mountain_5.png"/>
+        <tile idx="5" image="l1_mountain_6.png"/>
+        <tile idx="6" image="l1_mountain_7.png"/>
+        <tile idx="7" image="l1_mountain_8.png"/>
+        <tile idx="8" image="l1_mountain_9.png"/>
+        <tile idx="9" image="l1_mountain_10.png"/>
+        <tile idx="10" image="l1_mountain_11.png"/>
+    </terrain>
+    <terrain name="雪山-" terrain="4" type="4">
+        <tile idx="0" image="m1_mountain_1.png"/>
+        <tile idx="1" image="m1_mountain_2.png"/>
+        <tile idx="2" image="m1_mountain_3.png"/>
+        <tile idx="3" image="m1_mountain_4.png"/>
+        <tile idx="4" image="m1_mountain_5.png"/>
+        <tile idx="5" image="m1_mountain_6.png"/>
+        <tile idx="6" image="m1_mountain_7.png"/>
+        <tile idx="7" image="m1_mountain_8.png"/>
+        <tile idx="8" image="m1_mountain_9.png"/>
+        <tile idx="9" image="m1_mountain_10.png"/>
+        <tile idx="10" image="m1_mountain_11.png"/>
+    </terrain>
+    <terrain name="雪山-" terrain="5" type="5">
+        <tile idx="0" image="h1_mountain_1.png"/>
+        <tile idx="1" image="h1_mountain_2.png"/>
+        <tile idx="2" image="h1_mountain_3.png"/>
+        <tile idx="3" image="h1_mountain_4.png"/>
+        <tile idx="4" image="h1_mountain_5.png"/>
+    </terrain>
+
+    <terrain name="山-" terrain="6" type="3">
+        <tile idx="0" image="l2_mountain_1.png"/>
+        <tile idx="1" image="l2_mountain_2.png"/>
+        <tile idx="2" image="l2_mountain_3.png"/>
+        <tile idx="3" image="l2_mountain_4.png"/>
+        <tile idx="4" image="l2_mountain_5.png"/>
+        <tile idx="5" image="l2_mountain_6.png"/>
+        <tile idx="6" image="l2_mountain_7.png"/>
+        <tile idx="7" image="l2_mountain_8.png"/>
+        <tile idx="8" image="l2_mountain_9.png"/>
+        <tile idx="9" image="l2_mountain_10.png"/>
+        <tile idx="10" image="l2_mountain_11.png"/>
+    </terrain>
+    <terrain name="山-" terrain="7" type="4">
+        <tile idx="0" image="m2_mountain_1.png"/>
+        <tile idx="1" image="m2_mountain_2.png"/>
+        <tile idx="2" image="m2_mountain_3.png"/>
+        <tile idx="3" image="m2_mountain_4.png"/>
+        <tile idx="4" image="m2_mountain_5.png"/>
+        <tile idx="5" image="m2_mountain_6.png"/>
+        <tile idx="6" image="m2_mountain_7.png"/>
+        <tile idx="7" image="m2_mountain_8.png"/>
+        <tile idx="8" image="m2_mountain_9.png"/>
+        <tile idx="9" image="m2_mountain_10.png"/>
+        <tile idx="10" image="m2_mountain_11.png"/>
+    </terrain>
+    <terrain name="山-" terrain="8" type="5">
+        <tile idx="0" image="h2_mountain_1.png"/>
+        <tile idx="1" image="h2_mountain_2.png"/>
+        <tile idx="2" image="h2_mountain_3.png"/>
+        <tile idx="3" image="h2_mountain_4.png"/>
+        <tile idx="4" image="h2_mountain_5.png"/>
+    </terrain>
+
+    <terrain name="山-" terrain="9" type="3">
+        <tile idx="0" image="l3_mountain_1.png"/>
+        <tile idx="1" image="l3_mountain_2.png"/>
+        <tile idx="2" image="l3_mountain_3.png"/>
+        <tile idx="3" image="l3_mountain_4.png"/>
+        <tile idx="4" image="l3_mountain_5.png"/>
+        <tile idx="5" image="l3_mountain_6.png"/>
+        <tile idx="6" image="l3_mountain_7.png"/>
+        <tile idx="7" image="l3_mountain_8.png"/>
+        <tile idx="8" image="l3_mountain_9.png"/>
+        <tile idx="9" image="l3_mountain_10.png"/>
+        <tile idx="10" image="l3_mountain_11.png"/>
+    </terrain>
+    <terrain name="山-" terrain="10" type="4">
+        <tile idx="0" image="m3_mountain_1.png"/>
+        <tile idx="1" image="m3_mountain_2.png"/>
+        <tile idx="2" image="m3_mountain_3.png"/>
+        <tile idx="3" image="m3_mountain_4.png"/>
+        <tile idx="4" image="m3_mountain_5.png"/>
+        <tile idx="5" image="m3_mountain_6.png"/>
+        <tile idx="6" image="m3_mountain_7.png"/>
+        <tile idx="7" image="m3_mountain_8.png"/>
+        <tile idx="8" image="m3_mountain_9.png"/>
+        <tile idx="9" image="m3_mountain_10.png"/>
+        <tile idx="10" image="m3_mountain_11.png"/>
+    </terrain>
+    <terrain name="山-" terrain="11" type="5">
+        <tile idx="0" image="h3_mountain_1.png"/>
+        <tile idx="1" image="h3_mountain_2.png"/>
+        <tile idx="2" image="h3_mountain_3.png"/>
+        <tile idx="3" image="h3_mountain_4.png"/>
+        <tile idx="4" image="h3_mountain_5.png"/>
+    </terrain>
+    <terrain name="沙山-" terrain="12" type="3">
+        <tile idx="0" image="l4_mountain_1.png"/>
+        <tile idx="1" image="l4_mountain_2.png"/>
+        <tile idx="2" image="l4_mountain_3.png"/>
+        <tile idx="3" image="l4_mountain_4.png"/>
+        <tile idx="4" image="l4_mountain_5.png"/>
+        <tile idx="5" image="l4_mountain_6.png"/>
+        <tile idx="6" image="l4_mountain_7.png"/>
+        <tile idx="7" image="l4_mountain_8.png"/>
+        <tile idx="8" image="l4_mountain_9.png"/>
+        <tile idx="9" image="l4_mountain_10.png"/>
+        <tile idx="10" image="l4_mountain_11.png"/>
+    </terrain>
+    <terrain name="沙山-" terrain="13" type="4">
+        <tile idx="0" image="m4_mountain_1.png"/>
+        <tile idx="1" image="m4_mountain_2.png"/>
+        <tile idx="2" image="m4_mountain_3.png"/>
+        <tile idx="3" image="m4_mountain_4.png"/>
+        <tile idx="4" image="m4_mountain_5.png"/>
+        <tile idx="5" image="m4_mountain_6.png"/>
+        <tile idx="6" image="m4_mountain_7.png"/>
+        <tile idx="7" image="m4_mountain_8.png"/>
+        <tile idx="8" image="m4_mountain_9.png"/>
+        <tile idx="9" image="m4_mountain_10.png"/>
+        <tile idx="10" image="m4_mountain_11.png"/>
+    </terrain>
+    <terrain name="沙山-" terrain="14" type="5">
+        <tile idx="0" image="h4_mountain_1.png"/>
+        <tile idx="1" image="h4_mountain_2.png"/>
+        <tile idx="2" image="h4_mountain_3.png"/>
+        <tile idx="3" image="h4_mountain_4.png"/>
+        <tile idx="4" image="h4_mountain_5.png"/>
+    </terrain>
+
+    <terrain name="" terrain="15" type="2" layerlowerdoodad="false">
+        <tile idx="0" image="cactus_1.png"/>
+        <tile idx="1" image="cactus_2.png"/>
+        <tile idx="2" image="cactus_3.png"/>
+        <tile idx="3" image="cactus_4.png"/>
+        <tile idx="4" image="cactus_5.png"/>
+        <tile idx="5" image="cactus_6.png"/>
+        <tile idx="6" image="cactus_7.png"/>
+        <tile idx="7" image="cactus_8.png"/>
+        <tile idx="8" image="cactus_9.png"/>
+    </terrain>
+    <terrain name="叶" terrain="16" type="7" layerlowerdoodad="false">
+        <tile idx="0" image="broadleaf_1.png"/>
+        <tile idx="1" image="broadleaf_2.png"/>
+        <tile idx="2" image="broadleaf_3.png"/>
+        <tile idx="3" image="broadleaf_4.png"/>
+        <tile idx="4" image="broadleaf_5.png"/>
+        <tile idx="5" image="broadleaf_6.png"/>
+        <tile idx="6" image="broadleaf_7.png"/>
+        <tile idx="7" image="broadleaf_8.png"/>
+        <tile idx="8" image="broadleaf_9.png"/>
+    </terrain>
+    <terrain name="雪叶" terrain="18" type="7" layerlowerdoodad="false">
+        <tile idx="0" image="broadleaf2_1.png"/>
+        <tile idx="1" image="broadleaf2_2.png"/>
+        <tile idx="2" image="broadleaf2_3.png"/>
+        <tile idx="3" image="broadleaf2_4.png"/>
+        <tile idx="4" image="broadleaf2_5.png"/>
+        <tile idx="5" image="broadleaf2_6.png"/>
+        <tile idx="6" image="broadleaf2_7.png"/>
+        <tile idx="7" image="broadleaf2_8.png"/>
+        <tile idx="8" image="broadleaf2_9.png"/>
+    </terrain>
+    <terrain name="叶" terrain="20" type="7" layerlowerdoodad="false">
+        <tile idx="0" image="coniferous_1.png"/>
+        <tile idx="1" image="coniferous_2.png"/>
+        <tile idx="2" image="coniferous_3.png"/>
+        <tile idx="3" image="coniferous_4.png"/>
+        <tile idx="4" image="coniferous_5.png"/>
+        <tile idx="5" image="coniferous_6.png"/>
+        <tile idx="6" image="coniferous_7.png"/>
+        <tile idx="7" image="coniferous_8.png"/>
+        <tile idx="8" image="coniferous_9.png"/>
+    </terrain>
+    <terrain name="雪叶" terrain="21" type="7" layerlowerdoodad="false">
+        <tile idx="0" image="coniferous2_1.png"/>
+        <tile idx="1" image="coniferous2_2.png"/>
+        <tile idx="2" image="coniferous2_3.png"/>
+        <tile idx="3" image="coniferous2_4.png"/>
+        <tile idx="4" image="coniferous2_5.png"/>
+        <tile idx="5" image="coniferous2_6.png"/>
+        <tile idx="6" image="coniferous2_7.png"/>
+        <tile idx="7" image="coniferous2_8.png"/>
+        <tile idx="8" image="coniferous2_9.png"/>
+    </terrain>
+    <terrain name="榈" terrain="22" type="7" layerlowerdoodad="false">
+        <tile idx="0" image="palmae_1.png"/>
+        <tile idx="1" image="palmae_2.png"/>
+        <tile idx="2" image="palmae_3.png"/>
+        <tile idx="3" image="palmae_4.png"/>
+        <tile idx="4" image="palmae_5.png"/>
+        <tile idx="5" image="palmae_6.png"/>
+        <tile idx="6" image="palmae_7.png"/>
+        <tile idx="7" image="palmae_8.png"/>
+        <tile idx="8" image="palmae_9.png"/>
+    </terrain>
+
+    <terrain name="农" terrain="26" type="10" layerterrain="false" layerupperdoodad="false">
+        <tile idx="0" image="building_1.png"/>
+    </terrain>
+
+    <terrain name="" terrain="30" type="10" layerterrain="false">
+        <tile idx="0" image="hollow_1.png"/>
+        <tile idx="1" image="hollow_2.png"/>
+        <tile idx="2" image="hollow_3.png"/>
+        <tile idx="3" image="hollow_4.png"/>
+        <tile idx="4" image="hollow_5.png"/>
+        <tile idx="5" image="hollow_6.png"/>
+        <tile idx="6" image="hollow_7.png"/>
+        <tile idx="7" image="hollow_8.png"/>
+        <tile idx="8" image="hollow_9.png"/>
+    </terrain>
+    <terrain name="雪" terrain="31" type="10" layerterrain="false">
+        <tile idx="0" image="snowfield_1.png"/>
+        <tile idx="1" image="snowfield_2.png"/>
+        <tile idx="2" image="snowfield_3.png"/>
+        <tile idx="3" image="snowfield_4.png"/>
+        <tile idx="4" image="snowfield_5.png"/>
+        <tile idx="5" image="snowfield_6.png"/>
+        <tile idx="6" image="snowfield_7.png"/>
+        <tile idx="7" image="snowfield_8.png"/>
+        <tile idx="8" image="snowfield_9.png"/>
+    </terrain>
+
+</terrains>

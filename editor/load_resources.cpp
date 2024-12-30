@@ -14,8 +14,8 @@ LoadResources::~LoadResources()
 
 void LoadResources::Init()
 {
-    mapConfigParser.loadFromXml("assets/config/def_map.xml");
-    terrainConfigParser.loadFromXml("assets/config/def_mapterrain.xml");
+    mapConfigParser.loadFromXml("config/def_map.xml");
+    terrainConfigParser.loadFromXml("config/def_mapterrain.xml");
 
     LoadTexture2D();
 }
@@ -23,5 +23,9 @@ void LoadResources::Init()
 void LoadResources::LoadTexture2D() const
 {
     const std::string texturePath = "map_land.png";
-    Helper::LoadTexture2D(*mapLand, texturePath);
+#ifdef PLATFORM_WINDOWS
+    Helper::LoadTexture2DFromPath(*mapLand, texturePath);
+#elifdef PLATFORM_ANDROID
+    Helper::LoadTexture2DFromAndroidAssets(*mapLand, texturePath);
+#endif
 }

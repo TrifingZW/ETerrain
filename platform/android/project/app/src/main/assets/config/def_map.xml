@@ -1,0 +1,5 @@
+﻿<maps>
+    <map id="1" name="world" file="world.bin" w="7992" h="3361" tile="map1.bin" textpos="maptextpos_world.xml" tilesize="64" pattern="map_pt.png"
+         patternsize="512"/>
+
+</maps>

@@ -1,0 +1,43 @@
+<Texture name="buildings_hd.png"/>
+<Images>
+<Image name="building_1.png" x="230" y="739" w="149" h="122" refx="73" refy="59"/>
+<Image name="building_11.png" x="594" y="390" w="124" h="100" refx="54" refy="51"/>
+<Image name="building_12.png" x="442" y="613" w="148" h="112" refx="63" refy="57"/>
+<Image name="building_13.png" x="381" y="739" w="188" h="120" refx="99" refy="57"/>
+<Image name="building_14.png" x="2" y="474" w="196" h="132" refx="94" refy="65"/>
+<Image name="building_15.png" x="592" y="599" w="260" h="154" refx="131" refy="86"/>
+<Image name="building_15b.png" x="482" y="861" w="270" h="128" refx="126" refy="92"/>
+<Image name="building_15f.png" x="246" y="863" w="234" h="106" refx="103" refy="34"/>
+<Image name="building_2.png" x="342" y="168" w="152" h="139" refx="74" refy="64"/>
+<Image name="building_21.png" x="622" y="136" w="168" h="122" refx="70" refy="66"/>
+<Image name="building_22.png" x="594" y="260" w="170" h="128" refx="78" refy="73"/>
+<Image name="building_23.png" x="2" y="608" w="200" h="170" refx="93" refy="84"/>
+<Image name="building_3.png" x="144" y="308" w="152" h="141" refx="74" refy="70"/>
+<Image name="building_31_1.png" x="766" y="260" w="180" h="128" refx="80" refy="87"/>
+<Image name="building_31_2.png" x="762" y="2" w="168" h="124" refx="88" refy="67"/>
+<Image name="building_31_3.png" x="792" y="128" w="178" h="126" refx="93" refy="55"/>
+<Image name="building_31_4.png" x="432" y="309" w="160" h="118" refx="66" refy="45"/>
+<Image name="capital_01.png" x="342" y="2" w="148" h="164" refx="42" refy="122"/>
+<Image name="capital_04.png" x="298" y="309" w="132" h="126" refx="55" refy="87"/>
+<Image name="capital_05.png" x="298" y="437" w="106" h="98" refx="45" refy="66"/>
+<Image name="capital_07.png" x="432" y="429" w="108" h="80" refx="42" refy="46"/>
+<Image name="capital_08.png" x="428" y="511" w="124" h="100" refx="47" refy="59"/>
+<Image name="capital_09.png" x="314" y="637" w="126" h="100" refx="46" refy="59"/>
+<Image name="capital_10.png" x="116" y="878" w="128" h="102" refx="45" refy="60"/>
+<Image name="capital_11.png" x="626" y="2" w="134" h="120" refx="50" refy="69"/>
+<Image name="capital_12.png" x="496" y="136" w="124" h="112" refx="46" refy="89"/>
+<Image name="capital_15.png" x="204" y="537" w="108" h="98" refx="42" refy="65"/>
+<Image name="capital_16.png" x="2" y="780" w="112" h="106" refx="42" refy="66"/>
+<Image name="capital_18.png" x="2" y="338" w="130" h="134" refx="40" refy="95"/>
+<Image name="capital_19.png" x="492" y="2" w="132" h="132" refx="47" refy="80"/>
+<Image name="capital_20.png" x="160" y="170" w="148" h="136" refx="51" refy="69"/>
+<Image name="capital_21.png" x="2" y="180" w="140" h="156" refx="44" refy="110"/>
+<Image name="capital_22.png" x="2" y="2" w="156" h="176" refx="41" refy="123"/>
+<Image name="capital_24.png" x="204" y="637" w="108" h="90" refx="43" refy="56"/>
+<Image name="capital_26.png" x="314" y="537" w="112" h="98" refx="46" refy="59"/>
+<Image name="capital_27.png" x="116" y="780" w="112" h="96" refx="45" refy="59"/>
+<Image name="capital_28.png" x="2" y="888" w="112" h="94" refx="53" refy="57"/>
+<Image name="capital_29.png" x="160" y="2" w="180" h="166" refx="55" refy="111"/>
+<Image name="tunnel_gate1.png" x="554" y="492" w="181" h="105" refx="95" refy="64"/>
+<Image name="tunnel_gate2.png" x="737" y="390" w="181" h="105" refx="96" refy="68"/>
+</Images>

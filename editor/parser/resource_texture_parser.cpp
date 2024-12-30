@@ -72,10 +72,15 @@ bool ResourceTextureParser::loadFromXml()
 {
     pugi::xml_document doc;
     const std::string filePath = FilePath + ".xml";
-    if (const pugi::xml_parse_result result = doc.load_file(filePath.c_str()); !result)
-    {
+#ifdef PLATFORM_WINDOWS
+    if (const pugi::xml_parse_result result = doc.load_file(("assets/" + filePath).c_str()); !result)
         throw std::runtime_error("Failed to load XML file: " + filePath);
-    }
+#elifdef PLATFORM_ANDROID
+    std::string xmlData;
+    Helper::LoadStringFromAndroidAssets(xmlData, filePath);
+    if (const pugi::xml_parse_result result = doc.load_string(xmlData.c_str()); !result)
+        throw std::runtime_error("Failed to load XML file: " + filePath);
+#endif
 
     const auto resourceNode = doc.child("Resource");
     if (!resourceNode)
@@ -118,7 +123,11 @@ bool ResourceTextureParser::loadFromXml()
 void ResourceTextureParser::loadTexture()
 {
     // 构造纹理文件的完整路径
-    const std::string texturePath = getParentPath(FilePath) + "/" + TextureName;
+    const std::string texturePath = TextureName;
 
-    Helper::LoadTexture2D(Texture2D, texturePath);
+#ifdef PLATFORM_WINDOWS
+    Helper::LoadTexture2DFromPath(Texture2D, "assets/" + texturePath);
+#elifdef PLATFORM_ANDROID
+    Helper::LoadTexture2DFromAndroidAssets(Texture2D, texturePath);
+#endif
 }

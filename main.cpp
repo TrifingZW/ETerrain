@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <ostream>
 #include <iostream>
-// #include <windows.h>
+#include <windows.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -22,14 +22,12 @@
 #endif
 
 #include "core/core.h"
-#include <android_native_app_glue.h>
 
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间
 ImFont* large_font = nullptr; // 定义全局字体指针
 constexpr auto clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-/*
 // 创建窗口
 GLFWwindow* GetGlfwWindow()
 {
@@ -65,7 +63,7 @@ void InitImGui(GLFWwindow* window, const char* glsl_version)
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // 启用键盘控件
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // 启用游戏手柄控件
+//    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // 启用游戏手柄控件
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // 启用停靠功能
     // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // 启用多视口支持
 
@@ -143,7 +141,7 @@ int main(int, char**)
         return -1;
     }
 
-    // 初始化 OpenGL 和 ImGui 和 Core
+    // 初始化 ImGui 和 Core
     InitImGui(window, glsl_version);
     Core::Instance().InitTree();
 
@@ -181,10 +179,4 @@ int main(int, char**)
 
     Shutdown(window);
     return 0;
-}
-*/
-
-void android_main(struct android_app* app)
-{
-
 }

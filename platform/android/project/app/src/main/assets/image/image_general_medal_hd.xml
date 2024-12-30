@@ -1,0 +1,26 @@
+<Texture name="image_general_medal_hd.png"/>
+<Images>
+<Image name="general_medal_1.png" x="1" y="1" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_10.png" x="1" y="124" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_11.png" x="98" y="1" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_12.png" x="98" y="124" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_13.png" x="1" y="247" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_14.png" x="98" y="247" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_15.png" x="195" y="1" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_16.png" x="195" y="124" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_2.png" x="292" y="1" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_3.png" x="389" y="1" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_4.png" x="292" y="124" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_5.png" x="195" y="247" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_6.png" x="389" y="124" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_7.png" x="292" y="247" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_8.png" x="389" y="247" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_9.png" x="486" y="1" w="96" h="122" refx="0" refy="0"/>
+<Image name="random_medal.png" x="486" y="124" w="96" h="122" refx="0" refy="0"/>
+<Image name="general_medal_17.png" x="1" y="370" w="100" h="100" refx="0" refy="0"/>
+<Image name="general_medal_18.png" x="102" y="370" w="100" h="100" refx="0" refy="0"/>
+<Image name="general_medal_19.png" x="203" y="370" w="100" h="100" refx="0" refy="0"/>
+<Image name="general_medal_20.png" x="304" y="370" w="100" h="100" refx="0" refy="0"/>
+<Image name="general_medal_21.png" x="486" y="247" w="100" h="100" refx="0" refy="0"/>
+<Image name="general_medal_22.png" x="405" y="370" w="100" h="100" refx="0" refy="0"/>
+</Images>

@@ -4,6 +4,7 @@
 
 #include "bin_parser.h"
 #include "e_terrain.h"
+#include "core/helpers/helper.h"
 
 int BinParser::GetWidth() const { return binInfo.Width; }
 int BinParser::GetHeight() const { return binInfo.Height; }
@@ -14,10 +15,16 @@ void BinParser::Parse(const std::string& name)
 {
     try
     {
+#ifdef PLATFORM_WINDOWS
         const std::string binPath = AssetsPath + "/" + name;
         std::ifstream stream(binPath, std::ios::binary);
         if (!stream)
             throw std::runtime_error("没有导入bin");
+#elifdef PLATFORM_ANDROID
+        std::stringstream stream = Helper::CreateBinaryStreamFromAsset(name);
+        if (!stream)
+            throw std::runtime_error("没有导入bin");
+#endif
 
         char masterBytes[0x10];
         stream.read(masterBytes, sizeof(masterBytes));

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.30.5)
 set(PLATFORM "android")
 
 # 为平台设置工具链和参数并定义宏
@@ -7,10 +7,12 @@ if (PLATFORM STREQUAL "windows")
 elseif (PLATFORM STREQUAL "android")
     add_definitions(-DPLATFORM_ANDROID)
     set(ANDROID_NDK "C:/Users/TrifingZW/AppData/Local/Android/Sdk/ndk/27.2.12479018")
-    set(CMAKE_TOOLCHAIN_FILE "${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
-    set(ANDROID_ABI "arm64-v8a")
-    set(ANDROID_NATIVE_API_LEVEL 21)
-    set(ANDROID_STL c++_static)
+    if (NOT CMAKE_SYSTEM_NAME STREQUAL "Android")
+        set(CMAKE_TOOLCHAIN_FILE "${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
+        set(ANDROID_ABI arm64-v8a)
+        set(ANDROID_NATIVE_API_LEVEL 24)
+        set(ANDROID_STL c++_static)
+    endif ()
 endif ()
 
 project(ETerrain)
@@ -27,8 +29,6 @@ include(method.cmake)
 
 # 定义并添加源文件
 set(SOURCE_FILES
-        main.cpp
-
         # 渲染器后端
         core/graphics/graphics_device.cpp
         core/graphics/graphics_device.h
@@ -110,10 +110,14 @@ set(SOURCE_FILES
 
         # 杂项
         misc/fonts/font.h
+        platform/android/android.cpp
+        platform/android/android.h
 )
 if (PLATFORM STREQUAL "windows")
+    list(APPEND SOURCE_FILES main.cpp)
     add_executable(ETerrain ${SOURCE_FILES})
 elseif (PLATFORM STREQUAL "android")
+    list(APPEND SOURCE_FILES android_main.cpp)
     add_library(ETerrain SHARED ${SOURCE_FILES})
 endif ()
 
@@ -125,6 +129,8 @@ set(EDITOR_DIR ${CMAKE_SOURCE_DIR}/editor)
 set(MODULE_DIR ${CMAKE_SOURCE_DIR}/modules)
 # 设置第三方库路径
 set(THIRDPARTY_DIR ${CMAKE_SOURCE_DIR}/thirdparty)
+# 设置平台路径
+set(PLATFORM_DIR ${CMAKE_SOURCE_DIR}/platform)
 
 # 包含生成的头文件路径，只在构建时包含
 target_include_directories(ETerrain PRIVATE ${CMAKE_BINARY_DIR})
