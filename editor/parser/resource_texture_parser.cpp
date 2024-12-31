@@ -75,7 +75,7 @@ bool ResourceTextureParser::loadFromXml()
 #ifdef PLATFORM_WINDOWS
     if (const pugi::xml_parse_result result = doc.load_file(("assets/" + filePath).c_str()); !result)
         throw std::runtime_error("Failed to load XML file: " + filePath);
-#elifdef PLATFORM_ANDROID
+#elif defined(PLATFORM_ANDROID)
     std::string xmlData;
     Helper::LoadStringFromAndroidAssets(xmlData, filePath);
     if (const pugi::xml_parse_result result = doc.load_string(xmlData.c_str()); !result)
@@ -127,7 +127,7 @@ void ResourceTextureParser::loadTexture()
 
 #ifdef PLATFORM_WINDOWS
     Helper::LoadTexture2DFromPath(Texture2D, "assets/" + texturePath);
-#elifdef PLATFORM_ANDROID
+#elif defined(PLATFORM_ANDROID)
     Helper::LoadTexture2DFromAndroidAssets(Texture2D, texturePath);
 #endif
 }

@@ -18,9 +18,11 @@ function(LoadPlatformDependencies)
         list(APPEND PLATFORM_SOURCES
                 ${DIR}/android_out.cpp
                 ${DIR}/android_out.h
+                ${DIR}/android.cpp
+                ${DIR}/android.h
         )
 
-        target_include_directories(ETerrain PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
+        include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
         target_sources(ETerrain PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
         target_link_libraries(ETerrain PRIVATE
                 android

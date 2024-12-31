@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.Keep
 import java.util.concurrent.LinkedBlockingQueue
 
 class MainActivity : NativeActivity() {
@@ -16,6 +17,7 @@ class MainActivity : NativeActivity() {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
         bar()
+
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -37,13 +39,14 @@ class MainActivity : NativeActivity() {
         }
     }
 
-
+    @Keep
     fun showSoftInput() {
         val inputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(this.window.decorView, 0)
     }
 
+    @Keep
     fun hideSoftInput() {
         val inputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -62,6 +65,7 @@ class MainActivity : NativeActivity() {
         return super.dispatchKeyEvent(event)
     }
 
+    @Keep
     fun pollUnicodeChar(): Int {
         return unicodeCharacterQueue.poll() ?: 0
     }

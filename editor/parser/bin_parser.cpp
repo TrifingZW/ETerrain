@@ -20,7 +20,7 @@ void BinParser::Parse(const std::string& name)
         std::ifstream stream(binPath, std::ios::binary);
         if (!stream)
             throw std::runtime_error("没有导入bin");
-#elifdef PLATFORM_ANDROID
+#elif defined(PLATFORM_ANDROID)
         std::stringstream stream = Helper::CreateBinaryStreamFromAsset(name);
         if (!stream)
             throw std::runtime_error("没有导入bin");

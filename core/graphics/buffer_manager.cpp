@@ -89,7 +89,7 @@ void BufferManager::AddBuffer(const char* name, const GLenum type)
 
 void BufferManager::DeleteBuffer(const char* name)
 {
-    glDeleteBuffers(0, &_buffers[name]);
+    glDeleteBuffers(1, &_buffers[name]);
     _buffers.erase(name);
 }
 
@@ -120,7 +120,6 @@ void BufferManager::SetIndexPointerEXT(const char* name, const void* indices, co
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffers[name]);
     else
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices,GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

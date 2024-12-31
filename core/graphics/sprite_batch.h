@@ -107,7 +107,8 @@ private:
     );
     void FlushBatch();
     int UpdateVertexBuffer(int start, int count);
-    void DrawPrimitives(Texture2D* texture2D, int primitiveOffset, int primitiveSize) const;
+    void DrawPrimitives(Texture2D* texture2D, int primitiveSize) const;
+    void DrawPrimitivesBase(Texture2D* texture2D, int primitiveOffset, int primitiveSize) const;
     void PrepRenderState();
     static void GenerateIndexArray(short* indices);
 

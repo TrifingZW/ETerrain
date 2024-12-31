@@ -53,9 +53,7 @@ public:
             }
         }
 
-        glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
     void SetData(const char* name, const void* data, size_t memoryLength);

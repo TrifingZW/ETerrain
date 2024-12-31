@@ -15,6 +15,13 @@
 
         <activity
             android:name="com.trifingzw.eterrain.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|density|keyboard|navigation|screenLayout|uiMode"
+            android:excludeFromRecents="false"
+            android:launchMode="singleInstancePerTask"
+            android:process=":phoenix"
+            android:resizeableActivity="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/ETerrainTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

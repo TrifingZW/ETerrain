@@ -25,7 +25,7 @@ void LoadResources::LoadTexture2D() const
     const std::string texturePath = "map_land.png";
 #ifdef PLATFORM_WINDOWS
     Helper::LoadTexture2DFromPath(*mapLand, texturePath);
-#elifdef PLATFORM_ANDROID
+#elif defined(PLATFORM_ANDROID)
     Helper::LoadTexture2DFromAndroidAssets(*mapLand, texturePath);
 #endif
 }

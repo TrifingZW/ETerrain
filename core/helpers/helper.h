@@ -4,13 +4,16 @@
 
 #pragma once
 
-#include <imgui.h>
 #include <sstream>
 #include <stb/stb_image.h>
 #include <string>
-#include <android/asset_manager.h>
 
+#ifdef PLATFORM_ANDROID
+#include <imgui.h>
+#include <android/asset_manager.h>
 #include "platform/android/android.h"
+#endif
+
 #include "scene/resources/texture_2d.h"
 
 namespace Helper

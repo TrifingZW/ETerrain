@@ -63,7 +63,7 @@ void InitImGui(GLFWwindow* window, const char* glsl_version)
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // 启用键盘控件
-//    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // 启用游戏手柄控件
+    //    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // 启用游戏手柄控件
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // 启用停靠功能
     // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // 启用多视口支持
 
@@ -123,8 +123,8 @@ int main(int, char**)
     if (!glfwInit()) return 1;
 
     const auto glsl_version = "#version 130";
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // 创建窗口
@@ -140,6 +140,8 @@ int main(int, char**)
         std::cerr << "Failed to initialize GLAD!" << std::endl;
         return -1;
     }
+
+    std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 
     // 初始化 ImGui 和 Core
     InitImGui(window, glsl_version);

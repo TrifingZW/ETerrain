@@ -18,11 +18,17 @@ void GraphicsDevice::SetRenderTarget(RenderTarget* renderTarget)
 
 void GraphicsDevice::SetBufferManager(BufferManager* bufferManager) { _bufferManager = bufferManager; }
 
-void GraphicsDevice::DrawIndexedPrimitives(
-    const GLenum mode,
-    const int baseVertex,
-    const int numVertices
-)
+void GraphicsDevice::DrawIndexedPrimitives(const GLenum mode, const int numVertices)
+{
+    ApplyState();
+
+    _bufferManager->Apply();
+    glDrawElements(mode, numVertices, GL_UNSIGNED_SHORT, nullptr);
+
+    ResetBuffer();
+}
+
+void GraphicsDevice::DrawIndexedPrimitivesBase(const GLenum mode, const int baseVertex, const int numVertices)
 {
     /*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferManager->EBO);
     short testMatrix[6];

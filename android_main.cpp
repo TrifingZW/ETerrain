@@ -90,7 +90,8 @@ void android_main(android_app* app)
         }
 
         // 启动一个新的帧
-        MainLoopStep();
+        if (Android::g_Initialized)
+            MainLoopStep();
     }
 }
 
@@ -109,6 +110,8 @@ void Init(android_app* app)
     // 初始化 GLAD
     if (!gladLoadGLES2Loader(reinterpret_cast<GLADloadproc>(eglGetProcAddress)))
         std::cerr << "Failed to initialize GLAD!" << std::endl;
+
+    aout << glGetString(GL_VERSION) << std::endl;
 
     // 将 .ini 配置文件的加载/保存重定向位置到 Android 内部储存
     // 确保在我们使用 Dear ImGui 时“g_IniFilename”仍然存在。
@@ -160,7 +163,16 @@ void InitEGL()
     eglGetConfigAttrib(Android::g_EglDisplay, egl_config, EGL_NATIVE_VISUAL_ID, &egl_format);
     ANativeWindow_setBuffersGeometry(Android::g_App->window, 0, 0, egl_format);
 
-    constexpr EGLint egl_context_attributes[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE};
+    constexpr EGLint egl_context_attributes[] = {
+        EGL_CONTEXT_MAJOR_VERSION,
+        3,
+        // 主版本号
+        EGL_CONTEXT_MINOR_VERSION,
+        2,
+        // 次版本号
+        EGL_NONE
+    };
+
     Android::g_EglContext = eglCreateContext(Android::g_EglDisplay, egl_config, EGL_NO_CONTEXT, egl_context_attributes);
 
     if (Android::g_EglContext == EGL_NO_CONTEXT)
@@ -180,10 +192,10 @@ void InitImGui()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // 启用停靠功能
 
     ImFontConfig font_cfg;
-    font_cfg.SizePixels = 22.0f;
+    font_cfg.SizePixels = 28.0f;
     io.Fonts->AddFontDefault(&font_cfg);
 
-    ImGui::GetStyle().ScaleAllSizes(3.0f);
+    ImGui::GetStyle().ScaleAllSizes(4.0f);
 
     // 设置平台/渲染器后端
     ImGui_ImplAndroid_Init(Android::g_App->window);

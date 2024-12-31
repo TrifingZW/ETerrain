@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30.5)
-set(PLATFORM "android")
+set(PLATFORM "windows")
 
 # 为平台设置工具链和参数并定义宏
 if (PLATFORM STREQUAL "windows")
@@ -110,8 +110,6 @@ set(SOURCE_FILES
 
         # 杂项
         misc/fonts/font.h
-        platform/android/android.cpp
-        platform/android/android.h
 )
 if (PLATFORM STREQUAL "windows")
     list(APPEND SOURCE_FILES main.cpp)
