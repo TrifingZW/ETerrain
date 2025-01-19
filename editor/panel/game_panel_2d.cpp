@@ -15,7 +15,7 @@ GamePanel2D::GamePanel2D()
 {
     auto* camera = new Camera2D();
     camera2d = camera;
-    AddChild(std::unique_ptr<Node>(camera));
+    AddChild(camera);
 }
 
 GamePanel2D::~GamePanel2D()
@@ -142,6 +142,9 @@ void GamePanel2D::Gui()
         ImVec2(1, 0)
     );
 
+    if (ImGui::IsItemHovered())
+        ImageInput();
+
     ImGui::End();
     ImGui::PopStyleVar(2);
 
@@ -157,7 +160,6 @@ void GamePanel2D::Gui()
     static float f8 = 0.0f;
     static float f9 = 0.0f;
     static auto clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);*/
-    camera2d->SetZoom(fov);
     ImGui::Begin("Game Test");
     ImGui::SliderFloat("fov", &fov, 0.1f, 10.0f);
     /*ImGui::SliderFloat("f1", &f1, -10.0f, 10.0f);
@@ -172,6 +174,19 @@ void GamePanel2D::Gui()
     ImGui::ColorEdit3("clear color", reinterpret_cast<float *>(&clear_color));*/
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
+}
+
+void GamePanel2D::ImageInput() const
+{
+    if (const float mouseWheel = ImGui::GetIO().MouseWheel; mouseWheel != 0.0f)
+    {
+        camera2d->SetZoom(camera2d->GetZoom() + mouseWheel * 0.1f);
+    }
+
+    if (const ImVec2 mouseDelta = ImGui::GetIO().MouseDelta; mouseDelta.x != 0.0f || mouseDelta.y != 0.0f)
+    {
+        camera2d->SetOffset(glm::vec2(mouseDelta.x, mouseDelta.y));
+    }
 }
 
 void GamePanel2D::IterateLandUnit(const std::function<void(LandUnit&, glm::vec2)>& func) const
@@ -302,7 +317,7 @@ void GamePanel2D::GenerateOceanVertex() const
 
     for (int i = 0; i < 6; ++i)
     {
-        std::cout << glm::to_string(vertexInfo->PHexVertexData[i].Position) << std::endl;
+        std::cout << to_string(vertexInfo->PHexVertexData[i].Position) << std::endl;
     }
 }
 

@@ -65,7 +65,7 @@ void HexPanel::Rendering(SpriteBatch& spriteBatch)
     Core::GetGraphicsDevice()->SetRenderTarget(renderTarget);
     Core::GetGraphicsDevice()->Clear();
 
-    const auto model = glm::mat4(1.0f);
+    constexpr auto model = glm::mat4(1.0f);
     shader.Apply();
     shader.SetMatrix4("model", model);
     shader.SetMatrix4("view", camera3d->Transform3D.GetViewMatrix());
@@ -106,15 +106,15 @@ void HexPanel::Gui()
 void HexPanel::Input(int key)
 {
     if (ImGui::IsKeyDown(ImGuiKey_W))
-        camera3d->Transform3D.Translate(glm::normalize(camera3d->Transform3D.Forward()) * 0.01f);
+        camera3d->Transform3D.Translate(normalize(camera3d->Transform3D.Forward()) * 0.01f);
     if (ImGui::IsKeyDown(ImGuiKey_S))
-        camera3d->Transform3D.Translate(-glm::normalize(camera3d->Transform3D.Forward()) * 0.01f);
+        camera3d->Transform3D.Translate(-normalize(camera3d->Transform3D.Forward()) * 0.01f);
     if (ImGui::IsKeyDown(ImGuiKey_A))
-        camera3d->Transform3D.Translate(-glm::normalize(camera3d->Transform3D.RightAxis()) * 0.01f);
+        camera3d->Transform3D.Translate(-normalize(camera3d->Transform3D.RightAxis()) * 0.01f);
     if (ImGui::IsKeyDown(ImGuiKey_D))
-        camera3d->Transform3D.Translate(glm::normalize(camera3d->Transform3D.RightAxis()) * 0.01f);
+        camera3d->Transform3D.Translate(normalize(camera3d->Transform3D.RightAxis()) * 0.01f);
     if (ImGui::IsKeyDown(ImGuiKey_Space))
-        camera3d->Transform3D.Translate(glm::normalize(camera3d->Transform3D.UpAxis()) * 0.1f);
+        camera3d->Transform3D.Translate(normalize(camera3d->Transform3D.UpAxis()) * 0.1f);
     if (ImGui::IsKeyDown(ImGuiKey_Q))
         camera3d->Transform3D.RotateEuler(glm::vec3(-0.1f, 0.0f, 0.0f));
 }

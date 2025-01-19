@@ -22,7 +22,7 @@ public:
     {
         auto* camera = new Camera3D();
         camera3d = camera;
-        AddChild(std::unique_ptr<Node>(camera));
+        AddChild(camera);
     }
 
     void Init() override;

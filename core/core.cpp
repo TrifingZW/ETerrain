@@ -21,12 +21,12 @@ Core& Core::Instance()
 
 void Core::Renderings()
 {
-    RootNode.RenderingTree(_spriteBatch);
+    RootNode.TraverseChildren([](Node* node) { node->Rendering(*_spriteBatch); });
 }
 
 void Core::ImGuiAll()
 {
-    RootNode.GuiTree();
+    RootNode.TraverseChildren([](Node* node) { node->Gui(); });
 }
 
 void Core::InitTree()
@@ -34,18 +34,23 @@ void Core::InitTree()
     _graphicsDevice = new GraphicsDevice();
     _spriteBatch = new SpriteBatch(_graphicsDevice);
 
-    RootNode.InitTree();
-    RootNode.ReadyTree();
+    RootNode.TraverseChildren(
+        [](Node* node)
+        {
+            node->Init();
+            node->Ready();
+        }
+    );
 }
 
 void Core::ProcessTree(const float delta)
 {
-    RootNode.ProcessTree(delta);
+    RootNode.TraverseChildren([delta](Node* node) { node->Process(delta); });
 }
 
 void Core::Input(const int key)
 {
-    RootNode.InputTree(key);
+    RootNode.TraverseChildren([key](Node* node) { node->Process(static_cast<float>(key)); });
 }
 
 GraphicsDevice* Core::GetGraphicsDevice() { return _graphicsDevice; }

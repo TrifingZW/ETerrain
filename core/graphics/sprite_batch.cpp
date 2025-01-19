@@ -17,7 +17,7 @@ SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphi
     _bufferManager.SetIndexPointerEXT(nullptr, _indices, MAX_INDICES_SIZE);
 }
 
-SpriteBatch::~SpriteBatch() {}
+SpriteBatch::~SpriteBatch() = default;
 
 void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred); }
 
@@ -488,10 +488,10 @@ void SpriteBatch::FlushBatch()
     if (_numSprites == 0)
         return;
 
-// #ifdef PLATFORM_WINDOWS
+    // #ifdef PLATFORM_WINDOWS
     int arrayOffset = 0;
-    nextbatch:
-        const int batchSize = glm::min(_numSprites, MAX_SPRITES);
+nextbatch:
+    const int batchSize = glm::min(_numSprites, MAX_SPRITES);
     const int baseOff = UpdateVertexBuffer(arrayOffset, batchSize);
     int offset = 0;
 
@@ -514,35 +514,35 @@ void SpriteBatch::FlushBatch()
         goto nextbatch;
     }
     _numSprites = 0;
-/*#elifdef PLATFORM_ANDROID
-    const int batchSize = _numSprites;
-    int offset = 0;
-    Texture2D* curTexture = _textureInfo[0];
-    for (int i = 1; i < batchSize; i += 1)
-    {
-        if (Texture2D* tex = _textureInfo[i]; tex != curTexture)
+    /*#elifdef PLATFORM_ANDROID
+        const int batchSize = _numSprites;
+        int offset = 0;
+        Texture2D* curTexture = _textureInfo[0];
+        for (int i = 1; i < batchSize; i += 1)
         {
-            const PositionTexture4* p = &_vertexInfo[offset];
-            const int primitiveSize = i - offset;
-            _bufferManager.SetData(nullptr, p, primitiveSize * sizeof(PositionTexture4));
-            DrawPrimitives(curTexture, primitiveSize);
-            curTexture = tex;
-            offset = i;
+            if (Texture2D* tex = _textureInfo[i]; tex != curTexture)
+            {
+                const PositionTexture4* p = &_vertexInfo[offset];
+                const int primitiveSize = i - offset;
+                _bufferManager.SetData(nullptr, p, primitiveSize * sizeof(PositionTexture4));
+                DrawPrimitives(curTexture, primitiveSize);
+                curTexture = tex;
+                offset = i;
+            }
         }
-    }
-    const PositionTexture4* p = &_vertexInfo[offset];
-    const int primitiveSize = batchSize - offset;
-    _bufferManager.SetData(nullptr, p, primitiveSize * sizeof(PositionTexture4));
-    DrawPrimitives(curTexture, primitiveSize);
-    _numSprites = 0;
-#endif*/
+        const PositionTexture4* p = &_vertexInfo[offset];
+        const int primitiveSize = batchSize - offset;
+        _bufferManager.SetData(nullptr, p, primitiveSize * sizeof(PositionTexture4));
+        DrawPrimitives(curTexture, primitiveSize);
+        _numSprites = 0;
+    #endif*/
 }
 
 int SpriteBatch::UpdateVertexBuffer(const int start, const int count)
 {
     int offset;
     SetDataOptions options;
-    if ((_bufferOffset + count) > MAX_SPRITES)
+    if (_bufferOffset + count > MAX_SPRITES)
     {
         offset = 0;
         options = SetDataOptions::Discard;

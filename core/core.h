@@ -22,7 +22,6 @@ public:
 
     void Renderings();
     void ImGuiAll();
-
     void InitTree();
     void ProcessTree(float delta);
     void Input(int key);

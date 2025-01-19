@@ -4,17 +4,27 @@
 
 #include "node.h"
 
-void Node::AddChild(std::unique_ptr<Node> object)
+#include <functional>
+
+void Node::AddChild(Node* object)
 {
     object->parent = this;
     if (IsInit)
-        object->InitTree();
+    {
+        object->Init();
+        object->TraverseChildren([](Node* node) { node->Init(); });
+    }
     if (IsReady)
-        object->ReadyTree();
-    children.push_back(std::move(object));
+    {
+        object->Ready();
+        object->TraverseChildren([](Node* node) { node->Ready(); });
+    }
+    children.push_back(object);
 }
 
-const std::vector<std::unique_ptr<Node> >& Node::GetChildren() const
+bool Node::HasChild() const { return children.empty(); }
+
+const std::vector<Node *>& Node::GetChildren() const
 {
     return children;
 }
@@ -24,59 +34,14 @@ Node* Node::GetParent() const
     return parent;
 }
 
-void Node::InitTree()
+void Node::TraverseChildren(const std::function<void(Node*)>& func) // NOLINT(*-no-recursion)
 {
-    Init();
-    IsInit = true;
-    for (const auto& child: children)
+    func(this);
+    for (const auto child: children)
     {
-        child->InitTree();
-    }
-}
-
-void Node::ReadyTree()
-{
-    Ready();
-    IsReady = true;
-    for (const auto& child: children)
-    {
-        child->ReadyTree();
-    }
-}
-
-void Node::ProcessTree(const float delta)
-{
-    Process(delta);
-    for (const auto& child: children)
-    {
-        child->ProcessTree(delta);
-    }
-}
-
-void Node::RenderingTree(SpriteBatch* spriteBatch)
-{
-    Rendering(*spriteBatch);
-    for (const auto& child: children)
-    {
-        child->RenderingTree(spriteBatch);
-    }
-}
-
-void Node::GuiTree()
-{
-    Gui();
-    for (const auto& child: children)
-    {
-        child->GuiTree();
-    }
-}
-
-void Node::InputTree(const int key)
-{
-    Input(key);
-    for (const auto& child: children)
-    {
-        child->InputTree(key);
+        func(child);
+        if (child->HasChild())
+            child->TraverseChildren(func);
     }
 }
 

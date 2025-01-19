@@ -9,10 +9,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-# ifdef BUILD_TIME
-#include "font.h"
-# endif
-
 #include <glad/glad.h>
 
 #ifdef PLATFORM_WINDOWS
@@ -50,11 +46,6 @@ float GetDpiScaleForWindow(HWND hwnd)
     return static_cast<float>(dpi) / default_dpi;
 }
 
-// 设置所有控件的缩放
-void ApplyDpiScale(const float dpi_scale)
-{
-    ImGui::GetStyle().ScaleAllSizes(dpi_scale);
-}
 
 // 初始化 Dear ImGui
 void InitImGui(GLFWwindow* window, const char* glsl_version)
@@ -70,15 +61,13 @@ void InitImGui(GLFWwindow* window, const char* glsl_version)
     // 设置dpi为系统dpi
     HWND hwnd = glfwGetWin32Window(window);
     const float dpi_scale = GetDpiScaleForWindow(hwnd);
-    ApplyDpiScale(dpi_scale);
-
-    // 加载字体
-#ifdef BUILD_TIME
-    ImFontConfig font_cfg;
-    font_cfg.FontDataOwnedByAtlas = false;
-    ADD_FONT_FROM_MEMORY_TTF(io, 16.0f, &font_cfg);
-    large_font = ADD_FONT_FROM_MEMORY_TTF(io, 24.0f, &font_cfg);
-#endif
+    ImGui::GetStyle().ScaleAllSizes(dpi_scale);
+    io.Fonts->AddFontFromFileTTF(
+        "C:/Windows/Fonts/msyh.ttc",
+        16 * dpi_scale,
+        nullptr,
+        io.Fonts->GetGlyphRangesChineseFull()
+    );
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);

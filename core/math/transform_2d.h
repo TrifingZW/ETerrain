@@ -9,11 +9,11 @@
 
 class Transform2D
 {
-    glm::vec2 position; // 位置
-    float rotation; // 旋转角度（单位：弧度）
-    glm::vec2 scale; // 缩放比例
-
 public:
+    glm::vec2 Position; // 位置
+    float Rotation; // 旋转角度（单位：弧度）
+    glm::vec2 Scale; // 缩放比例
+
     // 构造函数
     Transform2D();
 

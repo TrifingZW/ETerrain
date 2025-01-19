@@ -22,7 +22,7 @@ HexManager::HexManager(const int hexWidth, const int hexHeight, const float side
 glm::vec2 HexManager::HexToPixel(const glm::ivec2& hex) const
 {
     return {
-        static_cast<float>(sideLength) + (static_cast<float>(hex.x) * (static_cast<float>(sideLength) * (3.0f / 2.0f))),
+        static_cast<float>(sideLength) + static_cast<float>(hex.x) * (static_cast<float>(sideLength) * (3.0f / 2.0f)),
         innerRadius + static_cast<float>(hex.y) * static_cast<float>(tileHeight) + static_cast<float>(hex.x % 2) * innerRadius
     };
 }

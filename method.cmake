@@ -124,27 +124,6 @@ function(LoadStb)
 
 endfunction()
 
-function(LoadFont)
-
-    # 定义字体文件路径
-    set(FONT_DIR ${CMAKE_SOURCE_DIR}/misc/fonts)
-    target_include_directories(ETerrain PRIVATE ${FONT_DIR})
-    set(FONT_SOURCE ${FONT_DIR}/HarmonyOS_Sans_SC_Bold.ttf)
-    set(FONT_HEADER ${CMAKE_BINARY_DIR}/harmony_os_sans_sc_bold.h)
-
-    add_custom_command(
-            DEPENDS ${FONT_SOURCE}
-            OUTPUT ${FONT_HEADER}
-            COMMAND python ${FONT_DIR}/generate_font_array.py ${FONT_SOURCE} ${FONT_HEADER}
-            COMMENT "Generating HarmonyOS_Sans_SC_Bold.ttf from harmony_os_sans_sc_bold.h"
-    )
-
-    # 添加自定义目标，确保字节数组头文件先生成
-    add_custom_target(EmbedFont DEPENDS ${FONT_HEADER})
-    add_dependencies(ETerrain EmbedFont)
-
-endfunction()
-
 function(LoadShader ShaderName)
     # 读取顶点着色器和片段着色器内容
     file(READ "misc/glsl/${ShaderName}.vsh" SHADER_VSH_CONTENT)

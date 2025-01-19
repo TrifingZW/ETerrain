@@ -30,7 +30,7 @@ mat4 Transform3D::GetModelMatrix() const
 {
     const mat4 translationMatrix = translate(mat4(1.0f), _position);
     const mat4 rotationMatrix = toMat4(_rotation);
-    const mat4 scaleMatrix = glm::scale(mat4(1.0f), _scale);
+    const mat4 scaleMatrix = scale(mat4(1.0f), _scale);
     return translationMatrix * rotationMatrix * scaleMatrix;
 }
 

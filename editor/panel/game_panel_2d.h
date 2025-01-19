@@ -15,7 +15,6 @@
 #include "hex_manager.h"
 #include "editor/world/land_unit.h"
 #include "glm/detail/_noise.hpp"
-#include "glm/detail/_noise.hpp"
 
 class GamePanel2D : public Node
 {
@@ -40,10 +39,11 @@ public:
     void Rendering(SpriteBatch& spriteBatch) override;
     void Gui() override;
 
-    void IterateLandUnit(const std::function<void(LandUnit&, const glm::vec2)>& func) const;
+    void ImageInput() const;
+    void IterateLandUnit(const std::function<void(LandUnit&, glm::vec2)>& func) const;
     void NewFramebuffer(int width, int height);
     void GenerateOceanVertex() const;
     void GenerateBuffer() const;
 
-    static void DrawTerrain(SpriteBatch& spriteBatch,uint8_t type, uint8_t id, const glm::vec2& position);
+    static void DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id, const glm::vec2& position);
 };

@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <memory>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -14,22 +14,18 @@ class Node
 public:
     bool IsInit = false;
     bool IsReady = false;
-    std::string Name = "Node";;
+    std::string Name = "Node";
 
     // TODO 节点系统的内存管理不合理
     virtual ~Node() = default;
 
     // TODO 字节的内存管理不合理
-    void AddChild(std::unique_ptr<Node> object);
-    [[nodiscard]] const std::vector<std::unique_ptr<Node> >& GetChildren() const;
+    void AddChild(Node* object);
+    [[nodiscard]] bool HasChild() const;
+    [[nodiscard]] const std::vector<Node *>& GetChildren() const;
     [[nodiscard]] Node* GetParent() const;
+    void TraverseChildren(const std::function<void(Node*)>& func);
 
-    void InitTree();
-    void ReadyTree();
-    void ProcessTree(float delta);
-    void RenderingTree(SpriteBatch* spriteBatch);
-    void GuiTree();
-    void InputTree(int key);
     virtual void Init();
     virtual void Ready();
     virtual void Process(float delta);
@@ -39,5 +35,5 @@ public:
 
 private:
     Node* parent = nullptr;
-    std::vector<std::unique_ptr<Node> > children;
+    std::vector<Node *> children{};
 };

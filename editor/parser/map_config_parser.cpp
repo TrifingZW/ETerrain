@@ -7,8 +7,6 @@
 #include <pugixml.hpp>
 #include <stdexcept>
 
-#include "core/helpers/helper.h"
-
 bool MapConfigParser::loadFromXml(const std::string& filePath)
 {
     pugi::xml_document doc;

@@ -25,8 +25,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
 # 导入方法
 include(method.cmake)
 
-#add_definitions(-DBUILD_TIME)
-
 # 定义并添加源文件
 set(SOURCE_FILES
         # 渲染器后端
@@ -107,9 +105,6 @@ set(SOURCE_FILES
         editor/parser/btl_structure.h
         editor/world/land_unit.cpp
         editor/world/land_unit.h
-
-        # 杂项
-        misc/fonts/font.h
 )
 if (PLATFORM STREQUAL "windows")
     list(APPEND SOURCE_FILES main.cpp)
@@ -156,5 +151,4 @@ LoadModules()
 LoadImGui()
 LoadPugixml()
 LoadStb()
-LoadFont()
 LoadShader(game)

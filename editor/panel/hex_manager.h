@@ -67,11 +67,11 @@ public:
     size_t GetVertexCount() override { return PHexVertexData.size(); }
     void* GetVertexDataPtr() override { return PHexVertexData.data(); }
     size_t GetVertexMemorySize() override { return sizeof(HexVertexData); }
-    size_t GetVertexDataMemorySize() override { return PHexVertexData.size() * sizeof(HexVertexData); };
+    size_t GetVertexDataMemorySize() override { return PHexVertexData.size() * sizeof(HexVertexData); }
 
-    size_t GetIndicesCount() override { return PLineHexVertexIndices.size(); };
-    void* GetIndicesDataPtr() override { return PLineHexVertexIndices.data(); };
-    size_t GetIndicesDataMemorySize() override { return PLineHexVertexIndices.size() * sizeof(short); };
+    size_t GetIndicesCount() override { return PLineHexVertexIndices.size(); }
+    void* GetIndicesDataPtr() override { return PLineHexVertexIndices.data(); }
+    size_t GetIndicesDataMemorySize() override { return PLineHexVertexIndices.size() * sizeof(short); }
 };
 
 class HexManager
