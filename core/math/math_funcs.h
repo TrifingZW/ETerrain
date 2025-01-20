@@ -21,11 +21,15 @@ namespace Math
         return value;
     }
 
-    inline double floor(const double pX) { return ::floor(pX); }
-    inline float floor(const float pX) { return floorf(pX); }
+    inline double Floor(const double pX) { return ::floor(pX); }
+    inline float Floor(const float pX) { return floorf(pX); }
 
     inline float Cross(const glm::vec2& pCurrent, const glm::vec2& pOther)
     {
         return pCurrent.x * pOther.y - pCurrent.y * pOther.x;
+    }
+
+   inline float Lerp(const float start, const float end, const float interp) {
+        return start + (end - start) * interp;
     }
 }

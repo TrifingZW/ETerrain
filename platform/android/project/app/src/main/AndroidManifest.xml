@@ -21,7 +21,7 @@
             android:process=":phoenix"
             android:resizeableActivity="false"
             android:screenOrientation="landscape"
-            android:theme="@style/ETerrainTheme"
+            android:theme="@style/Theme.ETerrain"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

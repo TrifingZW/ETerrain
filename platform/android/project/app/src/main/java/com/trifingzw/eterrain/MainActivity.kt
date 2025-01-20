@@ -2,8 +2,10 @@ package com.trifingzw.eterrain
 
 import android.app.NativeActivity
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowInsets
@@ -15,7 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue
 class MainActivity : NativeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
+        enableEdgeToEdge()
         bar()
 
     }
@@ -69,4 +71,11 @@ class MainActivity : NativeActivity() {
     fun pollUnicodeChar(): Int {
         return unicodeCharacterQueue.poll() ?: 0
     }
+
+    @Keep
+    fun getDpiSize(): Float {
+        val metrics: DisplayMetrics = this.resources.displayMetrics
+        return metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
+    }
+
 }

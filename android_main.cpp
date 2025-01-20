@@ -16,6 +16,31 @@
 #include "platform/android/android.h"
 #include "platform/android/android_out.h"
 
+float GetSystemDPI(const android_app* app)
+{
+    JNIEnv* java_env = nullptr;
+    JavaVM* java_vm = app->activity->vm;
+
+    // 检查线程是否已经附加
+    if (java_vm->GetEnv(reinterpret_cast<void **>(&java_env), JNI_VERSION_1_6) != JNI_OK)
+        java_vm->AttachCurrentThread(&java_env, nullptr);
+
+    jclass native_activity_clazz = java_env->GetObjectClass(app->activity->clazz);
+    jmethodID method_id = java_env->GetMethodID(native_activity_clazz, "getDpiSize", "()F");
+
+    if (method_id == nullptr)
+        return 4.0f;
+
+    // 调用 getDpiSize() 获取 DPI
+    jfloat dpi = java_env->CallFloatMethod(app->activity->clazz, method_id);
+
+    // 分离线程并恢复原始状态
+    if (java_vm->GetEnv(reinterpret_cast<void **>(&java_env), JNI_VERSION_1_6) != JNI_OK)
+        java_vm->DetachCurrentThread();
+
+    return dpi;
+}
+
 
 // 辅助函数的前向声明
 static void Init(android_app* app);
@@ -191,11 +216,15 @@ void InitImGui()
     io.IniFilename = Android::g_IniFilename.c_str();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // 启用停靠功能
 
-    ImFontConfig font_cfg;
-    font_cfg.SizePixels = 28.0f;
-    io.Fonts->AddFontDefault(&font_cfg);
-
-    ImGui::GetStyle().ScaleAllSizes(4.0f);
+    // 设置dpi为系统dpi
+    const float dpi_scale = GetSystemDPI(Android::g_App);
+    ImGui::GetStyle().ScaleAllSizes(dpi_scale);
+    io.Fonts->AddFontFromFileTTF(
+        "/system/fonts/VivoFont.ttf",
+        16 * dpi_scale,
+        nullptr,
+        io.Fonts->GetGlyphRangesChineseFull()
+    );
 
     // 设置平台/渲染器后端
     ImGui_ImplAndroid_Init(Android::g_App->window);

@@ -49,7 +49,7 @@ void Node::Init() {}
 
 void Node::Ready() {}
 
-void Node::Process(float delta) {}
+void Node::Process(double delta) {}
 
 void Node::Rendering(SpriteBatch& spriteBatch) {}
 

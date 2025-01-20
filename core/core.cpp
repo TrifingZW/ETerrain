@@ -43,14 +43,14 @@ void Core::InitTree()
     );
 }
 
-void Core::ProcessTree(const float delta)
+void Core::ProcessTree(const double delta)
 {
     RootNode.TraverseChildren([delta](Node* node) { node->Process(delta); });
 }
 
 void Core::Input(const int key)
 {
-    RootNode.TraverseChildren([key](Node* node) { node->Process(static_cast<float>(key)); });
+    RootNode.TraverseChildren([key](Node* node) { node->Input(key); });
 }
 
 GraphicsDevice* Core::GetGraphicsDevice() { return _graphicsDevice; }

@@ -28,7 +28,7 @@ public:
 
     virtual void Init();
     virtual void Ready();
-    virtual void Process(float delta);
+    virtual void Process(double delta);
     virtual void Rendering(SpriteBatch& spriteBatch);
     virtual void Gui();
     virtual void Input(int key);

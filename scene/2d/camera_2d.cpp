@@ -19,10 +19,12 @@ void Camera2D::SetViewportSize(const vec2& viewportSize) { _viewportSize = viewp
 mat4 Camera2D::GetProjectionMatrix() const
 {
     // 计算视口的大小，考虑缩放和宽高比
-    constexpr float left = 0.0f;
-    const float right = _viewportSize.x / _zoom; // 将右边界设为800除以缩放系数
-    const float bottom = _viewportSize.y / _zoom; // 将下边界设为600除以缩放系数
-    constexpr float top = 0.0f;
+    const float width = _viewportSize.x / _zoom;
+    const float height = _viewportSize.y / _zoom;
+    const float left = Transform2D.Position.x - width / 2.0f;
+    const float right = Transform2D.Position.x + width / 2.0f;
+    const float top = Transform2D.Position.y - height / 2.0f;
+    const float bottom = Transform2D.Position.y + height / 2.0f;
 
     mat4 projection = ortho(left, right, bottom, top, -1.0f, 1.0f);
     projection = translate(projection, vec3(_offset, 0.0f));

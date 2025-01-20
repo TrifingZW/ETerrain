@@ -14,12 +14,12 @@
 #include "editor/parser/bin_parser.h"
 #include "hex_manager.h"
 #include "editor/world/land_unit.h"
-#include "glm/detail/_noise.hpp"
 
 class GamePanel2D : public Node
 {
 public:
     int width = 1, height = 1;
+    float TargetCameraZoom = 1.0f;
     Shader* shader = nullptr;
     HexVertexType* vertexInfo = nullptr;
     BufferManager* GridBufferManager = nullptr;
@@ -38,8 +38,9 @@ public:
     void Ready() override;
     void Rendering(SpriteBatch& spriteBatch) override;
     void Gui() override;
+    void Process(double delta) override;
 
-    void ImageInput() const;
+    void ImageInput();
     void IterateLandUnit(const std::function<void(LandUnit&, glm::vec2)>& func) const;
     void NewFramebuffer(int width, int height);
     void GenerateOceanVertex() const;

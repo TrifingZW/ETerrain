@@ -5,11 +5,15 @@
 #include "game_panel_2d.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <iostream>
 #include <glm/gtx/string_cast.hpp>
 
 #include "core/core.h"
 #include "game_shader.h"
+#include "core/math/math_funcs.h"
+
+struct ImGuiDockNode;
 
 GamePanel2D::GamePanel2D()
 {
@@ -60,15 +64,12 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     Core::GetGraphicsDevice()->SetRenderTarget(renderTarget);
     Core::GetGraphicsDevice()->Clear();
 
-    spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, SamplerState::LinearMirror);
+    spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, camera2d->GetProjectionMatrix());
     spriteBatch.Draw(
         Editor::loadResources->mapLand,
         Rect(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
         Color(1.0f, 1.0f, 1.0f, 1.0f)
     );
-    spriteBatch.End();
-
-    spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, camera2d->GetProjectionMatrix());
 
     IterateLandUnit(
         [&spriteBatch](const LandUnit& landUnit, const glm::vec2& position)
@@ -125,7 +126,11 @@ void GamePanel2D::Gui()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0)); // 设置窗口内边距为 0
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f); // 去掉窗口边框
 
-    ImGui::Begin("Game2D");
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+    const ImGuiDockNode* gui_dock_node = ImGui::DockBuilderGetNode(Core::Instance().RootNode.dockSpaceId);
+    ImGui::SetNextWindowDockID(gui_dock_node->CentralNode->ID, ImGuiCond_Always);
+
+    ImGui::Begin("Game2D", nullptr, window_flags);
 
     const ImVec2 panelSize = ImGui::GetContentRegionAvail();
     if (static_cast<int>(panelSize.x) != width || static_cast<int>(panelSize.y) != height)
@@ -148,45 +153,25 @@ void GamePanel2D::Gui()
     ImGui::End();
     ImGui::PopStyleVar(2);
 
-
-    static float fov = 0.1f;
-    /*static float f1 = 0.0f;
-    static float f2 = 0.0f;
-    static float f3 = 0.0f;
-    static float f4 = 0.0f;
-    static float f5 = 0.0f;
-    static float f6 = 0.0f;
-    static float f7 = 0.0f;
-    static float f8 = 0.0f;
-    static float f9 = 0.0f;
-    static auto clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);*/
-    ImGui::Begin("Game Test");
-    ImGui::SliderFloat("fov", &fov, 0.1f, 10.0f);
-    /*ImGui::SliderFloat("f1", &f1, -10.0f, 10.0f);
-    ImGui::SliderFloat("f2", &f2, -10.0f, 10.0f);
-    ImGui::SliderFloat("f3", &f3, -10.0f, 10.0f);
-    ImGui::SliderFloat("f4", &f4, -10.0f, 10.0f);
-    ImGui::SliderFloat("f5", &f5, -10.0f, 10.0f);
-    ImGui::SliderFloat("f6", &f6, -10.0f, 10.0f);
-    ImGui::SliderFloat("f7", &f7, -10.0f, 10.0f);
-    ImGui::SliderFloat("f8", &f8, -10.0f, 10.0f);
-    ImGui::SliderFloat("f9", &f9, -10.0f, 10.0f);
-    ImGui::ColorEdit3("clear color", reinterpret_cast<float *>(&clear_color));*/
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    window_flags |= ImGuiWindowFlags_NoResize;
+    ImGui::SetNextWindowDockID(gui_dock_node->ChildNodes[0]->ID, ImGuiCond_Always);
+    ImGui::Begin("Tool", nullptr, window_flags);
     ImGui::End();
 }
 
-void GamePanel2D::ImageInput() const
+void GamePanel2D::Process(const double delta)
+{
+    camera2d->SetZoom(Math::Lerp(camera2d->GetZoom(), TargetCameraZoom, static_cast<float>(delta) * 10.0f));
+}
+
+void GamePanel2D::ImageInput()
 {
     if (const float mouseWheel = ImGui::GetIO().MouseWheel; mouseWheel != 0.0f)
-    {
-        camera2d->SetZoom(camera2d->GetZoom() + mouseWheel * 0.1f);
-    }
+        TargetCameraZoom += mouseWheel * 0.1f * camera2d->GetZoom();
 
-    if (const ImVec2 mouseDelta = ImGui::GetIO().MouseDelta; mouseDelta.x != 0.0f || mouseDelta.y != 0.0f)
-    {
-        camera2d->SetOffset(glm::vec2(mouseDelta.x, mouseDelta.y));
-    }
+    if (ImGui::GetIO().MouseDown[1])
+        if (const ImVec2 mouseDelta = ImGui::GetIO().MouseDelta; mouseDelta.x != 0.0f || mouseDelta.y != 0.0f)
+            camera2d->Transform2D.Position -= glm::vec2(mouseDelta.x, mouseDelta.y) / camera2d->GetZoom();
 }
 
 void GamePanel2D::IterateLandUnit(const std::function<void(LandUnit&, glm::vec2)>& func) const

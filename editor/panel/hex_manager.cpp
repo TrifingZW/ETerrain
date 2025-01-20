@@ -36,8 +36,8 @@ glm::ivec2 HexManager::PixelToHex(const glm::vec2& pixel) const
     ret.x /= overlapping_ratio;
 
     const glm::vec2 raw_pos = ret;
-    if (Math::PosMod(static_cast<long>(Math::floor(ret.x)), 2))
-        ret = glm::vec2(Math::floor(ret.x), Math::floor(ret.y + 0.5) - 0.5);
+    if (Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2))
+        ret = glm::vec2(Math::Floor(ret.x), Math::Floor(ret.y + 0.5) - 0.5);
     else
         ret = floor(ret);
 
@@ -47,9 +47,9 @@ glm::ivec2 HexManager::PixelToHex(const glm::vec2& pixel) const
 
     ret = floor(ret);
     if (in_top_left_triangle)
-        ret += glm::ivec2(-1, Math::PosMod(static_cast<long>(Math::floor(ret.x)), 2) ? 0 : -1);
+        ret += glm::ivec2(-1, Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2) ? 0 : -1);
     else if (in_bottom_left_triangle)
-        ret += glm::ivec2(-1, Math::PosMod(static_cast<long>(Math::floor(ret.x)), 2) ? 1 : 0);
+        ret += glm::ivec2(-1, Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2) ? 1 : 0);
 
     return {ret.x, ret.y};
 }

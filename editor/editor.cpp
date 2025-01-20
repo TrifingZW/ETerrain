@@ -4,6 +4,8 @@
 
 #include "editor.h"
 
+#include <imgui_internal.h>
+
 LoadResources* Editor::loadResources = nullptr;
 
 Editor::Editor()
@@ -31,7 +33,7 @@ Editor::~Editor()
 
 void Editor::Gui()
 {
-    ImGuiDockNodeFlags docks_pace_flags = ImGuiDockNodeFlags_None;
+    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 
     // 全屏
@@ -43,7 +45,10 @@ void Editor::Gui()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
     window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-    if (docks_pace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+
+    // 使用 ImGuiDockNodeFlags_PassthruCentralNode 时，DockSpace() 会渲染背景
+    // 并处理通过的孔洞，因此我们要求 Begin() 不渲染背景。
+    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
         window_flags |= ImGuiWindowFlags_NoBackground;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -52,7 +57,7 @@ void Editor::Gui()
     ImGui::PopStyleVar(2);
 
     dockSpaceId = ImGui::GetID("DockSpace");
-    ImGui::DockSpace(dockSpaceId, ImVec2(0.0f, 0.0f), docks_pace_flags);
+    ImGui::DockSpace(dockSpaceId, ImVec2(0.0f, 0.0f), dockspace_flags);
 
     if (ImGui::BeginMenuBar())
     {
@@ -64,7 +69,9 @@ void Editor::Gui()
             if (ImGui::MenuItem("经典（Classic）")) { ImGui::StyleColorsClassic(); }
             ImGui::EndMenu();
         }
+
         ImGui::EndMenuBar();
     }
+
     ImGui::End();
 }
