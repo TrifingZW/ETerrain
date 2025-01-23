@@ -7,7 +7,6 @@ function(LoadPlatformDependencies)
         set(DIR ${PLATFORM_DIR}/windows)
         list(APPEND PLATFORM_SOURCES
                 ${DIR}/placeholder_class.cpp
-                ${DIR}/placeholder_class.h
         )
 
         include_directories(${THIRDPARTY_DIR}/glfw/include)
@@ -17,9 +16,7 @@ function(LoadPlatformDependencies)
         set(DIR ${PLATFORM_DIR}/android)
         list(APPEND PLATFORM_SOURCES
                 ${DIR}/android_out.cpp
-                ${DIR}/android_out.h
                 ${DIR}/android.cpp
-                ${DIR}/android.h
         )
 
         include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
@@ -121,6 +118,73 @@ function(LoadStb)
     set(DIR ${THIRDPARTY_DIR}/stb)
     target_include_directories(ETerrain PRIVATE ${DIR})
     #    add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
+
+endfunction()
+
+function(LoadThorvg)
+
+    add_definitions(-DTVG_STATIC)
+
+    add_library(thorvg STATIC)
+    set(DIR ${THIRDPARTY_DIR}/thorvg)
+
+    target_include_directories(ETerrain PRIVATE ${DIR}/inc)
+    target_include_directories(thorvg PRIVATE ${DIR}/inc)
+    target_include_directories(thorvg PRIVATE ${DIR}/src/common)
+    target_include_directories(thorvg PRIVATE ${DIR}/src/loaders/svg)
+    target_include_directories(thorvg PRIVATE ${DIR}/src/renderer)
+    target_include_directories(thorvg PRIVATE ${DIR}/src/renderer/sw_engine)
+    target_include_directories(thorvg PRIVATE ${DIR}/src/loaders/raw)
+
+    set(MODULE_SOURCES
+            # common
+            ${DIR}/src/common/tvgCompressor.cpp
+            ${DIR}/src/common/tvgMath.cpp
+            ${DIR}/src/common/tvgStr.cpp
+
+            # SVG parser
+            ${DIR}/src/loaders/svg/tvgSvgCssStyle.cpp
+            ${DIR}/src/loaders/svg/tvgSvgLoader.cpp
+            ${DIR}/src/loaders/svg/tvgSvgPath.cpp
+            ${DIR}/src/loaders/svg/tvgSvgSceneBuilder.cpp
+            ${DIR}/src/loaders/svg/tvgSvgUtil.cpp
+            ${DIR}/src/loaders/svg/tvgXmlParser.cpp
+            ${DIR}/src/loaders/raw/tvgRawLoader.cpp
+
+            # renderer common
+            ${DIR}/src/renderer/tvgAccessor.cpp
+            #  ${DIR}/src/renderer/tvgAnimation.cpp
+            ${DIR}/src/renderer/tvgCanvas.cpp
+            ${DIR}/src/renderer/tvgFill.cpp
+            #  ${DIR}/"src/renderer/tvgGlCanvas.cpp
+            ${DIR}/src/renderer/tvgInitializer.cpp
+            ${DIR}/src/renderer/tvgLoader.cpp
+            ${DIR}/src/renderer/tvgPaint.cpp
+            ${DIR}/src/renderer/tvgPicture.cpp
+            ${DIR}/src/renderer/tvgRender.cpp
+            #  ${DIR}/"src/renderer/tvgSaver.cpp
+            ${DIR}/src/renderer/tvgScene.cpp
+            ${DIR}/src/renderer/tvgShape.cpp
+            ${DIR}/src/renderer/tvgSwCanvas.cpp
+            ${DIR}/src/renderer/tvgTaskScheduler.cpp
+            ${DIR}/src/renderer/tvgText.cpp
+            #  ${DIR}/src/renderer/tvgWgCanvas.cpp
+
+            # renderer sw_engine
+            ${DIR}/src/renderer/sw_engine/tvgSwFill.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwImage.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwMath.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwMemPool.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwPostEffect.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwRaster.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwRenderer.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwRle.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwShape.cpp
+            ${DIR}/src/renderer/sw_engine/tvgSwStroke.cpp
+    )
+
+    target_sources(thorvg PRIVATE ${MODULE_SOURCES})
+    target_link_libraries(ETerrain PRIVATE thorvg)
 
 endfunction()
 

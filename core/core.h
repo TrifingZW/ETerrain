@@ -14,17 +14,19 @@ class Core
     static SpriteBatch* _spriteBatch;
 
 public:
-    Editor RootNode{};
+    Node* RootNode = nullptr;
 
+    Core();
+    ~Core();
     // 静态方法，获取单例实例
     static Core& Instance();
-    ~Core();
 
-    void Renderings();
-    void ImGuiAll();
-    void InitTree();
-    void ProcessTree(double delta);
-    void Input(int key);
+
+    void Renderings() const;
+    void ImGuiAll() const;
+    void InitTree() const;
+    void ProcessTree(double delta) const;
+    void Input(int key) const;
 
     static GraphicsDevice* GetGraphicsDevice();
     static SpriteBatch& GetSpriteBatch();

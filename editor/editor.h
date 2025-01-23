@@ -14,7 +14,6 @@
 class Editor : public Node
 {
 public:
-    ImGuiID dockSpaceId{};
     HexPanel* hexPanel = nullptr;
     GamePanel2D* gamePanel2d = nullptr;
     GamePanel3D* gamePanel3d = nullptr;
@@ -23,5 +22,6 @@ public:
     explicit Editor();
     ~Editor() override;
 
+    void Init() override;
     void Gui() override;
 };

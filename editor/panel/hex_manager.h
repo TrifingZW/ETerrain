@@ -12,6 +12,8 @@
 
 #include "core/graphics/vertex_declaration.h"
 #include "core/graphics/vertex_type.h"
+#include "core/math/vector2.h"
+#include "core/math/vector2i.h"
 
 namespace HexMetrics
 {
@@ -82,8 +84,9 @@ public:
     float outerRadius, innerRadius;
     HexManager(int hexWidth, int hexHeight, float sideLength);
 
-    [[nodiscard]] glm::vec2 HexToPixel(const glm::ivec2& hex) const;
-    [[nodiscard]] glm::ivec2 PixelToHex(const glm::vec2& pixel) const;
+    [[nodiscard]] Vector2 GridToPixel(const Vector2I& hex) const;
+    [[nodiscard]] Vector2I PixelToGrid(const Vector2& pixel) const;
+    [[nodiscard]] Vector2 GetStandardPosition(const Vector2& position) const;
     [[nodiscard]] float GetPixelWidth() const;
     [[nodiscard]] float GetPixelHeight() const;
 };

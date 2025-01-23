@@ -11,7 +11,7 @@ Texture2D::~Texture2D()
     glDeleteTextures(1, &Id);
 }
 
-void Texture2D::Generate(const int width, const int height, const int channels, const unsigned char* data)
+void Texture2D::Generate(const int width, const int height, const int channels, const void* data)
 {
     Width = width;
     Height = height;
@@ -44,16 +44,18 @@ void Texture2D::SetPixelColor(const int x, const int y, const unsigned char data
     SetRangePixelColor(x, y, 1, 1, &data);
 }
 
-void Texture2D::SetRangePixelColor(const int x, const int y, const int width, const int height, const unsigned char* data) const
+void Texture2D::SetRangePixelColor(const int x, const int y, const int width, const int height, const void* data) const
 {
     // 更新纹理的部分区域
     glBindTexture(GL_TEXTURE_2D, Id);
     glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
 
-
 void Texture2D::Bind(const GLenum target) const
 {
     glActiveTexture(target);
     glBindTexture(GL_TEXTURE_2D, Id);
 }
+
+Vector2 Texture2D::GetSize() const {return {static_cast<float>(Width), static_cast<float>(Height)};}
+

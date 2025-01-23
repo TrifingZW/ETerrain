@@ -31,47 +31,8 @@ Editor::~Editor()
     delete loadResources;*/
 }
 
-void Editor::Gui()
+void Editor::Init()
 {
-    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-
-    // 全屏
-    const ImGuiViewport* viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(viewport->WorkPos);
-    ImGui::SetNextWindowSize(viewport->WorkSize);
-    ImGui::SetNextWindowViewport(viewport->ID);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-    // 使用 ImGuiDockNodeFlags_PassthruCentralNode 时，DockSpace() 会渲染背景
-    // 并处理通过的孔洞，因此我们要求 Begin() 不渲染背景。
-    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-        window_flags |= ImGuiWindowFlags_NoBackground;
-
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("DockSpaceWindow", nullptr, window_flags);
-    ImGui::PopStyleVar();
-    ImGui::PopStyleVar(2);
-
-    dockSpaceId = ImGui::GetID("DockSpace");
-    ImGui::DockSpace(dockSpaceId, ImVec2(0.0f, 0.0f), dockspace_flags);
-
-    if (ImGui::BeginMenuBar())
-    {
-        //增加主题切换
-        if (ImGui::BeginMenu("主题（Other）"))
-        {
-            if (ImGui::MenuItem("暗黑（Dark）")) { ImGui::StyleColorsDark(); }
-            if (ImGui::MenuItem("明亮（Light）")) { ImGui::StyleColorsLight(); }
-            if (ImGui::MenuItem("经典（Classic）")) { ImGui::StyleColorsClassic(); }
-            ImGui::EndMenu();
-        }
-
-        ImGui::EndMenuBar();
-    }
-
-    ImGui::End();
 }
+
+void Editor::Gui() {}

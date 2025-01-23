@@ -4,12 +4,15 @@
 
 #include "load_resources.h"
 
-#include "core/helpers/helper.h"
+#include <e_terrain.h>
+
+#include "core/helpers/assets_helper.h"
 
 LoadResources::~LoadResources()
 {
     delete mapLand;
     delete mapSea;
+    delete Pen;
 }
 
 void LoadResources::Init()
@@ -22,9 +25,12 @@ void LoadResources::Init()
 
 void LoadResources::LoadTexture2D() const
 {
-    const std::string texturePath = "map_land.png";
+    const std::string map_land = "map_land.png";
+    const std::string anim_status = "anim_status.png";
 #ifdef PLATFORM_WINDOWS
-    Helper::LoadTexture2DFromPath(*mapLand, texturePath);
+    ImGuiHelper::LoadTexture2DFromPath(*mapLand, map_land);
+    ImGuiHelper::LoadTexture2DFromPath(*AnimStatus, anim_status);
+    ImGuiHelper::LoadSVGToTexture2DFromFile(*Pen, "pen.svg", ETerrain::DpiScale);
 #elif defined(PLATFORM_ANDROID)
     Helper::LoadTexture2DFromAndroidAssets(*mapLand, texturePath);
 #endif

@@ -7,7 +7,7 @@
 #include <pugixml.hpp>
 #include <filesystem>
 
-#include "core/helpers/helper.h"
+#include "core/helpers/assets_helper.h"
 
 std::string getParentPath(const std::string& filePath)
 {
@@ -126,7 +126,7 @@ void ResourceTextureParser::loadTexture()
     const std::string texturePath = TextureName;
 
 #ifdef PLATFORM_WINDOWS
-    Helper::LoadTexture2DFromPath(Texture2D, "assets/" + texturePath);
+    ImGuiHelper::LoadTexture2DFromPath(Texture2D, "assets/" + texturePath);
 #elif defined(PLATFORM_ANDROID)
     Helper::LoadTexture2DFromAndroidAssets(Texture2D, texturePath);
 #endif

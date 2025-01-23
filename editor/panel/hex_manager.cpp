@@ -4,8 +4,6 @@
 
 #include "hex_manager.h"
 
-#include <glm/common.hpp>
-
 #include "core/math/math_funcs.h"
 
 HexManager::HexManager(const int hexWidth, const int hexHeight, const float sideLength)
@@ -19,7 +17,7 @@ HexManager::HexManager(const int hexWidth, const int hexHeight, const float side
     innerRadius = tileHeight / 2.0f;
 }
 
-glm::vec2 HexManager::HexToPixel(const glm::ivec2& hex) const
+Vector2 HexManager::GridToPixel(const Vector2I& hex) const
 {
     return {
         static_cast<float>(sideLength) + static_cast<float>(hex.x) * (static_cast<float>(sideLength) * (3.0f / 2.0f)),
@@ -27,31 +25,36 @@ glm::vec2 HexManager::HexToPixel(const glm::ivec2& hex) const
     };
 }
 
-glm::ivec2 HexManager::PixelToHex(const glm::vec2& pixel) const
+Vector2I HexManager::PixelToGrid(const Vector2& pixel) const
 {
-    glm::vec2 ret = pixel;
-    ret /= glm::vec2(tileWidth, tileHeight);
+    Vector2 ret = pixel;
+    ret /= Vector2(tileWidth, tileHeight);
 
     constexpr float overlapping_ratio = 0.75f;
     ret.x /= overlapping_ratio;
 
-    const glm::vec2 raw_pos = ret;
+    const Vector2 raw_pos = ret;
     if (Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2))
-        ret = glm::vec2(Math::Floor(ret.x), Math::Floor(ret.y + 0.5) - 0.5);
+        ret = Vector2(Math::Floor(ret.x), Math::Floor(ret.y + 0.5f) - 0.5f);
     else
-        ret = floor(ret);
+        ret = ret.Floor();
 
-    const glm::vec2 in_tile_pos = raw_pos - ret;
-    const bool in_top_left_triangle = Math::Cross(in_tile_pos - glm::vec2(0.0, 0.5), glm::vec2(1.0 / overlapping_ratio - 1, -0.5)) > 0;
-    const bool in_bottom_left_triangle = Math::Cross(in_tile_pos - glm::vec2(0.0, 0.5), glm::vec2(1.0 / overlapping_ratio - 1, 0.5)) <= 0;
+    const Vector2 in_tile_pos = raw_pos - ret;
+    const bool in_top_left_triangle = (in_tile_pos - Vector2(0.0f, 0.5f)).Cross(Vector2(1.0f / overlapping_ratio - 1, -0.5f)) > 0;
+    const bool in_bottom_left_triangle = (in_tile_pos - Vector2(0.0f, 0.5f)).Cross(Vector2(1.0f / overlapping_ratio - 1, 0.5f)) <= 0;
 
-    ret = floor(ret);
+    auto retI = static_cast<Vector2I>(ret.Floor());
     if (in_top_left_triangle)
-        ret += glm::ivec2(-1, Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2) ? 0 : -1);
+        retI += Vector2I(-1, Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2) ? 0 : -1);
     else if (in_bottom_left_triangle)
-        ret += glm::ivec2(-1, Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2) ? 1 : 0);
+        retI += Vector2I(-1, Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2) ? 1 : 0);
 
-    return {ret.x, ret.y};
+    return retI;
+}
+
+Vector2 HexManager::GetStandardPosition(const Vector2& position) const
+{
+    return GridToPixel(PixelToGrid(position));
 }
 
 float HexManager::GetPixelWidth() const

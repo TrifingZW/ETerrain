@@ -3,33 +3,31 @@
 //
 
 #pragma once
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "vector2.h"
 
 class Transform2D
 {
 public:
-    glm::vec2 Position; // 位置
+    Vector2 Position; // 位置
     float Rotation; // 旋转角度（单位：弧度）
-    glm::vec2 Scale; // 缩放比例
+    Vector2 Scale; // 缩放比例
 
     // 构造函数
     Transform2D();
 
     // Getters
-    [[nodiscard]] glm::vec2 GetPosition() const;
+    [[nodiscard]] Vector2 GetPosition() const;
     [[nodiscard]] float GetRotation() const;
-    [[nodiscard]] glm::vec2 GetScale() const;
+    [[nodiscard]] Vector2 GetScale() const;
 
     // Setters
-    void SetPosition(const glm::vec2& pos);
+    void SetPosition(const Vector2& pos);
     void SetRotation(float rot);
-    void SetScale(const glm::vec2& scl);
+    void SetScale(const Vector2& scl);
 
     // 工具方法
     [[nodiscard]] glm::mat3 GetMatrix() const;
-    void Translate(const glm::vec2& delta);
+    void Translate(const Vector2& delta);
     void Rotate(float delta);
-    void ScaleBy(const glm::vec2& factor);
+    void ScaleBy(const Vector2& factor);
 };

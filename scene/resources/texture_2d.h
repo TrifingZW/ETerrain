@@ -6,6 +6,8 @@
 
 #include <glad/glad.h>
 
+#include "core/math/vector2.h"
+
 class Texture2D
 {
 public:
@@ -23,10 +25,12 @@ public:
     Texture2D();
     ~Texture2D();
 
-    void Generate(int width, int height, int channels = 4, const unsigned char* data = nullptr);
+    void Generate(int width, int height, int channels = 4, const void* data = nullptr);
     // 将纹理绑定为当前活动的 GL_TEXTURE_2D 纹理对象
     void Bind(GLenum target) const;
     void SetData(const unsigned char* data) const;
     void SetPixelColor(int x, int y, unsigned char data) const;
-    void SetRangePixelColor(int x, int y, int width, int height, const unsigned char* data) const;
+    void SetRangePixelColor(int x, int y, int width, int height, const void* data) const;
+
+    Vector2 GetSize() const;
 };

@@ -5,6 +5,7 @@
 #pragma once
 
 #include <functional>
+#include <imgui.h>
 
 #include "core/graphics/render_target.h"
 #include "core/graphics/sprite_batch.h"
@@ -20,6 +21,14 @@ class GamePanel2D : public Node
 public:
     int width = 1, height = 1;
     float TargetCameraZoom = 1.0f;
+    Vector2* MouseSelect = nullptr;
+    int SelectedTerrainG, SelectedTileIdx;
+
+    const char* UI_DOCK_WINDOW = "##ui.dock_window";
+    const char* UI_VIEW_BOX = "##ui.view";
+    const char* UI_VIEW_GAME_TEST = "游戏测试##ui.game.test";
+
+
     Shader* shader = nullptr;
     HexVertexType* vertexInfo = nullptr;
     BufferManager* GridBufferManager = nullptr;
@@ -41,10 +50,15 @@ public:
     void Process(double delta) override;
 
     void ImageInput();
-    void IterateLandUnit(const std::function<void(LandUnit&, glm::vec2)>& func) const;
+    void IterateLandUnit(const std::function<void(LandUnit&, Vector2)>& func) const;
     void NewFramebuffer(int width, int height);
     void GenerateOceanVertex() const;
     void GenerateBuffer() const;
 
-    static void DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id, const glm::vec2& position);
+    static void DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id, const Vector2& position);
+
+    void DockingSpace() const;
+    void Menu();
+    void GameView();
+    void GameTestView();
 };

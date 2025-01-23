@@ -7,10 +7,15 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
+#include "core/math/vector2.h"
+
 struct Rect
 {
     Rect(const float x, const float y, const float width, const float height): X(x), Y(y), Width(width), Height(height) {}
     float X{}, Y{}, Width{}, Height{};
+
+    Vector2 GetPosition() const { return {X, Y}; }
+    Vector2 GetSize() const { return {Width, Height}; }
 };
 
 struct Color

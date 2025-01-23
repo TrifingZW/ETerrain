@@ -54,12 +54,23 @@ set(SOURCE_FILES
         core/core.cpp
         core/core.h
 
+        # 小帮手
+        core/helpers/assets_helper.cpp
+        core/helpers/assets_helper.h
+        core/helpers/imgui_helper.cpp
+        core/helpers/imgui_helper.h
+
         # 数学
+        core/math/math_defs.h
+        core/math/math_funcs.h
         core/math/transform_2d.cpp
         core/math/transform_2d.h
         core/math/transform_3d.cpp
         core/math/transform_3d.h
-        core/math/math_funcs.h
+        core/math/vector2.cpp
+        core/math/vector2.h
+        core/math/vector2i.cpp
+        core/math/vector2i.h
 
         # 场景
         scene/node.cpp
@@ -77,9 +88,8 @@ set(SOURCE_FILES
         scene/resources/texture_2d.cpp
         scene/resources/texture_2d.h
 
-        # 辅助函数
+        # 命名空间
         e_terrain.h
-        core/helpers/helper.h
 
         # 编辑器
         editor/editor.cpp
@@ -105,6 +115,9 @@ set(SOURCE_FILES
         editor/parser/btl_structure.h
         editor/world/land_unit.cpp
         editor/world/land_unit.h
+
+        # 定义
+        core/typedefs.h
 )
 if (PLATFORM STREQUAL "windows")
     list(APPEND SOURCE_FILES main.cpp)
@@ -151,4 +164,5 @@ LoadModules()
 LoadImGui()
 LoadPugixml()
 LoadStb()
+LoadThorvg()
 LoadShader(game)

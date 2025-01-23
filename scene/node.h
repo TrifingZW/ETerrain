@@ -12,6 +12,7 @@
 class Node
 {
 public:
+    bool Root = false;
     bool IsInit = false;
     bool IsReady = false;
     std::string Name = "Node";

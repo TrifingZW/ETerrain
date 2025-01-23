@@ -14,9 +14,11 @@
 #include "platform/android/android.h"
 #endif
 
+#include <thorvg.h>
+
 #include "scene/resources/texture_2d.h"
 
-namespace Helper
+namespace ImGuiHelper
 {
     inline void LoadTexture2DFromPath(Texture2D& texture2D, const std::string& texturePath)
     {
@@ -53,6 +55,29 @@ namespace Helper
         stbi_image_free(data);
 
         // std::cout << "Loaded texture: " << TextureName << " (ID: " << texture2D.Id << ")\n";
+    }
+
+    inline void LoadSVGToTexture2DFromFile(Texture2D& texture2D, const std::string& svgPath, const float p_scale)
+    {
+        auto picture = tvg::Picture::gen();
+        picture->load(svgPath);
+        tvg::Result result = picture->load(svgPath);
+        if (result != tvg::Result::Success) {}
+
+        float fw, fh;
+        picture->size(&fw, &fh);
+        const int width = std::max(1, static_cast<int>(round(fw * p_scale)));
+        const int height = std::max(1, static_cast<int>(round(fh * p_scale)));
+        picture->size(static_cast<float>(width), static_cast<float>(height));
+
+        const auto sw_canvas = tvg::SwCanvas::gen();
+        auto* buffer = new uint32_t[width * height];
+        sw_canvas->target(buffer, width, width, height, tvg::SwCanvas::ABGR8888S);
+        sw_canvas->push(move(picture));
+        sw_canvas->draw();
+        sw_canvas->sync();
+        texture2D.Generate(width, height, 4, buffer);
+        sw_canvas->clear(true);
     }
 
 #ifdef PLATFORM_ANDROID

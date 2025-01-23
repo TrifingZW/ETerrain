@@ -4,7 +4,7 @@
 
 #include "bin_parser.h"
 #include "e_terrain.h"
-#include "core/helpers/helper.h"
+#include "core/helpers/assets_helper.h"
 
 int BinParser::GetWidth() const { return binInfo.Width; }
 int BinParser::GetHeight() const { return binInfo.Height; }

@@ -36,7 +36,9 @@ Node* Node::GetParent() const
 
 void Node::TraverseChildren(const std::function<void(Node*)>& func) // NOLINT(*-no-recursion)
 {
-    func(this);
+    if (Root)
+        func(this);
+
     for (const auto child: children)
     {
         func(child);

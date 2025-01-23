@@ -7,7 +7,7 @@
 #include <pugixml.hpp>
 #include <stdexcept>
 
-#include "core/helpers/helper.h"
+#include "core/helpers/assets_helper.h"
 
 bool MapConfigParser::loadFromXml(const std::string& filePath)
 {
