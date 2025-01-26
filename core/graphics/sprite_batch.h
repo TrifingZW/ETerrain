@@ -13,6 +13,7 @@
 #include "graphics_structure.h"
 #include "graphics_resource.h"
 #include "sampler_state.h"
+#include "core/math/rect2.h"
 
 class SpriteBatch : public GraphicsResource
 {
@@ -51,12 +52,12 @@ public:
 
     void Draw(Texture2D* texture, glm::vec2 position, Color color);
     void DrawCenter(Texture2D* texture, glm::vec2 position, Color color);
-    void Draw(Texture2D* texture, glm::vec2 position, Rect sourceRect, Color color);
-    void DrawCenter(Texture2D* texture, glm::vec2 position, Rect sourceRect, Color color);
+    void Draw(Texture2D* texture, glm::vec2 position, Rect2 sourceRect, Color color);
+    void DrawCenter(Texture2D* texture, glm::vec2 position, Rect2 sourceRect, Color color);
     void Draw(
         Texture2D* texture,
         glm::vec2 position,
-        Rect sourceRect,
+        Rect2 sourceRect,
         Color color,
         float rotation,
         glm::vec2 origin,
@@ -66,19 +67,19 @@ public:
     void Draw(
         Texture2D* texture,
         glm::vec2 position,
-        Rect sourceRect,
+        Rect2 sourceRect,
         Color color,
         float rotation,
         glm::vec2 origin,
         glm::vec2 scale,
         Graphics::SpriteEffects effects
     );
-    void Draw(Texture2D* texture, Rect TargetRect, Color color);
-    void Draw(Texture2D* texture, Rect SourceRect, Rect TargetRect, Color color);
+    void Draw(Texture2D* texture, Rect2 TargetRect, Color color);
+    void Draw(Texture2D* texture, Rect2 SourceRect, Rect2 TargetRect, Color color);
     void Draw(
         Texture2D* texture2D,
-        Rect SourceRect,
-        Rect TargetRect,
+        Rect2 SourceRect,
+        Rect2 TargetRect,
         Color color,
         float rotation,
         glm::vec2 origin,

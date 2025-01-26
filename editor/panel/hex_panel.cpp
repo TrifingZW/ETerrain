@@ -7,7 +7,7 @@
 #include <imgui.h>
 
 #include "core/core.h"
-#include "hex_manager.h"
+#include "grid_manager.h"
 
 void HexPanel::Init()
 {

@@ -21,7 +21,7 @@ ResourceTextureParser::ResourceTextureParser(std::string filePath): FilePath(std
     loadTexture();
 }
 
-std::optional<Rect> ResourceTextureParser::GetRect(const std::string& imageName) const
+std::optional<Rect2> ResourceTextureParser::GetRect(const std::string& imageName) const
 {
     const auto image = std::find_if(
         Images.begin(),
@@ -32,10 +32,10 @@ std::optional<Rect> ResourceTextureParser::GetRect(const std::string& imageName)
     if (image == Images.end())
         return std::nullopt; // 如果没有找到，返回空值
 
-    return GetRect(*image); // 找到时返回实际的 Rect
+    return GetRect2(*image); // 找到时返回实际的 Rect2
 }
 
-Rect ResourceTextureParser::GetRect(const Image& image) const
+Rect2 ResourceTextureParser::GetRect2(const Image& image) const
 {
     return {static_cast<float>(image.X), static_cast<float>(image.Y), static_cast<float>(image.W), static_cast<float>(image.H)};
 }

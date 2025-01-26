@@ -8,11 +8,11 @@
 
 void Vector2::Normalize()
 {
-    if (float l = x * x + y * y; l != 0)
+    if (float l = X * X + Y * Y; l != 0)
     {
         l = std::sqrt(l);
-        x /= l;
-        y /= l;
+        X /= l;
+        Y /= l;
     }
 }
 
@@ -30,12 +30,12 @@ bool Vector2::IsNormalized() const
 
 float Vector2::Length() const
 {
-    return std::sqrt(x * x + y * y);
+    return std::sqrt(X * X + Y * Y);
 }
 
 float Vector2::LengthSquared() const
 {
-    return x * x + y * y;
+    return X * X + Y * Y;
 }
 
 Vector2 Vector2::LimitLength(const float pLen) const
@@ -52,12 +52,12 @@ Vector2 Vector2::LimitLength(const float pLen) const
 
 float Vector2::DistanceTo(const Vector2& vector2) const
 {
-    return std::sqrt((x - vector2.x) * (x - vector2.x) + (y - vector2.y) * (y - vector2.y));
+    return std::sqrt((X - vector2.X) * (X - vector2.X) + (Y - vector2.Y) * (Y - vector2.Y));
 }
 
 float Vector2::DistanceSquaredTo(const Vector2& vector2) const
 {
-    return (x - vector2.x) * (x - vector2.x) + (y - vector2.y) * (y - vector2.y);
+    return (X - vector2.X) * (X - vector2.X) + (Y - vector2.Y) * (Y - vector2.Y);
 }
 
 float Vector2::AngleTo(const Vector2& vector2) const
@@ -72,29 +72,29 @@ float Vector2::AngleToPoint(const Vector2& vector2) const
 
 Vector2 Vector2::DirectionTo(const Vector2& target) const
 {
-    Vector2 ret(target.x - x, target.y - y);
+    Vector2 ret(target.X - X, target.Y - Y);
     ret.Normalize();
     return ret;
 }
 
 float Vector2::Dot(const Vector2& vector2) const
 {
-    return x * vector2.x + y * vector2.y;
+    return X * vector2.X + Y * vector2.Y;
 }
 
 float Vector2::Cross(const Vector2& vector2) const
 {
-    return x * vector2.y - y * vector2.x;
+    return X * vector2.Y - Y * vector2.X;
 }
 
 Vector2 Vector2::PosMod(const float mod) const
 {
-    return {Math::PosModF(x, mod), Math::PosModF(y, mod)};
+    return {Math::PosModF(X, mod), Math::PosModF(Y, mod)};
 }
 
 Vector2 Vector2::PosModV(const Vector2& modv) const
 {
-    return {Math::PosModF(x, modv.x), Math::PosModF(y, modv.y)};
+    return {Math::PosModF(X, modv.X), Math::PosModF(Y, modv.Y)};
 }
 
 Vector2 Vector2::Project(const Vector2& target) const
@@ -110,8 +110,8 @@ Vector2 Vector2::PlaneProject(const float d, const Vector2& target) const
 Vector2 Vector2::Lerp(const Vector2& target, const float weight) const
 {
     Vector2 res = *this;
-    res.x = Math::Lerp(res.x, target.x, weight);
-    res.y = Math::Lerp(res.y, target.y, weight);
+    res.X = Math::Lerp(res.X, target.X, weight);
+    res.Y = Math::Lerp(res.Y, target.Y, weight);
     return res;
 }
 
@@ -133,8 +133,8 @@ Vector2 Vector2::Slerp(const Vector2& target, const float weight) const
 Vector2 Vector2::CubicInterp(const Vector2& target, const Vector2& preTarget, const Vector2& postTarget, const float weight) const
 {
     Vector2 res = *this;
-    res.x = Math::CubicInterpolate(res.x, target.x, preTarget.x, postTarget.x, weight);
-    res.y = Math::CubicInterpolate(res.y, target.y, preTarget.y, postTarget.y, weight);
+    res.X = Math::CubicInterpolate(res.X, target.X, preTarget.X, postTarget.X, weight);
+    res.Y = Math::CubicInterpolate(res.Y, target.Y, preTarget.Y, postTarget.Y, weight);
     return res;
 }
 
@@ -149,24 +149,24 @@ Vector2 Vector2::CubicInterpInTime(
 ) const
 {
     Vector2 res = *this;
-    res.x = Math::CubicInterpolateInTime(res.x, target.x, preTarget.x, postTarget.x, weight, time, preTime, postTime);
-    res.y = Math::CubicInterpolateInTime(res.y, target.y, preTarget.y, postTarget.y, weight, time, preTime, postTime);
+    res.X = Math::CubicInterpolateInTime(res.X, target.X, preTarget.X, postTarget.X, weight, time, preTime, postTime);
+    res.Y = Math::CubicInterpolateInTime(res.Y, target.Y, preTarget.Y, postTarget.Y, weight, time, preTime, postTime);
     return res;
 }
 
 Vector2 Vector2::BezierInterp(const Vector2& control1, const Vector2& control2, const Vector2& end, const float time) const
 {
     Vector2 res = *this;
-    res.x = Math::BezierInterpolate(res.x, control1.x, control2.x, end.x, time);
-    res.y = Math::BezierInterpolate(res.y, control1.y, control2.y, end.y, time);
+    res.X = Math::BezierInterpolate(res.X, control1.X, control2.X, end.X, time);
+    res.Y = Math::BezierInterpolate(res.Y, control1.Y, control2.Y, end.Y, time);
     return res;
 }
 
 Vector2 Vector2::BezierDerivative(const Vector2& control1, const Vector2& control2, const Vector2& end, const float time) const
 {
     Vector2 res = *this;
-    res.x = Math::BezierDerivative(res.x, control1.x, control2.x, end.x, time);
-    res.y = Math::BezierDerivative(res.y, control1.y, control2.y, end.y, time);
+    res.X = Math::BezierDerivative(res.X, control1.X, control2.X, end.X, time);
+    res.Y = Math::BezierDerivative(res.Y, control1.Y, control2.Y, end.Y, time);
     return res;
 }
 
@@ -195,22 +195,22 @@ Vector2 Vector2::Reflect(const Vector2& normal) const
 
 bool Vector2::IsEqualApprox(const Vector2& vector2) const
 {
-    return Math::IsEqualApprox(x, vector2.x) && Math::IsEqualApprox(y, vector2.y);
+    return Math::IsEqualApprox(X, vector2.X) && Math::IsEqualApprox(Y, vector2.Y);
 }
 
 bool Vector2::IsZeroApprox() const
 {
-    return Math::IsZeroApprox(x) && Math::IsZeroApprox(y);
+    return Math::IsZeroApprox(X) && Math::IsZeroApprox(Y);
 }
 
 bool Vector2::IsFinite() const
 {
-    return Math::IsFinite(x) && Math::IsFinite(y);
+    return Math::IsFinite(X) && Math::IsFinite(Y);
 }
 
 float Vector2::Angle() const
 {
-    return std::atan2(y, x);
+    return std::atan2(Y, X);
 }
 
 Vector2 Vector2::FromAngle(const float angle)
@@ -222,49 +222,49 @@ Vector2 Vector2::Rotated(const float by) const
 {
     const float sine = std::sin(by);
     const float cosi = std::cos(by);
-    return {x * cosi - y * sine, x * sine + y * cosi};
+    return {X * cosi - Y * sine, X * sine + Y * cosi};
 }
 
 Vector2 Vector2::Sign() const
 {
-    return {SIGN(x), SIGN(y)};
+    return {SIGN(X), SIGN(Y)};
 }
 
 Vector2 Vector2::Floor() const
 {
-    return {Math::Floor(x), Math::Floor(y)};
+    return {Math::Floor(X), Math::Floor(Y)};
 }
 
 Vector2 Vector2::Ceil() const
 {
-    return {std::ceil(x), std::ceil(y)};
+    return {std::ceil(X), std::ceil(Y)};
 }
 
 Vector2 Vector2::Round() const
 {
-    return {std::round(x), std::round(y)};
+    return {std::round(X), std::round(Y)};
 }
 
 Vector2 Vector2::Snapped(const Vector2& step) const
 {
-    return {Math::Snapped(x, step.x), Math::Snapped(y, step.y)};
+    return {Math::Snapped(X, step.X), Math::Snapped(Y, step.Y)};
 }
 
 Vector2 Vector2::SnappedF(const float step) const
 {
-    return {Math::Snapped(x, step), Math::Snapped(y, step)};
+    return {Math::Snapped(X, step), Math::Snapped(Y, step)};
 }
 
 Vector2 Vector2::Clamp(const Vector2& min, const Vector2& max) const
 {
-    return {CLAMP(x, min.x, max.x), CLAMP(y, min.y, max.y)};
+    return {CLAMP(X, min.X, max.X), CLAMP(Y, min.Y, max.Y)};
 }
 
 Vector2 Vector2::ClampF(const float min, const float max) const
 {
-    return {CLAMP(x, min, max), CLAMP(y, min, max)};
+    return {CLAMP(X, min, max), CLAMP(Y, min, max)};
 }
 
-Vector2::operator Vector2I() const { return {static_cast<int32_t>(x), static_cast<int32_t>(y)}; }
-Vector2::operator glm::vec<2, float>() const { return {x, y}; }
-Vector2::operator ImVec2() const { return {x, y}; }
+Vector2::operator Vector2I() const { return {static_cast<int32_t>(X), static_cast<int32_t>(Y)}; }
+Vector2::operator glm::vec<2, float>() const { return {X, Y}; }
+Vector2::operator ImVec2() const { return {X, Y}; }

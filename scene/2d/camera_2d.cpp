@@ -22,12 +22,12 @@ void Camera2D::SetViewportSize(const Vector2& viewportSize) { _viewportSize = vi
 glm::mat4 Camera2D::GetProjectionMatrix() const
 {
     // 计算视口的大小，考虑缩放和宽高比
-    const float width = _viewportSize.x / _zoom;
-    const float height = _viewportSize.y / _zoom;
-    const float left = Transform2D.Position.x - width / 2.0f;
-    const float right = Transform2D.Position.x + width / 2.0f;
-    const float top = Transform2D.Position.y - height / 2.0f;
-    const float bottom = Transform2D.Position.y + height / 2.0f;
+    const float width = _viewportSize.X / _zoom;
+    const float height = _viewportSize.Y / _zoom;
+    const float left = Transform2D.Position.X - width / 2.0f;
+    const float right = Transform2D.Position.X + width / 2.0f;
+    const float top = Transform2D.Position.Y - height / 2.0f;
+    const float bottom = Transform2D.Position.Y + height / 2.0f;
 
     glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
     projection = translate(projection, glm::vec3(static_cast<glm::vec2>(_offset), 0.0f));

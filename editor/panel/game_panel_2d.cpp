@@ -54,7 +54,7 @@ void GamePanel2D::Init()
 void GamePanel2D::Ready()
 {
     binParser.Parse("world.bin");
-    hexManager = new HexManager(binParser.GetWidth(), binParser.GetHeight(), 74.0f);
+    hexManager = new GridManager(binParser.GetWidth(), binParser.GetHeight(), 74.0f);
 
     ColorTexture->Generate(binParser.GetWidth(), binParser.GetHeight());
 
@@ -84,7 +84,7 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, camera2d->GetProjectionMatrix());
     spriteBatch.Draw(
         Editor::loadResources->mapLand,
-        Rect(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
+        Rect2(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
         Color(1.0f, 1.0f, 1.0f, 1.0f)
     );
 
@@ -136,7 +136,7 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, camera2d->GetProjectionMatrix());
     spriteBatch.Draw(
         Editor::loadResources->mapSea,
-        Rect(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
+        Rect2(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
         Color(1.0f, 1.0f, 1.0f, 1.0f)
     );
     spriteBatch.End();
@@ -190,28 +190,33 @@ void GamePanel2D::Process(const double delta)
 
 void GamePanel2D::ImageInput()
 {
-    delete MouseSelect;
+    const Vector2 mouse_position = ImGuiHelper::GetMousePositionInCamera2DWorld(*camera2d, ImGuiHelper::GetMousePositionInItem());
 
-    MouseSelect = new Vector2(
-        hexManager->GetStandardPosition(ImGuiHelper::GetMousePositionInCamera2DWorld(*camera2d, ImGuiHelper::GetMousePositionInItem()))
-    );
+    delete MouseSelect;
+    MouseSelect = new Vector2(hexManager->GetStandardPosition(mouse_position));
+
+    const int grid_width = binParser.GetWidth();
+    const int grid_height = binParser.GetHeight();
+    const float pixel_width = hexManager->GetPixelWidth();
+    const float pixel_height = hexManager->GetPixelHeight();
 
     if (const float mouseWheel = ImGui::GetIO().MouseWheel; mouseWheel != 0.0f)
         TargetCameraZoom += mouseWheel * 0.1f * camera2d->GetZoom();
 
+    if (mouse_position.X >= pixel_width - 10.0f && mouse_position.X <= pixel_height + 10.0f
+        && mouse_position.Y >= 10.0f && mouse_position.Y <= pixel_height + 10.0f)
+    {
+
+    }
+
     if (ImGui::GetIO().MouseDown[0])
     {
-        const Vector2I position_grid = hexManager->PixelToGrid(
-            ImGuiHelper::GetMousePositionInCamera2DWorld(*camera2d, ImGuiHelper::GetMousePositionInItem())
-        );
+        const Vector2I position_grid = hexManager->PixelToGrid(mouse_position);
 
-        const int width = binParser.GetWidth();
-        const int height = binParser.GetHeight();
-
-        if (position_grid.x >= 0 && position_grid.x < width &&
-            position_grid.y >= 0 && position_grid.y < height)
+        if (position_grid.X >= 0 && position_grid.X < grid_width &&
+            position_grid.Y >= 0 && position_grid.Y < grid_height)
         {
-            Topography* topography = landUnit[position_grid.x][position_grid.y].Topography;
+            Topography* topography = landUnit[position_grid.X][position_grid.Y].Topography;
 
             if (ActiveToolButton == "Pen")
                 switch (PlacementType)
@@ -514,7 +519,7 @@ void GamePanel2D::GameTestView()
                 const auto& [idx, image] = terrain.tiles[i];
 
                 const Texture2D* texture = &plant_resource_texture.Texture2D;
-                std::optional<Rect> rect = plant_resource_texture.GetRect(image);
+                std::optional<Rect2> rect = plant_resource_texture.GetRect(image);
                 if (!rect)
                 {
                     rect = terrain_resource_texture.GetRect(image);
@@ -565,7 +570,7 @@ void GamePanel2D::PlacementSettings()
 void GamePanel2D::EditorModelWindow()
 {
     // Always center this window when appearing
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
     if (ImGui::BeginPopupModal("Delete?asd", NULL, ImGuiWindowFlags_AlwaysAutoResize))
@@ -603,10 +608,10 @@ float GamePanel2D::GetMaxRectWidth(
             const auto& [idx1, image1] = tile1;
             const auto& [idx2, image2] = tile2;
 
-            std::optional<Rect> rect1 = plant_resource_texture.GetRect(image1);
+            std::optional<Rect2> rect1 = plant_resource_texture.GetRect(image1);
             if (!rect1) rect1 = terrain_resource_texture.GetRect(image1);
 
-            std::optional<Rect> rect2 = plant_resource_texture.GetRect(image2);
+            std::optional<Rect2> rect2 = plant_resource_texture.GetRect(image2);
             if (!rect2) rect2 = terrain_resource_texture.GetRect(image2);
 
             const float width1 = rect1 ? rect1->Width : 0;
@@ -619,7 +624,7 @@ float GamePanel2D::GetMaxRectWidth(
     if (max_width != terrain.tiles.end())
     {
         const auto& [idx, image] = *max_width;
-        std::optional<Rect> rect = plant_resource_texture.GetRect(image);
+        std::optional<Rect2> rect = plant_resource_texture.GetRect(image);
         if (!rect) rect = terrain_resource_texture.GetRect(image);
         return rect ? rect->Width : 0;
     }

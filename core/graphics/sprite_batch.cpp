@@ -115,7 +115,7 @@ void SpriteBatch::DrawCenter(Texture2D* texture, const glm::vec2 position, const
     );
 }
 
-void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Rect sourceRect, const Color color)
+void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Rect2 sourceRect, const Color color)
 {
     const float sourceX = sourceRect.X / static_cast<float>(texture->Width);
     const float sourceY = sourceRect.Y / static_cast<float>(texture->Height);
@@ -142,7 +142,7 @@ void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Rect 
     );
 }
 
-void SpriteBatch::DrawCenter(Texture2D* texture, const glm::vec2 position, const Rect sourceRect, const Color color)
+void SpriteBatch::DrawCenter(Texture2D* texture, const glm::vec2 position, const Rect2 sourceRect, const Color color)
 {
     const float sourceX = sourceRect.X / static_cast<float>(texture->Width);
     const float sourceY = sourceRect.Y / static_cast<float>(texture->Height);
@@ -172,7 +172,7 @@ void SpriteBatch::DrawCenter(Texture2D* texture, const glm::vec2 position, const
 void SpriteBatch::Draw(
     Texture2D* texture,
     const glm::vec2 position,
-    const Rect sourceRect,
+    const Rect2 sourceRect,
     const Color color,
     const float rotation,
     const glm::vec2 origin,
@@ -213,7 +213,7 @@ void SpriteBatch::Draw(
 void SpriteBatch::Draw(
     Texture2D* texture,
     const glm::vec2 position,
-    const Rect sourceRect,
+    const Rect2 sourceRect,
     const Color color,
     const float rotation,
     const glm::vec2 origin,
@@ -249,7 +249,7 @@ void SpriteBatch::Draw(
     );
 }
 
-void SpriteBatch::Draw(Texture2D* texture, const Rect TargetRect, const Color color)
+void SpriteBatch::Draw(Texture2D* texture, const Rect2 TargetRect, const Color color)
 {
     CheckBegin("Draw");
     PushSprite(
@@ -270,7 +270,7 @@ void SpriteBatch::Draw(Texture2D* texture, const Rect TargetRect, const Color co
     );
 }
 
-void SpriteBatch::Draw(Texture2D* texture, const Rect SourceRect, const Rect TargetRect, const Color color)
+void SpriteBatch::Draw(Texture2D* texture, const Rect2 SourceRect, const Rect2 TargetRect, const Color color)
 {
     CheckBegin("Draw");
     const float sourceX = SourceRect.X / static_cast<float>(texture->Width);
@@ -298,8 +298,8 @@ void SpriteBatch::Draw(Texture2D* texture, const Rect SourceRect, const Rect Tar
 
 void SpriteBatch::Draw(
     Texture2D* texture2D,
-    const Rect SourceRect,
-    const Rect TargetRect,
+    const Rect2 SourceRect,
+    const Rect2 TargetRect,
     const Color color,
     const float rotation,
     const glm::vec2 origin,

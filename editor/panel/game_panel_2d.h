@@ -12,7 +12,7 @@
 #include "scene/2d/camera_2d.h"
 #include "scene/resources/shader.h"
 #include "editor/parser/bin_parser.h"
-#include "hex_manager.h"
+#include "grid_manager.h"
 #include "editor/parser/terrain_config_parser.h"
 #include "editor/world/land_unit.h"
 
@@ -23,14 +23,17 @@ class GamePanel2D : public Node
 public:
     int width = 1, height = 1;
     float TargetCameraZoom = 1.0f;
+
     Vector2* MouseSelect = nullptr;
     int SelectedTerrainG{}, SelectedTileIdx{};
-
     std::string ActiveToolButton = "Pen";
     std::string ActiveTopography{};
     int PlacementType{};
     int TerrainOffset[2]{};
     int WaterEdge{}, RoadEdge{};
+    bool VerticalResize;
+    bool HorizontalResize;
+    bool DiagonalResize;
 
     const char* UI_DOCK_WINDOW = "##ui.dock_window";
     const char* UI_VIEW_BOX = "##ui.view";
@@ -47,7 +50,7 @@ public:
     RenderTarget* renderTarget = nullptr;
 
     BinParser binParser = {};
-    HexManager* hexManager = nullptr;
+    GridManager* hexManager = nullptr;
 
     explicit GamePanel2D();
     ~GamePanel2D() override;

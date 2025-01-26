@@ -71,6 +71,10 @@ set(SOURCE_FILES
         core/math/vector2.h
         core/math/vector2i.cpp
         core/math/vector2i.h
+        core/math/rect2.cpp
+        core/math/rect2.h
+        core/math/rect2i.cpp
+        core/math/rect2i.h
 
         # 场景
         scene/node.cpp
@@ -100,8 +104,8 @@ set(SOURCE_FILES
         editor/panel/game_panel_2d.h
         editor/panel/game_panel_3D.cpp
         editor/panel/game_panel_3D.h
-        editor/panel/hex_manager.cpp
-        editor/panel/hex_manager.h
+        editor/panel/grid_manager.cpp
+        editor/panel/grid_manager.h
         editor/panel/hex_panel.cpp
         editor/panel/hex_panel.h
         editor/parser/map_config_parser.cpp

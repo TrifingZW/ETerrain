@@ -31,8 +31,8 @@ glm::mat3 Transform2D::GetMatrix() const
     );
 
     auto scaleMatrix = glm::mat3(1.0f);
-    scaleMatrix[0][0] = Scale.x;
-    scaleMatrix[1][1] = Scale.y;
+    scaleMatrix[0][0] = Scale.X;
+    scaleMatrix[1][1] = Scale.Y;
 
     return translationMatrix * rotationMatrix * scaleMatrix;
 }

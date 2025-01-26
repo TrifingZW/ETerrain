@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "core/graphics/graphics_structure.h"
+#include "core/math/rect2.h"
 #include "scene/resources/texture_2d.h"
 
 struct Image
@@ -28,8 +28,8 @@ public:
 
     explicit ResourceTextureParser(std::string filePath);
 
-    [[nodiscard]] std::optional<Rect> GetRect(const std::string& imageName) const;
-    [[nodiscard]] Rect GetRect(const Image& image) const;
+    [[nodiscard]] std::optional<Rect2> GetRect(const std::string& imageName) const;
+    [[nodiscard]] Rect2 GetRect2(const Image& image) const;
     [[nodiscard]] std::vector<float> GetVertices(const std::string& imageName);
 
 private:

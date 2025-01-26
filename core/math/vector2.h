@@ -27,26 +27,26 @@ struct [[nodiscard]] Vector2
         {
             union
             {
-                float x;
-                float width;
+                float X;
+                float Width;
             };
 
             union
             {
-                float y;
-                float height;
+                float Y;
+                float Height;
             };
         };
 
         float coord[2] = {0};
     };
 
-    Vector2(): x(), y() {}
-    Vector2(const float value) { x = value, y = value; }
-    Vector2(const float p_x, const float p_y) { x = p_x, y = p_y; }
+    Vector2(): X(), Y() {}
+    explicit Vector2(const float value) { X = value, Y = value; }
+    Vector2(const float p_x, const float p_y) { X = p_x, Y = p_y; }
 
-    [[nodiscard]] Axis MinAxisIndex() const { return x < y ? AXIS_X : AXIS_Y; }
-    [[nodiscard]] Axis MaxAxisIndex() const { return x < y ? AXIS_Y : AXIS_X; }
+    [[nodiscard]] Axis MinAxisIndex() const { return X < Y ? AXIS_X : AXIS_Y; }
+    [[nodiscard]] Axis MaxAxisIndex() const { return X < Y ? AXIS_Y : AXIS_X; }
 
     void Normalize();
     Vector2 Normalized() const;
@@ -56,10 +56,10 @@ struct [[nodiscard]] Vector2
     [[nodiscard]] float LengthSquared() const;
     Vector2 LimitLength(float pLen = 1.0) const;
 
-    Vector2 Min(const Vector2& vector2) const { return {MIN(x, vector2.x), MIN(y, vector2.y)}; }
-    Vector2 MinF(const float scalar) const { return {MIN(x, scalar), MIN(y, scalar)}; }
-    Vector2 Max(const Vector2& vector2) const { return {MAX(x, vector2.x), MAX(y, vector2.y)}; }
-    Vector2 MaxF(const float scalar) const { return {MAX(x, scalar), MAX(y, scalar)}; }
+    Vector2 Min(const Vector2& vector2) const { return {MIN(X, vector2.X), MIN(Y, vector2.Y)}; }
+    Vector2 MinF(const float scalar) const { return {MIN(X, scalar), MIN(Y, scalar)}; }
+    Vector2 Max(const Vector2& vector2) const { return {MAX(X, vector2.X), MAX(Y, vector2.Y)}; }
+    Vector2 MaxF(const float scalar) const { return {MAX(X, scalar), MAX(Y, scalar)}; }
 
     [[nodiscard]] float DistanceTo(const Vector2& vector2) const;
     [[nodiscard]] float DistanceSquaredTo(const Vector2& vector2) const;
@@ -103,11 +103,11 @@ struct [[nodiscard]] Vector2
     [[nodiscard]] float Angle() const;
     static Vector2 FromAngle(float angle);
 
-    Vector2 abs() const { return {std::abs(x), std::abs(y)}; }
+    Vector2 abs() const { return {std::abs(X), std::abs(Y)}; }
 
     Vector2 Rotated(float by) const;
 
-    Vector2 Orthogonal() const { return {y, -x}; }
+    Vector2 Orthogonal() const { return {Y, -X}; }
 
     Vector2 Sign() const;
     Vector2 Floor() const;
@@ -117,42 +117,42 @@ struct [[nodiscard]] Vector2
     Vector2 SnappedF(float step) const;
     Vector2 Clamp(const Vector2& min, const Vector2& max) const;
     Vector2 ClampF(float min, float max) const;
-    [[nodiscard]] float Aspect() const { return width / height; }
+    [[nodiscard]] float Aspect() const { return Width / Height; }
 
     float& operator[](const int axis) { return coord[axis]; }
     const float& operator[](const int axis) const { return coord[axis]; }
 
-    Vector2 operator+(const Vector2& vector2) const { return {x + vector2.x, y + vector2.y}; }
-    void operator+=(const Vector2& vector2) { x += vector2.x, y += vector2.y; }
-    Vector2 operator-(const Vector2& vector2) const { return {x - vector2.x, y - vector2.y}; }
-    void operator-=(const Vector2& vector2) { x -= vector2.x, y -= vector2.y; }
+    Vector2 operator+(const Vector2& vector2) const { return {X + vector2.X, Y + vector2.Y}; }
+    void operator+=(const Vector2& vector2) { X += vector2.X, Y += vector2.Y; }
+    Vector2 operator-(const Vector2& vector2) const { return {X - vector2.X, Y - vector2.Y}; }
+    void operator-=(const Vector2& vector2) { X -= vector2.X, Y -= vector2.Y; }
 
-    Vector2 operator*(const Vector2& vector2) const { return {x * vector2.x, y * vector2.y}; }
-    Vector2 operator*(const float rvalue) const { return {x * rvalue, y * rvalue}; }
-    void operator*=(const float rvalue) { x *= rvalue, y *= rvalue; }
+    Vector2 operator*(const Vector2& vector2) const { return {X * vector2.X, Y * vector2.Y}; }
+    Vector2 operator*(const float rvalue) const { return {X * rvalue, Y * rvalue}; }
+    void operator*=(const float rvalue) { X *= rvalue, Y *= rvalue; }
     void operator*=(const Vector2& rvalue) { *this = *this * rvalue; }
 
-    Vector2 operator/(const Vector2& vector2) const { return {x / vector2.x, y / vector2.y}; }
-    Vector2 operator/(const float rvalue) const { return {x / rvalue, y / rvalue}; }
-    void operator/=(const float rvalue) { x /= rvalue, y /= rvalue; }
+    Vector2 operator/(const Vector2& vector2) const { return {X / vector2.X, Y / vector2.Y}; }
+    Vector2 operator/(const float rvalue) const { return {X / rvalue, Y / rvalue}; }
+    void operator/=(const float rvalue) { X /= rvalue, Y /= rvalue; }
     void operator/=(const Vector2& rvalue) { *this = *this / rvalue; }
 
-    Vector2 operator-() const { return {-x, -y}; }
+    Vector2 operator-() const { return {-X, -Y}; }
 
-    bool operator==(const Vector2& vector2) const { return x == vector2.x && y == vector2.y; }
-    bool operator!=(const Vector2& vector2) const { return x != vector2.x || y != vector2.y; }
+    bool operator==(const Vector2& vector2) const { return X == vector2.X && Y == vector2.Y; }
+    bool operator!=(const Vector2& vector2) const { return X != vector2.X || Y != vector2.Y; }
 
-    bool operator<(const Vector2& vector2) const { return x == vector2.x ? (y < vector2.y) : (x < vector2.x); }
-    bool operator>(const Vector2& vector2) const { return x == vector2.x ? (y > vector2.y) : (x > vector2.x); }
-    bool operator<=(const Vector2& vector2) const { return x == vector2.x ? (y <= vector2.y) : (x < vector2.x); }
-    bool operator>=(const Vector2& vector2) const { return x == vector2.x ? (y >= vector2.y) : (x > vector2.x); }
+    bool operator<(const Vector2& vector2) const { return X == vector2.X ? (Y < vector2.Y) : (X < vector2.X); }
+    bool operator>(const Vector2& vector2) const { return X == vector2.X ? (Y > vector2.Y) : (X > vector2.X); }
+    bool operator<=(const Vector2& vector2) const { return X == vector2.X ? (Y <= vector2.Y) : (X < vector2.X); }
+    bool operator>=(const Vector2& vector2) const { return X == vector2.X ? (Y >= vector2.Y) : (X > vector2.X); }
 
     explicit operator Vector2I() const;
     explicit operator glm::vec2() const;
     explicit operator ImVec2() const;
 
-    [[nodiscard]] glm::vec2 ToGLM() const { return {x, y}; }
-    [[nodiscard]] ImVec2 ToImVec2() const { return {x, y}; }
+    [[nodiscard]] glm::vec2 ToGLM() const { return {X, Y}; }
+    [[nodiscard]] ImVec2 ToImVec2() const { return {X, Y}; }
 };
 
 // 使用隐式转换解决 LLVM 问题所需的乘法运算符

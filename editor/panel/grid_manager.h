@@ -76,13 +76,13 @@ public:
     size_t GetIndicesDataMemorySize() override { return PLineHexVertexIndices.size() * sizeof(short); }
 };
 
-class HexManager
+class GridManager
 {
 public:
-    int hexWidth, hexHeight;
+    int gridWidth, gridHeight;
     float tileWidth, tileHeight, sideLength;
     float outerRadius, innerRadius;
-    HexManager(int hexWidth, int hexHeight, float sideLength);
+    GridManager(int gridWidth, int gridHeight, float sideLength);
 
     [[nodiscard]] Vector2 GridToPixel(const Vector2I& hex) const;
     [[nodiscard]] Vector2I PixelToGrid(const Vector2& pixel) const;
