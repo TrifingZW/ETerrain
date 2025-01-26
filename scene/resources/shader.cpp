@@ -129,16 +129,24 @@ GLuint Shader::LinkShader(const char* vShaderCode, const char* fShaderCode)
     return id;
 }
 
-GLuint Shader::CreateShader(const char* source, const GLenum shader_type)
-{
+GLuint Shader::CreateShader(const char* source, const GLenum shader_type) {
+#ifdef PLATFORM_WINDOWS
+    std::string result = "#version 460 core\n" + std::string(source);
+#elif defined(PLATFORM_ANDROID)
+    std::string result = "#version 320 es\n" + std::string(source);
+#endif
+
     const GLuint shader = glCreateShader(shader_type);
-    glShaderSource(shader, 1, &source, nullptr);
+
+    // 正确传递字符串指针数组
+    const GLchar* source_ptr = result.c_str();
+    glShaderSource(shader, 1, &source_ptr, nullptr);
+
     glCompileShader(shader);
 
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
+    if (!success) {
         char infoLog[512];
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
         std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;

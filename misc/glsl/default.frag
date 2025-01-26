@@ -1,4 +1,6 @@
-#version 460 core
+#ifdef GL_ES
+precision mediump float;  // ES 必须声明浮点精度
+#endif
 
 in vec2 TexCoords;
 out vec4 FragColor;
