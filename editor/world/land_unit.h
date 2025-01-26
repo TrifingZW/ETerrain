@@ -12,7 +12,7 @@
 class LandUnit
 {
 public:
-    Topography Topography;
+    Topography* Topography = nullptr;
     Vector2 Position;
     Vector2I GridPosition;
 };

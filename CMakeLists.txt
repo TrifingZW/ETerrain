@@ -118,6 +118,10 @@ set(SOURCE_FILES
 
         # 定义
         core/typedefs.h
+        core/icon/IconsMaterialDesign.h
+        core/icon/IconsFontAwesome6.h
+        editor/editdefs.h
+        stb.cpp
 )
 if (PLATFORM STREQUAL "windows")
     list(APPEND SOURCE_FILES main.cpp)
@@ -165,4 +169,4 @@ LoadImGui()
 LoadPugixml()
 LoadStb()
 LoadThorvg()
-LoadShader(game)
+GenerateShaderHeaders()

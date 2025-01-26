@@ -37,7 +37,6 @@ void GraphicsDevice::DrawIndexedPrimitivesBase(const GLenum mode, const int base
 
     ApplyState();
 
-
     _bufferManager->Apply();
     glDrawElementsBaseVertex(mode, numVertices, GL_UNSIGNED_SHORT, nullptr, baseVertex);
 
@@ -100,24 +99,24 @@ void GraphicsDevice::ApplyState()
         _shader.Apply();
     if (currentShaderId == _shader.shaderId)
     {
-        _shader.SetMatrix4("uTransform", observeMatrix);
-        _shader.SetInt("image", 0);
+        _shader.SetMatrix4("uTransform", ObserveMatrix);
+        _shader.SetInt("Image", 0);
     }
 
     if (currentShaderId != _shader.shaderId)
         currentShaderId = 0;
 
-    for (int index = 0; index < textures.slots; index++)
+    for (int index = 0; index < Textures.slots; index++)
     {
-        if (textures[index])
+        if (Textures[index])
         {
-            const SamplerState samplerState = samplerStates[index];
-            textures[index]->Bind(GL_TEXTURE0 + index);
+            const SamplerState samplerState = SamplerStates[index];
+            Textures[index]->Bind(GL_TEXTURE0 + index);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ToOpenGLAddressMode(samplerState.AddressU));
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ToOpenGLAddressMode(samplerState.AddressV));
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToOpenGLFilter(samplerState.Filter));
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToOpenGLFilter(samplerState.Filter));
-            textures[index] = nullptr;
+            Textures[index] = nullptr;
         }
     }
 }

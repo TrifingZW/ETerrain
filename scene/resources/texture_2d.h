@@ -4,8 +4,10 @@
 
 #pragma once
 
+#include <string>
 #include <glad/glad.h>
 
+#include "core/graphics/graphics_structure.h"
 #include "core/math/vector2.h"
 
 class Texture2D
@@ -29,8 +31,10 @@ public:
     // 将纹理绑定为当前活动的 GL_TEXTURE_2D 纹理对象
     void Bind(GLenum target) const;
     void SetData(const unsigned char* data) const;
-    void SetPixelColor(int x, int y, unsigned char data) const;
+    void SetPixelColor(int x, int y, const void* data) const;
     void SetRangePixelColor(int x, int y, int width, int height, const void* data) const;
 
     Vector2 GetSize() const;
+
+    void SavePNG(const char* filename) const;
 };

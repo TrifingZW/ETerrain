@@ -11,6 +11,7 @@ namespace ETerrain
 {
     inline int Dpi = 96;
     inline float DpiScale = 1.0f;
+    inline float FontScale = 1.0f;
 
     // 读取数据到类数组（模板函数）
     template<typename T>

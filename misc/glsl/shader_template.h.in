@@ -2,10 +2,10 @@
 
 namespace GLSL
 {
-constexpr auto ${ShaderName}_vsh = R"(
+constexpr auto ${SHADER_NAME}_vsh = R"(
 ${SHADER_VSH_CONTENT}
 )";
-constexpr auto ${ShaderName}_fsh = R"(
+constexpr auto ${SHADER_NAME}_fsh = R"(
 ${SHADER_FSH_CONTENT}
 )";
 }

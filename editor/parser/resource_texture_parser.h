@@ -28,8 +28,8 @@ public:
 
     explicit ResourceTextureParser(std::string filePath);
 
-    std::optional<Rect> GetRect(const std::string& imageName);
-    static Rect GetRect(const Image& image);
+    [[nodiscard]] std::optional<Rect> GetRect(const std::string& imageName) const;
+    [[nodiscard]] Rect GetRect(const Image& image) const;
     [[nodiscard]] std::vector<float> GetVertices(const std::string& imageName);
 
 private:

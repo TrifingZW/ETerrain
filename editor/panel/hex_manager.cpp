@@ -27,23 +27,30 @@ Vector2 HexManager::GridToPixel(const Vector2I& hex) const
 
 Vector2I HexManager::PixelToGrid(const Vector2& pixel) const
 {
-    Vector2 ret = pixel;
-    ret /= Vector2(tileWidth, tileHeight);
-
     constexpr float overlapping_ratio = 0.75f;
-    ret.x /= overlapping_ratio;
 
+    Vector2 ret = pixel;
+
+    // 转化为基于矩形网格的直接网格坐标
+    ret /= Vector2(tileWidth * overlapping_ratio, tileHeight);
+
+    // 保存一份原始位置
     const Vector2 raw_pos = ret;
+
+    // 如果矩形坐标为奇数就向下移动半格，否则向下取整
     if (Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2))
         ret = Vector2(Math::Floor(ret.x), Math::Floor(ret.y + 0.5f) - 0.5f);
     else
         ret = ret.Floor();
 
+    // 计算点在矩形内的位置
     const Vector2 in_tile_pos = raw_pos - ret;
+
+    // 获得是否在左上方或者左下方三角形内的布尔值
     const bool in_top_left_triangle = (in_tile_pos - Vector2(0.0f, 0.5f)).Cross(Vector2(1.0f / overlapping_ratio - 1, -0.5f)) > 0;
     const bool in_bottom_left_triangle = (in_tile_pos - Vector2(0.0f, 0.5f)).Cross(Vector2(1.0f / overlapping_ratio - 1, 0.5f)) <= 0;
 
-    auto retI = static_cast<Vector2I>(ret.Floor());
+    auto retI = static_cast<Vector2I>(ret);
     if (in_top_left_triangle)
         retI += Vector2I(-1, Math::PosMod(static_cast<long>(Math::Floor(ret.x)), 2) ? 0 : -1);
     else if (in_bottom_left_triangle)

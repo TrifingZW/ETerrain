@@ -10,10 +10,11 @@
 #include <glm/gtc/type_ptr.inl>
 
 #include "core/core.h"
+#include "default_shader.h"
 
 Shader::Shader()
 {
-    shaderId = LinkShader(GLSL::DefaultVSH, GLSL::DefaultFSH);
+    shaderId = LinkShader(GLSL::default_vsh, GLSL::default_fsh);
 }
 
 Shader::Shader(const char* source1, const char* source2, ShaderSourceType type)
@@ -90,6 +91,11 @@ void Shader::SetFloat(const std::string& name, const float value) const
 void Shader::SetMatrix4(const std::string& name, glm::mat4 value) const
 {
     glUniformMatrix4fv(glGetUniformLocation(shaderId, name.c_str()), 1, GL_FALSE, value_ptr(value));
+}
+
+void Shader::SetVector2(const std::string& name, glm::vec2 value) const
+{
+    glUniform2fv(glGetUniformLocation(shaderId, name.c_str()), 1, value_ptr(value));
 }
 
 void Shader::SetVector3(const std::string& name, glm::vec3 value) const

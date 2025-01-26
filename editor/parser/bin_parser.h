@@ -14,6 +14,7 @@ class BinParser
 public:
     BinInfo binInfo{};
     std::vector<Topography> topographies{};
+    std::vector<char> remainingData{};
 
     // 计算宽度和高度
     [[nodiscard]] int GetWidth() const;
@@ -23,6 +24,7 @@ public:
 
     // 解析Bin文件
     void Parse(const std::string& name);
+    void Save(const std::string& name);
 
 private:
     std::string AssetsPath = "assets"; // 资产路径

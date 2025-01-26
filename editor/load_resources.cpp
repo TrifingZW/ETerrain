@@ -26,12 +26,13 @@ void LoadResources::Init()
 void LoadResources::LoadTexture2D() const
 {
     const std::string map_land = "map_land.png";
+    const std::string map_sea = "map_sea.png";
     const std::string anim_status = "anim_status.png";
 #ifdef PLATFORM_WINDOWS
-    ImGuiHelper::LoadTexture2DFromPath(*mapLand, map_land);
-    ImGuiHelper::LoadTexture2DFromPath(*AnimStatus, anim_status);
-    ImGuiHelper::LoadSVGToTexture2DFromFile(*Pen, "pen.svg", ETerrain::DpiScale);
+    AssetsHelper::LoadTexture2DFromPath(*mapLand, map_land);
+    AssetsHelper::LoadTexture2DFromPath(*mapSea, map_sea);
+    AssetsHelper::LoadTexture2DFromPath(*AnimStatus, anim_status);
 #elif defined(PLATFORM_ANDROID)
-    Helper::LoadTexture2DFromAndroidAssets(*mapLand, texturePath);
+    AssetsHelper::LoadTexture2DFromAndroidAssets(*mapLand, map_land);
 #endif
 }

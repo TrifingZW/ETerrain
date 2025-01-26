@@ -2,9 +2,6 @@
 // Created by TrifingZW on 24-12-30.
 //
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
-
 #include <glad/glad.h>
 #include <EGL/egl.h>
 #include <android_native_app_glue.h>
@@ -12,7 +9,11 @@
 #include <imgui_impl_opengl3.h>
 #include <iostream>
 
+#include "e_terrain.h"
 #include "core/core.h"
+#include "core/helpers/assets_helper.h"
+#include "core/icon/IconsFontAwesome6.h"
+#include "core/icon/IconsMaterialDesign.h"
 #include "platform/android/android.h"
 #include "platform/android/android_out.h"
 
@@ -217,14 +218,37 @@ void InitImGui()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // 启用停靠功能
 
     // 设置dpi为系统dpi
-    const float dpi_scale = GetSystemDPI(Android::g_App);
-    ImGui::GetStyle().ScaleAllSizes(dpi_scale);
-    io.Fonts->AddFontFromFileTTF(
-        "/system/fonts/VivoFont.ttf",
-        16 * dpi_scale,
+    ETerrain::DpiScale = GetSystemDPI(Android::g_App);
+    ETerrain::FontScale = 16 * ETerrain::DpiScale;
+    ImGui::GetStyle().ScaleAllSizes(ETerrain::DpiScale);
+
+    // 设置字体
+    void* harmony = nullptr;
+    void* material = nullptr;
+    void* far = nullptr;
+    void* fas = nullptr;
+    const size_t harmony_len = AssetsHelper::GetAssetData("fonts/HarmonyOS_Sans_SC_Bold.ttf", &harmony);
+    const size_t material_len = AssetsHelper::GetAssetData(FONT_ICON_FILE_NAME_MD, &material);
+    const size_t far_len = AssetsHelper::GetAssetData(FONT_ICON_FILE_NAME_FAR, &far);
+    const size_t fas_len = AssetsHelper::GetAssetData(FONT_ICON_FILE_NAME_FAS, &fas);
+    io.Fonts->AddFontFromMemoryTTF(
+        harmony,
+        static_cast<int>(harmony_len),
+        16 * ETerrain::DpiScale,
         nullptr,
-        io.Fonts->GetGlyphRangesChineseFull()
+        io.Fonts->GetGlyphRangesChineseSimplifiedCommon()
     );
+    static ImWchar material_ranges[] = {ICON_MIN_MD, ICON_MAX_16_MD, 0};
+    static ImWchar awesome6_ranges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
+    ImFontConfig cfg;
+    cfg.MergeMode = true;
+    cfg.PixelSnapH = true;
+    cfg.OversampleH = 1;
+    cfg.OversampleV = 1;
+    cfg.GlyphMinAdvanceX = ETerrain::FontScale;
+    io.Fonts->AddFontFromMemoryTTF(material, static_cast<int>(material_len), ETerrain::FontScale, &cfg, material_ranges);
+    io.Fonts->AddFontFromMemoryTTF(far, static_cast<int>(far_len), ETerrain::FontScale, &cfg, awesome6_ranges);
+    io.Fonts->AddFontFromMemoryTTF(fas, static_cast<int>(fas_len), ETerrain::FontScale, &cfg, awesome6_ranges);
 
     // 设置平台/渲染器后端
     ImGui_ImplAndroid_Init(Android::g_App->window);

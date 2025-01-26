@@ -17,7 +17,7 @@ bool TerrainConfigParser::loadFromXml(const std::string& filePath)
         throw std::runtime_error("Failed to load XML file: " + filePath);
 #elif defined(PLATFORM_ANDROID)
     std::string xmlData;
-    Helper::LoadStringFromAndroidAssets(xmlData, filePath);
+    AssetsHelper::LoadStringFromAndroidAssets(xmlData, filePath);
     if (const pugi::xml_parse_result result = doc.load_string(xmlData.c_str()); !result)
         throw std::runtime_error("Failed to load XML file: " + filePath);
 #endif

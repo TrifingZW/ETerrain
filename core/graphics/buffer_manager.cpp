@@ -81,10 +81,12 @@ void BufferManager::BindBuffer(const char* name)
 void BufferManager::AddBuffer(const char* name, const GLenum type)
 {
     GLuint buffer;
+    glBindVertexArray(VAO);
     glGenBuffers(1, &buffer);
     glBindBuffer(type, buffer);
     _buffers[name] = buffer;
-    glBindBuffer(type, 0); // 创建缓冲区后立即解除绑定
+    glBindBuffer(type, 0);
+    glBindVertexArray(0);
 }
 
 void BufferManager::DeleteBuffer(const char* name)

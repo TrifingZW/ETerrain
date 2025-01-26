@@ -5,8 +5,9 @@
 #pragma once
 
 #include <sstream>
-#include <stb/stb_image.h>
 #include <string>
+
+#include <stb/stb_image.h>
 
 #ifdef PLATFORM_ANDROID
 #include <imgui.h>
@@ -18,7 +19,7 @@
 
 #include "scene/resources/texture_2d.h"
 
-namespace ImGuiHelper
+namespace AssetsHelper
 {
     inline void LoadTexture2DFromPath(Texture2D& texture2D, const std::string& texturePath)
     {
@@ -73,7 +74,7 @@ namespace ImGuiHelper
         const auto sw_canvas = tvg::SwCanvas::gen();
         auto* buffer = new uint32_t[width * height];
         sw_canvas->target(buffer, width, width, height, tvg::SwCanvas::ABGR8888S);
-        sw_canvas->push(move(picture));
+        sw_canvas->push(std::move(picture));
         sw_canvas->draw();
         sw_canvas->sync();
         texture2D.Generate(width, height, 4, buffer);
@@ -84,16 +85,17 @@ namespace ImGuiHelper
     // 检索放入 asset/ 目录 (android/app/src/main/assets) 中的数据的函数
     inline size_t GetAssetData(const std::string& filename, void** outData)
     {
-        size_t num_bytes = 0;
+        size_t num_bytes_read = 0;
         if (AAsset* asset_descriptor = AAssetManager_open(Android::g_App->activity->assetManager, filename.c_str(), AASSET_MODE_BUFFER))
         {
+            size_t num_bytes = 0;
             num_bytes = AAsset_getLength(asset_descriptor);
             *outData = IM_ALLOC(num_bytes);
-            const int64_t num_bytes_read = AAsset_read(asset_descriptor, *outData, num_bytes);
+            num_bytes_read = AAsset_read(asset_descriptor, *outData, num_bytes);
             AAsset_close(asset_descriptor);
             IM_ASSERT(num_bytes_read == num_bytes);
         }
-        return num_bytes;
+        return num_bytes_read;
     }
 
     inline void LoadTexture2DFromAndroidAssets(Texture2D& texture2D, const std::string& texturePath)
@@ -107,7 +109,7 @@ namespace ImGuiHelper
     {
         void* data = nullptr;
         const size_t dataSize = GetAssetData(path, &data);
-        str = std::string(static_cast<char*>(data), dataSize);
+        str = std::string(static_cast<char *>(data), dataSize);
         IM_FREE(data);
     }
 
@@ -117,7 +119,7 @@ namespace ImGuiHelper
         const size_t asset_size = GetAssetData(filename, &asset_data);
 
         // 使用 std::vector<char> 存储内存数据
-        const std::vector buffer(static_cast<const char*>(asset_data), static_cast<const char*>(asset_data) + asset_size);
+        const std::vector buffer(static_cast<const char *>(asset_data), static_cast<const char *>(asset_data) + asset_size);
 
         // 将 buffer 转换为 stringstream 来处理字节流
         std::stringstream ss;
@@ -126,7 +128,7 @@ namespace ImGuiHelper
         // 可选：释放内存
         IM_FREE(asset_data);
 
-        return ss;  // 返回字节流
+        return ss; // 返回字节流
     }
 #endif
 }

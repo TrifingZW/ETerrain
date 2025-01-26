@@ -4,6 +4,9 @@
 
 #include "texture_2d.h"
 
+#include <iostream>
+#include <stb_image_write.h>
+
 Texture2D::Texture2D() = default;
 
 Texture2D::~Texture2D()
@@ -39,9 +42,9 @@ void Texture2D::SetData(const unsigned char* data) const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture2D::SetPixelColor(const int x, const int y, const unsigned char data) const
+void Texture2D::SetPixelColor(const int x, const int y, const void* data) const
 {
-    SetRangePixelColor(x, y, 1, 1, &data);
+    SetRangePixelColor(x, y, 1, 1, data);
 }
 
 void Texture2D::SetRangePixelColor(const int x, const int y, const int width, const int height, const void* data) const
@@ -57,5 +60,23 @@ void Texture2D::Bind(const GLenum target) const
     glBindTexture(GL_TEXTURE_2D, Id);
 }
 
-Vector2 Texture2D::GetSize() const {return {static_cast<float>(Width), static_cast<float>(Height)};}
+Vector2 Texture2D::GetSize() const { return {static_cast<float>(Width), static_cast<float>(Height)}; }
 
+void Texture2D::SavePNG(const char* filename) const
+{
+    // 创建一个用于保存像素数据的缓冲区
+    auto* pixels = new unsigned char[Width * Height * 4]; // RGBA 每个像素4个字节
+
+    // 读取纹理的像素数据
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    // 使用 stb_image_write 保存为 PNG
+    if (!stbi_write_png(filename, Width, Height, 4, pixels, Width * 4))
+    {
+        // 错误处理
+        std::cerr << "Failed to save PNG!" << std::endl;
+    }
+
+    // 释放像素数据缓冲区
+    delete[] pixels;
+}

@@ -4,6 +4,11 @@
 
 #include "core.h"
 
+#include "e_terrain.h"
+#include "helpers/assets_helper.h"
+#include "icon/IconsFontAwesome6.h"
+#include "icon/IconsMaterialDesign.h"
+
 GraphicsDevice* Core::_graphicsDevice = nullptr;
 SpriteBatch* Core::_spriteBatch = nullptr;
 

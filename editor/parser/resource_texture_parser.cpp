@@ -21,7 +21,7 @@ ResourceTextureParser::ResourceTextureParser(std::string filePath): FilePath(std
     loadTexture();
 }
 
-std::optional<Rect> ResourceTextureParser::GetRect(const std::string& imageName)
+std::optional<Rect> ResourceTextureParser::GetRect(const std::string& imageName) const
 {
     const auto image = std::find_if(
         Images.begin(),
@@ -35,7 +35,7 @@ std::optional<Rect> ResourceTextureParser::GetRect(const std::string& imageName)
     return GetRect(*image); // 找到时返回实际的 Rect
 }
 
-Rect ResourceTextureParser::GetRect(const Image& image)
+Rect ResourceTextureParser::GetRect(const Image& image) const
 {
     return {static_cast<float>(image.X), static_cast<float>(image.Y), static_cast<float>(image.W), static_cast<float>(image.H)};
 }
@@ -77,7 +77,7 @@ bool ResourceTextureParser::loadFromXml()
         throw std::runtime_error("Failed to load XML file: " + filePath);
 #elif defined(PLATFORM_ANDROID)
     std::string xmlData;
-    Helper::LoadStringFromAndroidAssets(xmlData, filePath);
+    AssetsHelper::LoadStringFromAndroidAssets(xmlData, filePath);
     if (const pugi::xml_parse_result result = doc.load_string(xmlData.c_str()); !result)
         throw std::runtime_error("Failed to load XML file: " + filePath);
 #endif
@@ -126,8 +126,8 @@ void ResourceTextureParser::loadTexture()
     const std::string texturePath = TextureName;
 
 #ifdef PLATFORM_WINDOWS
-    ImGuiHelper::LoadTexture2DFromPath(Texture2D, "assets/" + texturePath);
+    AssetsHelper::LoadTexture2DFromPath(Texture2D, "assets/" + texturePath);
 #elif defined(PLATFORM_ANDROID)
-    Helper::LoadTexture2DFromAndroidAssets(Texture2D, texturePath);
+    AssetsHelper::LoadTexture2DFromAndroidAssets(Texture2D, texturePath);
 #endif
 }

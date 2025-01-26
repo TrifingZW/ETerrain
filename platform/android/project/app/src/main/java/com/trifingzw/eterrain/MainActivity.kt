@@ -17,7 +17,6 @@ import java.util.concurrent.LinkedBlockingQueue
 class MainActivity : NativeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         bar()
 
     }

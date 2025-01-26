@@ -8,43 +8,6 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-namespace GLSL
-{
-    // 顶点着色器
-    constexpr auto DefaultVSH = R"(
-       #version 320 es
-layout (location = 0) in vec4 vertex;
-layout (location = 1) in vec2 textureCoord;
-
-out vec2 TexCoords;
-
-uniform highp mat4 uTransform;
-
-void main()
-{
-    TexCoords = textureCoord;
-    gl_Position = uTransform * vertex;
-}
-
-    )";
-    // 片段着色器
-    constexpr auto DefaultFSH = R"(
-       #version 320 es
-precision mediump float;  // 在OpenGL ES中需要显式指定浮点精度
-
-in vec2 TexCoords;
-out vec4 fragColor;
-
-uniform sampler2D image;
-
-void main()
-{
-    fragColor = texture(image, TexCoords);
-}
-
-    )";
-}
-
 class Shader
 {
 public:
@@ -68,6 +31,7 @@ public:
     void SetInt(const std::string& name, int value) const;
     void SetFloat(const std::string& name, float value) const;
     void SetMatrix4(const std::string& name, glm::mat4 value) const;
+    void SetVector2(const std::string& name, glm::vec2 value) const;
     void SetVector3(const std::string& name, glm::vec3 value) const;
 
     static GLuint LinkShader(const char* vShaderCode, const char* fShaderCode);

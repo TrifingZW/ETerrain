@@ -6,9 +6,6 @@
 #include <iostream>
 #include <windows.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
-
 #include <glad/glad.h>
 
 #ifdef PLATFORM_WINDOWS
@@ -21,6 +18,8 @@
 #include <thorvg.h>
 
 #include "core/core.h"
+#include "core/icon/IconsFontAwesome6.h"
+#include "core/icon/IconsMaterialDesign.h"
 
 ImFont* large_font = nullptr; // 定义全局字体指针
 constexpr auto clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -66,13 +65,26 @@ void InitImGui(GLFWwindow* window, const char* glsl_version)
     // 设置dpi为系统dpi
     HWND hwnd = glfwGetWin32Window(window);
     ETerrain::DpiScale = GetDpiScaleForWindow(hwnd);
+    ETerrain::FontScale = 16 * ETerrain::DpiScale;
     ImGui::GetStyle().ScaleAllSizes(ETerrain::DpiScale);
     io.Fonts->AddFontFromFileTTF(
-        "C:/Windows/Fonts/msyh.ttc",
-        16 * ETerrain::DpiScale,
+        "fonts/HarmonyOS_Sans_SC_Bold.ttf",
+        ETerrain::FontScale,
         nullptr,
         io.Fonts->GetGlyphRangesChineseFull()
     );
+    static ImWchar material_ranges[] = {ICON_MIN_MD, ICON_MAX_16_MD, 0};
+    static ImWchar awesome6_ranges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
+    ImFontConfig cfg;
+    cfg.MergeMode = true;
+    cfg.PixelSnapH = true;
+    cfg.OversampleH = 1;
+    cfg.OversampleV = 1;
+    cfg.GlyphMinAdvanceX = ETerrain::FontScale;
+    io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_MD, ETerrain::FontScale, &cfg, material_ranges);
+    io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FAR, ETerrain::FontScale, &cfg, awesome6_ranges);
+    io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FAS, ETerrain::FontScale, &cfg, awesome6_ranges);
+
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
@@ -138,8 +150,8 @@ int main(int, char**)
     std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 
     // 初始化 ImGui 和 Core
-    InitThorvg();
     InitImGui(window, glsl_version);
+    InitThorvg();
     Core::Instance().InitTree();
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

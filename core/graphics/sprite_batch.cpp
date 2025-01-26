@@ -563,20 +563,20 @@ int SpriteBatch::UpdateVertexBuffer(const int start, const int count)
 
 void SpriteBatch::DrawPrimitives(Texture2D* texture2D, const int primitiveSize) const
 {
-    _graphicsDevice->textures[0] = texture2D;
+    _graphicsDevice->Textures[0] = texture2D;
     _graphicsDevice->DrawIndexedPrimitives(GL_TRIANGLES, primitiveSize * 6);
 }
 
 void SpriteBatch::DrawPrimitivesBase(Texture2D* texture2D, const int primitiveOffset, const int primitiveSize) const
 {
-    _graphicsDevice->textures[0] = texture2D;
+    _graphicsDevice->Textures[0] = texture2D;
     _graphicsDevice->DrawIndexedPrimitivesBase(GL_TRIANGLES, primitiveOffset * 4, primitiveSize * 6);
 }
 
 void SpriteBatch::PrepRenderState()
 {
-    _graphicsDevice->samplerStates[0] = _samplerState;
-    _graphicsDevice->observeMatrix = _matrix;
+    _graphicsDevice->SamplerStates[0] = _samplerState;
+    _graphicsDevice->ObserveMatrix = _matrix;
     _graphicsDevice->SetBufferManager(&_bufferManager);
 }
 

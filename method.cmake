@@ -190,23 +190,65 @@ endfunction()
 
 function(LoadShader ShaderName)
     # 读取顶点着色器和片段着色器内容
-    file(READ "misc/glsl/${ShaderName}.vsh" SHADER_VSH_CONTENT)
-    file(READ "misc/glsl/${ShaderName}.fsh" SHADER_FSH_CONTENT)
+    set(SHADER_DIR "misc/glsl/")
+    set(VERTEX_SHADER "${SHADER_DIR}${ShaderName}.vert")
+    set(FRAGMENT_SHADER "${SHADER_DIR}${ShaderName}.frag")
 
-    # 设置依赖关系，确保当 GLSL 文件更改时强制更新
-    set(SHADER_DEPENDENCIES "misc/glsl/${ShaderName}.vsh" "misc/glsl/${ShaderName}.fsh")
+    # 设置依赖关系，确保 GLSL 文件更改时强制更新
+    set(SHADER_DEPENDENCIES ${VERTEX_SHADER} ${FRAGMENT_SHADER})
 
-    # 生成 shader 头文件
+    # 生成 shader 头文件（如果你确实需要通过模板生成的话）
     configure_file(misc/glsl/shader_template.h.in ${ShaderName}_shader.h)
 
-    # 设置 shader 文件为依赖，确保在文件修改时重新生成
+    # 添加 custom command 重新生成 header 文件
     add_custom_command(
             OUTPUT ${ShaderName}_shader.h
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different "misc/glsl/${ShaderName}.vsh" "misc/glsl/${ShaderName}.fsh" ${ShaderName}_shader.h
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${VERTEX_SHADER} ${FRAGMENT_SHADER} ${ShaderName}_shader.h
             DEPENDS ${SHADER_DEPENDENCIES}
             COMMENT "Updating shader header for ${ShaderName}"
     )
 
 endfunction()
+
+# 自动加载目录中的所有着色器，并生成头文件
+function(GenerateShaderHeaders)
+    # 设置 GLSL 文件夹路径
+    set(SHADER_DIR "misc/glsl/")
+
+    # 获取所有 .vert 和 .frag 文件
+    file(GLOB_RECURSE VERTEX_SHADERS "${SHADER_DIR}*.vert")
+    file(GLOB_RECURSE FRAGMENT_SHADERS "${SHADER_DIR}*.frag")
+
+    # 合并所有顶点着色器和片段着色器
+    list(APPEND SHADERS ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
+
+    # 遍历每个着色器文件并生成对应的头文件
+    foreach (SHADER_FILE IN LISTS SHADERS)
+        # 获取不带扩展名的文件名 (即 ShaderName)
+        get_filename_component(SHADER_NAME ${SHADER_FILE} NAME_WE)
+
+        # 设置输出头文件路径
+        set(OUTPUT_HEADER "${CMAKE_BINARY_DIR}/${SHADER_NAME}_shader.h")
+
+        # 读取顶点着色器和片段着色器内容
+        file(READ ${SHADER_DIR}${SHADER_NAME}.vert SHADER_VSH_CONTENT)
+        file(READ ${SHADER_DIR}${SHADER_NAME}.frag SHADER_FSH_CONTENT)
+
+        # 通过模板配置生成最终头文件
+        configure_file(misc/glsl/shader_template.h.in ${SHADER_NAME}_shader.h)
+
+        # 添加 custom command 以便着色器文件更新时重新生成头文件
+        add_custom_command(
+                OUTPUT ${OUTPUT_HEADER}
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_SOURCE_DIR}/misc/glsl/shader_template.h.in"
+                "${OUTPUT_HEADER}"
+                DEPENDS ${SHADER_FILE}
+                COMMENT "Generating shader header for ${SHADER_NAME}"
+        )
+    endforeach ()
+endfunction()
+
+
 
 
