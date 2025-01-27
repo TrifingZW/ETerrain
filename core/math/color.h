@@ -219,4 +219,19 @@ struct [[nodiscard]] Color
     Color operator/(float scalar) const;
     void operator/=(const Color& color);
     void operator/=(float scalar);
+
+    bool Color::operator<(const Color& p_color) const
+    {
+        if (R == p_color.R)
+        {
+            if (G == p_color.G)
+            {
+                if (B == p_color.B)
+                    return (A < p_color.A);
+                return (B < p_color.B);
+            }
+            return G < p_color.G;
+        }
+        return R < p_color.R;
+    }
 };
