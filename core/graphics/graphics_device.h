@@ -34,18 +34,18 @@ public:
     void SetRenderTarget(RenderTarget* renderTarget);
     void SetBufferManager(BufferManager* bufferManager);
 
-    void DrawIndexedPrimitives(GLenum mode, int numVertices);
-    void DrawIndexedPrimitivesBase(GLenum mode, int baseVertex, int numVertices);
-    void DrawUserPrimitives(GLenum mode, IVertexType* vertexType, size_t vertexOffset, size_t vertexCount);
+    void DrawPrimitivesIndexed(GLenum mode, int vertexCount);
+    void DrawPrimitivesIndexedBase(GLenum mode, int baseVertex, int vertexCount);
+    void DrawUserPrimitives(GLenum mode, IVertexType* vertexType, int vertexOffset, int vertexCount);
     void DrawUserPrimitivesIndexed(GLenum mode, IVertexType* vertexType);
     void DrawUserPrimitivesIndexed(GLenum mode, const BufferManager* bufferManager, int count, int instanceCount);
 
     void ApplyState();
-    void ApplyAttribPointer(const VertexDeclaration& vertexDeclaration);
+    void ApplyAttribPointer(const VertexDeclaration& vertexDeclaration) const;
 
-    void Clear();
-    void Clear(glm::vec4 color);
-    void ResetBuffer();
-    void ResetTexture();
-    void ResetRenderTarget();
+    void Clear() const;
+    void Clear(glm::vec4 color) const;
+    void ResetBuffer() const;
+    void ResetTexture() const;
+    void ResetRenderTarget() const;
 };

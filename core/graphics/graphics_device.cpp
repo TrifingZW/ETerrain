@@ -18,59 +18,37 @@ void GraphicsDevice::SetRenderTarget(RenderTarget* renderTarget)
 
 void GraphicsDevice::SetBufferManager(BufferManager* bufferManager) { _bufferManager = bufferManager; }
 
-void GraphicsDevice::DrawIndexedPrimitives(const GLenum mode, const int numVertices)
+void GraphicsDevice::DrawPrimitivesIndexed(const GLenum mode, const int vertexCount)
 {
     ApplyState();
 
     _bufferManager->Apply();
-    glDrawElements(mode, numVertices, GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements(mode, vertexCount, GL_UNSIGNED_SHORT, nullptr);
 
     ResetBuffer();
 }
 
-void GraphicsDevice::DrawIndexedPrimitivesBase(const GLenum mode, const int baseVertex, const int numVertices)
+void GraphicsDevice::DrawPrimitivesIndexedBase(const GLenum mode, const int baseVertex, const int vertexCount)
 {
-    /*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferManager->EBO);
-    short testMatrix[6];
-    glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 4, sizeof(short) * 6, &testMatrix);
-    std::cout << testMatrix[0] << std::endl;*/
-
     ApplyState();
 
     _bufferManager->Apply();
-    glDrawElementsBaseVertex(mode, numVertices, GL_UNSIGNED_SHORT, nullptr, baseVertex);
+    glDrawElementsBaseVertex(mode, vertexCount, GL_UNSIGNED_SHORT, nullptr, baseVertex);
 
     ResetBuffer();
-    // glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr, 1);
 }
 
-void GraphicsDevice::DrawUserPrimitives(const GLenum mode, IVertexType* vertexType, const size_t vertexOffset, const size_t vertexCount)
+void GraphicsDevice::DrawUserPrimitives(const GLenum mode, IVertexType* vertexType, const int vertexOffset, const int vertexCount)
 {
     ApplyState();
 
     _userBufferManager.SetData(nullptr, vertexType->GetVertexDataPtr(), vertexType->GetVertexMemorySize() * vertexCount);
-    _userBufferManager.Apply();
-
-    // 计算图形的数量
-    const GLsizei drawCount = vertexCount / 6; // 每个图形由 6 个顶点组成
-
-    // 创建数组来存储起始顶点索引和每个图形的顶点数
-    const auto first = new GLint[drawCount];
-    const auto count = new GLsizei[drawCount];
-
-    // 填充 first 和 count 数组
-    for (int i = 0; i < drawCount; ++i)
-    {
-        first[i] = i * 6; // 每个图形的起始顶点是 6 的倍数
-        count[i] = 6; // 每个图形有 6 个顶点
-    }
-
     ApplyAttribPointer(vertexType->GetVertexDeclaration());
-    glMultiDrawArrays(mode, first, count, drawCount);
 
-    // 释放内存
-    delete[] first;
-    delete[] count;
+    _userBufferManager.Apply();
+    glDrawArrays(mode, vertexOffset, vertexCount);
+
+    ResetBuffer();
 }
 
 void GraphicsDevice::DrawUserPrimitivesIndexed(const GLenum mode, IVertexType* vertexType)
@@ -79,18 +57,22 @@ void GraphicsDevice::DrawUserPrimitivesIndexed(const GLenum mode, IVertexType* v
 
     _userBufferManager.SetData(nullptr, vertexType->GetVertexDataPtr(), vertexType->GetVertexDataMemorySize());
     _userBufferManager.SetIndexPointerEXT(nullptr, vertexType->GetIndicesDataPtr(), static_cast<GLsizei>(vertexType->GetIndicesDataMemorySize()));
-    _userBufferManager.Apply();
-
     ApplyAttribPointer(vertexType->GetVertexDeclaration());
 
+    _userBufferManager.Apply();
     glDrawElementsInstanced(mode, 6, GL_UNSIGNED_SHORT, nullptr, 3);
+
+    ResetBuffer();
 }
 
 void GraphicsDevice::DrawUserPrimitivesIndexed(const GLenum mode, const BufferManager* bufferManager, const int count, const int instanceCount)
 {
     ApplyState();
+
     glBindVertexArray(bufferManager->VAO);
     glDrawArraysInstanced(mode, 0, count, instanceCount);
+
+    ResetBuffer();
 }
 
 void GraphicsDevice::ApplyState()
@@ -121,8 +103,10 @@ void GraphicsDevice::ApplyState()
     }
 }
 
-void GraphicsDevice::ApplyAttribPointer(const VertexDeclaration& vertexDeclaration)
+void GraphicsDevice::ApplyAttribPointer(const VertexDeclaration& vertexDeclaration) const
 {
+    _userBufferManager.Apply();
+
     for (size_t index = 0; index < vertexDeclaration.NumElements; index++)
     {
         const VertexElement element = vertexDeclaration.Elements[index];
@@ -136,32 +120,34 @@ void GraphicsDevice::ApplyAttribPointer(const VertexDeclaration& vertexDeclarati
         );
         glEnableVertexAttribArray(element.Index);
     }
+
+    ResetBuffer();
 }
 
-void GraphicsDevice::Clear()
+void GraphicsDevice::Clear() const
 {
     Clear(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-void GraphicsDevice::Clear(const glm::vec4 color)
+void GraphicsDevice::Clear(const glm::vec4 color) const
 {
     glClearColor(color.x, color.y, color.z, color.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GraphicsDevice::ResetBuffer()
+void GraphicsDevice::ResetBuffer() const
 {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void GraphicsDevice::ResetTexture()
+void GraphicsDevice::ResetTexture() const
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void GraphicsDevice::ResetRenderTarget()
+void GraphicsDevice::ResetRenderTarget() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);

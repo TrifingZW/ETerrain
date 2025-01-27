@@ -138,16 +138,16 @@ struct Rect2
         return new_rect;
     }
 
-    [[nodiscard]] bool HasPoint(const Vector2& point) const
+    [[nodiscard]] bool Contains(const Vector2& vector2) const
     {
-        if (point.X < Position.X)
+        if (vector2.X < Position.X)
             return false;
-        if (point.Y < Position.Y)
+        if (vector2.Y < Position.Y)
             return false;
 
-        if (point.X >= (Position.X + Size.X))
+        if (vector2.X >= (Position.X + Size.X))
             return false;
-        if (point.Y >= (Position.Y + Size.Y))
+        if (vector2.Y >= (Position.Y + Size.Y))
             return false;
 
         return true;

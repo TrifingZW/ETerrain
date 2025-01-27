@@ -344,6 +344,17 @@ void SpriteBatch::End()
 
     if (_spriteSortMode != SpriteSortMode::Immediate)
         FlushBatch();
+
+    Clear();
+}
+
+void SpriteBatch::Clear()
+{
+    _spriteSortMode = SpriteSortMode::Deferred;
+    _samplerState = SamplerState();
+    _matrix = glm::mat4(1.0f);
+    _beginCalled = false;
+    _numSprites = 0;
 }
 
 void SpriteBatch::CheckBegin(const std::string& method) const
@@ -564,13 +575,13 @@ int SpriteBatch::UpdateVertexBuffer(const int start, const int count)
 void SpriteBatch::DrawPrimitives(Texture2D* texture2D, const int primitiveSize) const
 {
     _graphicsDevice->Textures[0] = texture2D;
-    _graphicsDevice->DrawIndexedPrimitives(GL_TRIANGLES, primitiveSize * 6);
+    _graphicsDevice->DrawPrimitivesIndexed(GL_TRIANGLES, primitiveSize * 6);
 }
 
 void SpriteBatch::DrawPrimitivesBase(Texture2D* texture2D, const int primitiveOffset, const int primitiveSize) const
 {
     _graphicsDevice->Textures[0] = texture2D;
-    _graphicsDevice->DrawIndexedPrimitivesBase(GL_TRIANGLES, primitiveOffset * 4, primitiveSize * 6);
+    _graphicsDevice->DrawPrimitivesIndexedBase(GL_TRIANGLES, primitiveOffset * 4, primitiveSize * 6);
 }
 
 void SpriteBatch::PrepRenderState()

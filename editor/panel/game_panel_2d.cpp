@@ -203,11 +203,8 @@ void GamePanel2D::ImageInput()
     if (const float mouseWheel = ImGui::GetIO().MouseWheel; mouseWheel != 0.0f)
         TargetCameraZoom += mouseWheel * 0.1f * camera2d->GetZoom();
 
-    if (mouse_position.X >= pixel_width - 10.0f && mouse_position.X <= pixel_height + 10.0f
-        && mouse_position.Y >= 10.0f && mouse_position.Y <= pixel_height + 10.0f)
-    {
-
-    }
+    const auto rect2 = Rect2(pixel_width - 10.0f, 10.0f, 20.0f, pixel_height - 10.0f);
+    HorizontalResize = rect2.Contains(mouse_position);
 
     if (ImGui::GetIO().MouseDown[0])
     {
@@ -274,7 +271,6 @@ void GamePanel2D::DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id
     ResourceTextureParser& plant_resource_texture = Editor::loadResources->plantResourceTextureParser;
     ResourceTextureParser& terrain_resource_texture = Editor::loadResources->terrainResourceTextureParser;
     auto& [terrains] = Editor::loadResources->terrainConfigParser;
-
 
     auto find_terrain = [type](const Terrain& terrain) { return terrain.terrainG == type; };
     auto find_tile = [id](const Tile& tile) { return tile.idx == id; };

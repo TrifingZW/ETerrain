@@ -31,8 +31,6 @@ Editor::~Editor()
     delete loadResources;*/
 }
 
-void Editor::Init()
-{
-}
+void Editor::Init() {}
 
 void Editor::Gui() {}

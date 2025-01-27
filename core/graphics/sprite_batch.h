@@ -13,6 +13,7 @@
 #include "graphics_structure.h"
 #include "graphics_resource.h"
 #include "sampler_state.h"
+#include "core/math/color.h"
 #include "core/math/rect2.h"
 
 class SpriteBatch : public GraphicsResource
@@ -34,7 +35,7 @@ private:
 
     Graphics::SpriteSortMode _spriteSortMode = Graphics::SpriteSortMode::Deferred;
     SamplerState _samplerState{};
-    glm::mat4 _matrix = glm::mat4(0.1f);
+    glm::mat4 _matrix = glm::mat4(1.0f);
     bool _beginCalled = false;
     int _numSprites = 0;
     int _bufferOffset = 0;
@@ -85,8 +86,10 @@ public:
         glm::vec2 origin,
         Graphics::SpriteEffects effects
     );
+    void DrawRect(Texture2D texture, Rect2 rect, Color color);
 
     void End();
+    void Clear();
 
 private:
     void CheckBegin(const std::string& method) const;

@@ -75,6 +75,8 @@ set(SOURCE_FILES
         core/math/rect2.h
         core/math/rect2i.cpp
         core/math/rect2i.h
+        core/math/color.cpp
+        core/math/color.h
 
         # 场景
         scene/node.cpp
