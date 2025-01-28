@@ -55,16 +55,15 @@ public:
     std::vector<HexVertexData> PHexVertexData{};
     std::vector<short> PLineHexVertexIndices{};
     std::vector<float> PSeaHexVertexIndices{};
+    VertexDeclaration Declaration =
+    {
+        VertexElement(0, 0, 4, 4),
+        VertexElement(1, 4, 2, 4)
+    };
 
     ~HexVertexType() override = default;
 
-    VertexDeclaration GetVertexDeclaration() override
-    {
-        return {
-            VertexElement(0, 0, 4, 4),
-            VertexElement(1, 4, 2, 4)
-        };
-    }
+    VertexDeclaration& GetVertexDeclaration() override { return Declaration; }
 
     size_t GetVertexCount() override { return PHexVertexData.size(); }
     void* GetVertexDataPtr() override { return PHexVertexData.data(); }

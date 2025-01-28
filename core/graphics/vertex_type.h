@@ -19,6 +19,6 @@ public:
     virtual void* GetIndicesDataPtr() { return nullptr; }
     virtual size_t GetIndicesDataMemorySize() { return 0; }
 
-    virtual VertexDeclaration GetVertexDeclaration() = 0;
+    virtual VertexDeclaration& GetVertexDeclaration() = 0;
     virtual ~IVertexType() = default;
 };

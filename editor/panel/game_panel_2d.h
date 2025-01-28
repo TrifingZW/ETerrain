@@ -31,9 +31,9 @@ public:
     int PlacementType{};
     int TerrainOffset[2]{};
     int WaterEdge{}, RoadEdge{};
-    bool VerticalResize;
-    bool HorizontalResize;
-    bool DiagonalResize;
+    bool VerticalResize = false;
+    bool HorizontalResize = false;
+    bool DiagonalResize = false;
 
     const char* UI_DOCK_WINDOW = "##ui.dock_window";
     const char* UI_VIEW_BOX = "##ui.view";
@@ -66,7 +66,7 @@ public:
     void NewFramebuffer(int width, int height);
     void UpdateColorTexture() const;
 
-    static void DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id, const Vector2& position);
+    static void DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id, const Vector2& position, const Vector2& offset);
 
     void DockingSpaceUI() const;
     void Menu();

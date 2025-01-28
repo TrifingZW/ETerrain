@@ -24,16 +24,16 @@ struct Topography
 {
     uint8_t 地块类型;
     uint8_t 地块ID;
-    uint8_t 地块X;
-    uint8_t 地块Y;
+    int8_t 地块X;
+    int8_t 地块Y;
     uint8_t 装饰类型A;
     uint8_t 装饰AID;
-    uint8_t 装饰AX;
-    uint8_t 装饰AY;
+    int8_t 装饰AX;
+    int8_t 装饰AY;
     uint8_t 装饰类型B;
     uint8_t 装饰BID;
-    uint8_t 装饰BX;
-    uint8_t 装饰BY;
+    int8_t 装饰BX;
+    int8_t 装饰BY;
     uint8_t 水边缘;
     uint8_t 路边缘;
     uint8_t 海岸;

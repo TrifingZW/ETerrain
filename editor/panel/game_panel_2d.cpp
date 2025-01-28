@@ -81,13 +81,15 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     Core::GetGraphicsDevice()->SetRenderTarget(renderTarget);
     Core::GetGraphicsDevice()->Clear();
 
-    spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, camera2d->GetProjectionMatrix());
+    spriteBatch.Begin(Graphics::SpriteSortMode::Immediate, camera2d->GetProjectionMatrix());
     spriteBatch.Draw(
         Editor::loadResources->mapLand,
         Rect2(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
         Color(1.0f, 1.0f, 1.0f, 1.0f)
     );
+    spriteBatch.End();
 
+    spriteBatch.Begin(Graphics::SpriteSortMode::Texture, camera2d->GetProjectionMatrix());
     IterateLandUnit(
         [&spriteBatch](const LandUnit& landUnit)
         {
@@ -95,11 +97,11 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
                 spriteBatch,
                 landUnit.Topography->装饰类型B,
                 landUnit.Topography->装饰BID,
-                (landUnit.Position + Vector2(landUnit.Topography->装饰BX, landUnit.Topography->装饰BY))
+                landUnit.Position,
+                Vector2(landUnit.Topography->装饰BX, landUnit.Topography->装饰BX)
             );
         }
     );
-
     IterateLandUnit(
         [&spriteBatch](const LandUnit& landUnit)
         {
@@ -107,11 +109,11 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
                 spriteBatch,
                 landUnit.Topography->装饰类型A,
                 landUnit.Topography->装饰AID,
-                landUnit.Position + Vector2(landUnit.Topography->装饰AX, landUnit.Topography->装饰AY)
+                landUnit.Position,
+                Vector2(landUnit.Topography->装饰AX, landUnit.Topography->装饰AY)
             );
         }
     );
-
     IterateLandUnit(
         [&spriteBatch](const LandUnit& landUnit)
         {
@@ -119,11 +121,11 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
                 spriteBatch,
                 landUnit.Topography->地块类型,
                 landUnit.Topography->地块ID,
-                landUnit.Position + Vector2(landUnit.Topography->地块X, landUnit.Topography->地块Y)
+                landUnit.Position,
+                Vector2(landUnit.Topography->地块X, landUnit.Topography->地块Y)
             );
         }
     );
-
     spriteBatch.End();
 
     shader->Apply();
@@ -133,7 +135,7 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     shader->SetVector2("texsize", {1024.0f, 1024.0f});
     Core::GetGraphicsDevice()->Textures[1] = ColorTexture;
     Core::GetGraphicsDevice()->SamplerStates[1] = SamplerState::PointWrap;
-    spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, camera2d->GetProjectionMatrix());
+    spriteBatch.Begin(Graphics::SpriteSortMode::Immediate, camera2d->GetProjectionMatrix());
     spriteBatch.Draw(
         Editor::loadResources->mapSea,
         Rect2(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
@@ -141,7 +143,7 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     );
     spriteBatch.End();
 
-    spriteBatch.Begin(Graphics::SpriteSortMode::Deferred, camera2d->GetProjectionMatrix());
+    spriteBatch.Begin(Graphics::SpriteSortMode::Immediate, camera2d->GetProjectionMatrix());
     if (MouseSelect)
         spriteBatch.DrawCenter(Editor::loadResources->AnimStatus, MouseSelect->ToGLM(), Color(1.0f, 1.0f, 1.0f, 1.0f));
     spriteBatch.End();
@@ -266,7 +268,7 @@ void GamePanel2D::IterateLandUnit(const std::function<void(LandUnit&)>& func) co
             func(landUnit[x][y]);
 }
 
-void GamePanel2D::DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id, const Vector2& position)
+void GamePanel2D::DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id, const Vector2& position, const Vector2& offset)
 {
     ResourceTextureParser& plant_resource_texture = Editor::loadResources->plantResourceTextureParser;
     ResourceTextureParser& terrain_resource_texture = Editor::loadResources->terrainResourceTextureParser;
@@ -293,18 +295,18 @@ void GamePanel2D::DrawTerrain(SpriteBatch& spriteBatch, uint8_t type, uint8_t id
 
         if (tile_iterator != terrain_iterator->tiles.end())
         {
-            if (const auto rectOpt = plant_resource_texture.GetRect(tile_iterator->image))
-                spriteBatch.DrawCenter(
+            if (const auto image = plant_resource_texture.GetImage(tile_iterator->image))
+                spriteBatch.Draw(
                     &plant_resource_texture.Texture2D,
-                    position.ToGLM(),
-                    rectOpt.value(),
+                    (position - Vector2(static_cast<float>(image->Refx), static_cast<float>(image->Refy)) + offset).ToGLM(),
+                    ResourceTextureParser::GetRect2(*image),
                     Color(1.0f, 1.0f, 1.0f, 1.0f)
                 );
-            if (const auto rectOpt = terrain_resource_texture.GetRect(tile_iterator->image))
-                spriteBatch.DrawCenter(
+            if (const auto image = terrain_resource_texture.GetImage(tile_iterator->image))
+                spriteBatch.Draw(
                     &terrain_resource_texture.Texture2D,
-                    position.ToGLM(),
-                    rectOpt.value(),
+                    (position - Vector2(static_cast<float>(image->Refx), static_cast<float>(image->Refy)) + offset).ToGLM(),
+                    ResourceTextureParser::GetRect2(*image),
                     Color(1.0f, 1.0f, 1.0f, 1.0f)
                 );
         }
@@ -515,10 +517,10 @@ void GamePanel2D::GameTestView()
                 const auto& [idx, image] = terrain.tiles[i];
 
                 const Texture2D* texture = &plant_resource_texture.Texture2D;
-                std::optional<Rect2> rect = plant_resource_texture.GetRect(image);
+                std::optional<Rect2> rect = plant_resource_texture.GetRect2(image);
                 if (!rect)
                 {
-                    rect = terrain_resource_texture.GetRect(image);
+                    rect = terrain_resource_texture.GetRect2(image);
                     texture = &terrain_resource_texture.Texture2D;
                 }
                 if (!rect) continue;
@@ -588,42 +590,4 @@ void GamePanel2D::EditorModelWindow()
         if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
         ImGui::EndPopup();
     }
-}
-
-float GamePanel2D::GetMaxRectWidth(
-    const Terrain& terrain,
-    const ResourceTextureParser& plant_resource_texture,
-    const ResourceTextureParser& terrain_resource_texture
-)
-{
-    auto max_width = std::max_element(
-        terrain.tiles.begin(),
-        terrain.tiles.end(),
-        [&plant_resource_texture, &terrain_resource_texture](const auto& tile1, const auto& tile2)
-        {
-            const auto& [idx1, image1] = tile1;
-            const auto& [idx2, image2] = tile2;
-
-            std::optional<Rect2> rect1 = plant_resource_texture.GetRect(image1);
-            if (!rect1) rect1 = terrain_resource_texture.GetRect(image1);
-
-            std::optional<Rect2> rect2 = plant_resource_texture.GetRect(image2);
-            if (!rect2) rect2 = terrain_resource_texture.GetRect(image2);
-
-            const float width1 = rect1 ? rect1->Width : 0;
-            const float width2 = rect2 ? rect2->Width : 0;
-
-            return width1 < width2;
-        }
-    );
-
-    if (max_width != terrain.tiles.end())
-    {
-        const auto& [idx, image] = *max_width;
-        std::optional<Rect2> rect = plant_resource_texture.GetRect(image);
-        if (!rect) rect = terrain_resource_texture.GetRect(image);
-        return rect ? rect->Width : 0;
-    }
-
-    return 0; // 默认值，表示没有有效的 rect
 }

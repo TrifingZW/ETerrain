@@ -16,6 +16,24 @@
 #include "core/math/color.h"
 #include "core/math/rect2.h"
 
+struct SpriteInfo
+{
+    int TextureID{};
+    float SourceX{};
+    float SourceY{};
+    float SourceW{};
+    float SourceH{};
+    float DestinationX{};
+    float DestinationY{};
+    float DestinationW{};
+    float DestinationH{};
+    Color Color{};
+    float OriginX{};
+    float OriginY{};
+    float Rotation{};
+    Graphics::SpriteEffects Effects = Graphics::SpriteEffects::None;
+};
+
 class SpriteBatch : public GraphicsResource
 {
 public:
@@ -29,6 +47,8 @@ private:
     GraphicsDevice* _graphicsDevice = nullptr;
     BufferManager _bufferManager = BufferManager(MAX_VERTICES_SIZE, MAX_INDICES_SIZE);
 
+    SpriteInfo _spriteInfos[MAX_SPRITES] = {};
+    SpriteInfo* _sortedSpriteInfos[MAX_SPRITES] = {};
     PositionTexture4 _vertexInfo[MAX_SPRITES] = {};
     Texture2D* _textureInfo[MAX_SPRITES] = {};
     short* _indices = new short[MAX_INDICES];
@@ -47,8 +67,8 @@ public:
     void Begin();
     void Begin(Graphics::SpriteSortMode spriteSortMode);
     void Begin(Graphics::SpriteSortMode spriteSortMode, const glm::mat4& matrix);
-    void Begin(SamplerState samplerState, const glm::mat4& matrix);
-    void Begin(Graphics::SpriteSortMode spriteSortMode, SamplerState samplerState);
+    void Begin(const SamplerState& samplerState, const glm::mat4& matrix);
+    void Begin(Graphics::SpriteSortMode spriteSortMode, const SamplerState& samplerState);
     void Begin(Graphics::SpriteSortMode spriteSortMode, SamplerState samplerState, const glm::mat4& matrix);
 
     void Draw(Texture2D* texture, glm::vec2 position, Color color);
@@ -133,3 +153,4 @@ private:
         Graphics::SpriteEffects effects
     );
 };
+

@@ -4,7 +4,10 @@
 
 #include "sprite_batch.h"
 
+#include <algorithm>
+#include <numeric>
 #include <stdexcept>
+#include <vector>
 
 #include "glm/ext/matrix_transform.hpp"
 #include "core/math/math_funcs.h"
@@ -19,47 +22,29 @@ SpriteBatch::SpriteBatch(GraphicsDevice* graphicsDevice): _graphicsDevice(graphi
 
 SpriteBatch::~SpriteBatch() = default;
 
-void SpriteBatch::Begin() { Begin(SpriteSortMode::Deferred); }
+void SpriteBatch::Begin()
+{
+    Begin(SpriteSortMode::Deferred, SamplerState(), glm::mat4(1.0f));
+}
 
 void SpriteBatch::Begin(const SpriteSortMode spriteSortMode)
 {
-    if (_beginCalled)
-        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
-    _beginCalled = true;
-
-    _spriteSortMode = spriteSortMode;
+    Begin(spriteSortMode, SamplerState(), glm::mat4(1.0f));
 }
 
 void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, const glm::mat4& matrix)
 {
-    if (_beginCalled)
-        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
-    _beginCalled = true;
-
-    _spriteSortMode = spriteSortMode;
-    _samplerState = SamplerState();
-    _matrix = matrix;
+    Begin(spriteSortMode, SamplerState(), matrix);
 }
 
-void SpriteBatch::Begin(SamplerState samplerState, const glm::mat4& matrix)
+void SpriteBatch::Begin(const SamplerState& samplerState, const glm::mat4& matrix)
 {
-    if (_beginCalled)
-        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
-    _beginCalled = true;
-
-    _spriteSortMode = SpriteSortMode::Deferred;
-    _samplerState = std::move(samplerState);
-    _matrix = matrix;
+    Begin(SpriteSortMode::Deferred, samplerState, matrix);
 }
 
-void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, SamplerState samplerState)
+void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, const SamplerState& samplerState)
 {
-    if (_beginCalled)
-        throw std::runtime_error("在成功调用 End 之前，无法再次调用 Begin。");
-    _beginCalled = true;
-
-    _spriteSortMode = spriteSortMode;
-    _samplerState = std::move(samplerState);
+    Begin(spriteSortMode, samplerState, glm::mat4(1.0f));
 }
 
 void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, SamplerState samplerState, const glm::mat4& matrix)
@@ -71,6 +56,9 @@ void SpriteBatch::Begin(const SpriteSortMode spriteSortMode, SamplerState sample
     _spriteSortMode = spriteSortMode;
     _samplerState = std::move(samplerState);
     _matrix = matrix;
+
+    if (_spriteSortMode == SpriteSortMode::Immediate)
+        PrepRenderState();
 }
 
 void SpriteBatch::Draw(Texture2D* texture, const glm::vec2 position, const Color color)
@@ -336,6 +324,8 @@ void SpriteBatch::Draw(
     );
 }
 
+void SpriteBatch::DrawRect(Texture2D texture, Rect2 rect, Color color) {}
+
 void SpriteBatch::End()
 {
     if (!_beginCalled)
@@ -408,50 +398,46 @@ void SpriteBatch::PushSprite(
         _textureInfo[_numSprites] = texture;
         _numSprites++;
     }
-    else
+    else if (_spriteSortMode == SpriteSortMode::Immediate)
     {
-        if (_numSprites == 0)
-        {
-            GenerateVertexInfo(
-                &_vertexInfo[0],
-                sourceX,
-                sourceY,
-                sourceW,
-                sourceH,
-                destinationX,
-                destinationY,
-                destinationW,
-                destinationH,
-                color,
-                originX,
-                originY,
-                rotation,
-                effects
-            );
-            _textureInfo[0] = texture;
-            _numSprites++;
-        }
-        else
-        {
-            if (_textureInfo[0] != texture)
-                FlushBatch();
-            GenerateVertexInfo(
-                &_vertexInfo[0],
-                sourceX,
-                sourceY,
-                sourceW,
-                sourceH,
-                destinationX,
-                destinationY,
-                destinationW,
-                destinationH,
-                color,
-                originX,
-                originY,
-                rotation,
-                effects
-            );
-        }
+        GenerateVertexInfo(
+            &_vertexInfo[0],
+            sourceX,
+            sourceY,
+            sourceW,
+            sourceH,
+            destinationX,
+            destinationY,
+            destinationW,
+            destinationH,
+            color,
+            originX,
+            originY,
+            rotation,
+            effects
+        );
+        const int offset = UpdateVertexBuffer(0, 1);
+        DrawPrimitivesBase(texture, offset, 1);
+    }
+    else if (_spriteSortMode == SpriteSortMode::Texture)
+    {
+        SpriteInfo* sprite_info = &_spriteInfos[_numSprites];
+        sprite_info->TextureID = texture->Id;
+        sprite_info->SourceX = sourceX;
+        sprite_info->SourceY = sourceY;
+        sprite_info->SourceW = sourceW;
+        sprite_info->SourceH = sourceH;
+        sprite_info->DestinationX = destinationX;
+        sprite_info->DestinationY = destinationY;
+        sprite_info->DestinationW = destinationW;
+        sprite_info->DestinationH = destinationH;
+        sprite_info->Color = color;
+        sprite_info->OriginX = originX;
+        sprite_info->OriginY = originY;
+        sprite_info->Rotation = rotation;
+        sprite_info->Effects = effects;
+        _textureInfo[_numSprites] = texture;
+        _numSprites += 1;
     }
 }
 
@@ -498,6 +484,44 @@ void SpriteBatch::FlushBatch()
     PrepRenderState();
     if (_numSprites == 0)
         return;
+
+    if (_spriteSortMode != SpriteSortMode::Deferred)
+    {
+        Texture2D* sorted_texture_temp[MAX_SPRITES];
+        std::vector<size_t> indices(_numSprites);
+        std::iota(indices.begin(), indices.end(), 0);
+        std::sort(
+            indices.begin(),
+            indices.end(),
+            [&](const size_t i, const size_t j) { return _spriteInfos[i].TextureID < _spriteInfos[j].TextureID; }
+        );
+        for (int i = 0; i < _numSprites; i += 1)
+        {
+            _sortedSpriteInfos[i] = &_spriteInfos[indices[i]];
+            sorted_texture_temp[i] = _textureInfo[indices[i]];
+        }
+        std::copy_n(sorted_texture_temp, _numSprites, _textureInfo);
+        for (int i = 0; i < _numSprites; i += 1)
+        {
+            const auto* info = _sortedSpriteInfos[i];
+            GenerateVertexInfo(
+                &_vertexInfo[i],
+                info->SourceX,
+                info->SourceY,
+                info->SourceW,
+                info->SourceH,
+                info->DestinationX,
+                info->DestinationY,
+                info->DestinationW,
+                info->DestinationH,
+                info->Color,
+                info->OriginX,
+                info->OriginY,
+                info->Rotation,
+                info->Effects
+            );
+        }
+    }
 
     // #ifdef PLATFORM_WINDOWS
     int arrayOffset = 0;
