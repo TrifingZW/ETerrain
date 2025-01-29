@@ -50,7 +50,7 @@ public:
     RenderTarget* renderTarget = nullptr;
 
     BinParser binParser = {};
-    GridManager* hexManager = nullptr;
+    GridManager* gridManager = nullptr;
 
     explicit GamePanel2D();
     ~GamePanel2D() override;

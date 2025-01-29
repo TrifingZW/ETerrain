@@ -39,7 +39,7 @@ GamePanel2D::~GamePanel2D()
 {
     delete shader;
     delete vertexInfo;
-    delete hexManager;
+    delete gridManager;
     delete camera2d;
     delete renderTarget;
 }
@@ -54,7 +54,7 @@ void GamePanel2D::Init()
 void GamePanel2D::Ready()
 {
     binParser.Parse("world.bin");
-    hexManager = new GridManager(binParser.GetWidth(), binParser.GetHeight(), 74.0f);
+    gridManager = new GridManager(binParser.GetWidth(), binParser.GetHeight(), 74.0f);
 
     ColorTexture->Generate(binParser.GetWidth(), binParser.GetHeight());
 
@@ -66,7 +66,7 @@ void GamePanel2D::Ready()
         {
             Topography& topography = binParser.topographies[y * binParser.GetWidth() + x];
             landUnit[x][y].Topography = &topography;
-            landUnit[x][y].Position = Vector2(hexManager->GridToPixel({x, y}));
+            landUnit[x][y].Position = Vector2(gridManager->GridToPixel({x, y}));
             landUnit[x][y].GridPosition = Vector2I(x, y);
         }
     }
@@ -84,7 +84,7 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     spriteBatch.Begin(Graphics::SpriteSortMode::Immediate, camera2d->GetProjectionMatrix());
     spriteBatch.Draw(
         Editor::loadResources->mapLand,
-        Rect2(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
+        Rect2(0, 0, gridManager->GetPixelWidth(), gridManager->GetPixelHeight()),
         Color(1.0f, 1.0f, 1.0f, 1.0f)
     );
     spriteBatch.End();
@@ -132,13 +132,15 @@ void GamePanel2D::Rendering(SpriteBatch& spriteBatch)
     shader->SetInt("Image", 0);
     shader->SetInt("Color", 1);
     shader->SetMatrix4("uTransform", camera2d->GetProjectionMatrix());
-    shader->SetVector2("texsize", {1024.0f, 1024.0f});
+    shader->SetFloat("tileWidth", gridManager->tileWidth);
+    shader->SetFloat("tileHeight", gridManager->tileHeight);
+    shader->SetVector2("texSize", {1024.0f, 1024.0f});
     Core::GetGraphicsDevice()->Textures[1] = ColorTexture;
     Core::GetGraphicsDevice()->SamplerStates[1] = SamplerState::PointWrap;
     spriteBatch.Begin(Graphics::SpriteSortMode::Immediate, camera2d->GetProjectionMatrix());
     spriteBatch.Draw(
         Editor::loadResources->mapSea,
-        Rect2(0, 0, hexManager->GetPixelWidth(), hexManager->GetPixelHeight()),
+        Rect2(0, 0, gridManager->GetPixelWidth(), gridManager->GetPixelHeight()),
         Color(1.0f, 1.0f, 1.0f, 1.0f)
     );
     spriteBatch.End();
@@ -195,12 +197,12 @@ void GamePanel2D::ImageInput()
     const Vector2 mouse_position = ImGuiHelper::GetMousePositionInCamera2DWorld(*camera2d, ImGuiHelper::GetMousePositionInItem());
 
     delete MouseSelect;
-    MouseSelect = new Vector2(hexManager->GetStandardPosition(mouse_position));
+    MouseSelect = new Vector2(gridManager->GetStandardPosition(mouse_position));
 
     const int grid_width = binParser.GetWidth();
     const int grid_height = binParser.GetHeight();
-    const float pixel_width = hexManager->GetPixelWidth();
-    const float pixel_height = hexManager->GetPixelHeight();
+    const float pixel_width = gridManager->GetPixelWidth();
+    const float pixel_height = gridManager->GetPixelHeight();
 
     if (const float mouseWheel = ImGui::GetIO().MouseWheel; mouseWheel != 0.0f)
         TargetCameraZoom += mouseWheel * 0.1f * camera2d->GetZoom();
@@ -210,7 +212,7 @@ void GamePanel2D::ImageInput()
 
     if (ImGui::GetIO().MouseDown[0])
     {
-        const Vector2I position_grid = hexManager->PixelToGrid(mouse_position);
+        const Vector2I position_grid = gridManager->PixelToGrid(mouse_position);
 
         if (position_grid.X >= 0 && position_grid.X < grid_width &&
             position_grid.Y >= 0 && position_grid.Y < grid_height)
