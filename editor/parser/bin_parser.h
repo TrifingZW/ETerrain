@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "btl_structure.h"
+#include "../world/btl_structure.h"
 
 class BinParser
 {
@@ -27,5 +27,5 @@ public:
     void Save(const std::string& name);
 
 private:
-    std::string AssetsPath = "assets"; // 资产路径
+    std::string AssetsPath = "package/assets"; // 资产路径
 };

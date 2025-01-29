@@ -13,7 +13,7 @@ bool MapConfigParser::loadFromXml(const std::string& filePath)
 {
     pugi::xml_document doc;
 #ifdef PLATFORM_WINDOWS
-    if (const pugi::xml_parse_result result = doc.load_file(("assets/" + filePath).c_str()); !result)
+    if (const pugi::xml_parse_result result = doc.load_file(("package/assets/" + filePath).c_str()); !result)
         throw std::runtime_error("Failed to load XML file: " + filePath);
 #elif defined( PLATFORM_ANDROID)
     std::string xmlData;

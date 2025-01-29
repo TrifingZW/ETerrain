@@ -6,7 +6,7 @@
 
 #include "core/math/vector2.h"
 #include "core/math/vector2i.h"
-#include "editor/parser/btl_structure.h"
+#include "btl_structure.h"
 
 
 class LandUnit

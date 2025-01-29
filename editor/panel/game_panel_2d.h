@@ -6,15 +6,14 @@
 
 #include <functional>
 
+#include "grid_manager.h"
 #include "core/graphics/render_target.h"
 #include "core/graphics/sprite_batch.h"
+#include "editor/parser/bin_parser.h"
+#include "editor/world/land_unit.h"
 #include "scene/node.h"
 #include "scene/2d/camera_2d.h"
 #include "scene/resources/shader.h"
-#include "editor/parser/bin_parser.h"
-#include "grid_manager.h"
-#include "editor/parser/terrain_config_parser.h"
-#include "editor/world/land_unit.h"
 
 class ResourceTextureParser;
 

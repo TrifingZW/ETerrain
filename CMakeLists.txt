@@ -118,7 +118,7 @@ set(SOURCE_FILES
         editor/parser/resource_texture_parser.h
         editor/parser/bin_parser.cpp
         editor/parser/bin_parser.h
-        editor/parser/btl_structure.h
+        editor/world/btl_structure.h
         editor/world/land_unit.cpp
         editor/world/land_unit.h
 
@@ -128,6 +128,7 @@ set(SOURCE_FILES
         core/icon/IconsFontAwesome6.h
         editor/editdefs.h
         stb.cpp
+        editor/world/structdefs.h
 )
 if (PLATFORM STREQUAL "windows")
     list(APPEND SOURCE_FILES main.cpp)

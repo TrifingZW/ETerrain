@@ -182,7 +182,6 @@ void GamePanel2D::Gui()
     GameView();
     GameTestView();
     PlacementSettings();
-    EditorModelWindow();
 
     // ImGui::ShowDemoWindow();
 }
@@ -244,7 +243,7 @@ void GamePanel2D::ImageInput()
                 }
             else if (ActiveToolButton == "Pen Fancy")
             {
-                ImGui::OpenPopup("Delete?asd");
+                ImGui::OpenPopup("Deleteasd");
             }
             else if (ActiveToolButton == "Eraser")
             {
@@ -492,10 +491,11 @@ void GamePanel2D::GameView()
     );
 
     if (ImGui::IsItemHovered())
-
         ImageInput();
     else
         MouseSelect = nullptr;
+
+    EditorModelWindow();
 
     ImGui::End();
     ImGui::PopStyleVar(4);
@@ -573,7 +573,7 @@ void GamePanel2D::EditorModelWindow()
     const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
-    if (ImGui::BeginPopupModal("Delete?asd", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    if (ImGui::BeginPopupModal("Deleteasd", NULL, ImGuiWindowFlags_AlwaysAutoResize))
     {
         ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!");
         ImGui::Separator();
