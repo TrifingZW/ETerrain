@@ -43,7 +43,7 @@ ivec2 getGridCoords(vec2 pixel) {
 
     vec2 in_tile_pos = raw_pos - ret;
 
-    ivec2 retI = ivec2(ret);
+    ivec2 retI = ivec2(floor(ret));
 
     if (cross2D((in_tile_pos - vec2(0.0, 0.5)), (vec2(1.0 / overlapping_ratio - 1.0, -0.5))) > 0.0) {
         int result = PosMod(int(floor(ret.x)), 2) != 0 ? 0 : -1;

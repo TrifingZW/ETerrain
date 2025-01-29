@@ -74,10 +74,4 @@ public:
     void GameTestView();
     void PlacementSettings();
     void EditorModelWindow();
-
-    static float GetMaxRectWidth(
-        const Terrain& terrain,
-        const ResourceTextureParser& plant_resource_texture,
-        const ResourceTextureParser& terrain_resource_texture
-    );
 };

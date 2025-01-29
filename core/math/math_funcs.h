@@ -19,8 +19,7 @@ namespace Math
     inline int64_t PosMod(const int64_t p_x, const int64_t p_y)
     {
         int64_t value = p_x % p_y;
-        if ((value < 0 && p_y > 0) || (value > 0 && p_y < 0))
-        {
+        if ((value < 0 && p_y > 0) || (value > 0 && p_y < 0)) {
             value += p_y;
         }
         return value;
@@ -77,7 +76,7 @@ namespace Math
     inline float CubicInterpolate(const float from, const float target, const float pre, const float post, const float weight)
     {
         return 0.5f *
-               ((from * 2.0f) +
+               (from * 2.0f +
                 (-pre + target) * weight +
                 (2.0f * pre - 5.0f * from + 4.0f * target - post) * (weight * weight) +
                 (-pre + 3.0f * from - 3.0f * target + post) * (weight * weight * weight));
@@ -107,7 +106,7 @@ namespace Math
     inline float BezierInterpolate(const float start, const float control1, const float control2, const float end, const float time)
     {
         /* 来自维基百科有关贝塞尔曲线的文章的公式。 */
-        const float omt = (1.0f - time);
+        const float omt = 1.0f - time;
         const float omt2 = omt * omt;
         const float omt3 = omt2 * omt;
         const float t2 = time * time;
@@ -119,7 +118,7 @@ namespace Math
     inline float BezierDerivative(const float start, const float control1, const float control2, const float end, const float time)
     {
         /* 来自维基百科有关贝塞尔曲线的文章的公式。 */
-        const float omt = (1.0f - time);
+        const float omt = 1.0f - time;
         const float omt2 = omt * omt;
         const float t2 = time * time;
 

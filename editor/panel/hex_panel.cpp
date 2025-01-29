@@ -73,7 +73,6 @@ void HexPanel::Rendering(SpriteBatch& spriteBatch)
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
 
-
     Core::GetGraphicsDevice()->ResetRenderTarget();
 }
 

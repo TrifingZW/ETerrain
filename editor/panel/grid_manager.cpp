@@ -50,7 +50,7 @@ Vector2I GridManager::PixelToGrid(const Vector2& pixel) const
     const bool in_top_left_triangle = (in_tile_pos - Vector2(0.0f, 0.5f)).Cross(Vector2(1.0f / overlapping_ratio - 1, -0.5f)) > 0;
     const bool in_bottom_left_triangle = (in_tile_pos - Vector2(0.0f, 0.5f)).Cross(Vector2(1.0f / overlapping_ratio - 1, 0.5f)) <= 0;
 
-    auto retI = static_cast<Vector2I>(ret);
+    auto retI = static_cast<Vector2I>(ret.Floor());
     if (in_top_left_triangle)
         retI += Vector2I(-1, Math::PosMod(static_cast<long>(Math::Floor(ret.X)), 2) ? 0 : -1);
     else if (in_bottom_left_triangle)
