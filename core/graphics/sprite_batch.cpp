@@ -493,7 +493,12 @@ void SpriteBatch::FlushBatch()
         std::sort(
             indices.begin(),
             indices.end(),
-            [&](const size_t i, const size_t j) { return _spriteInfos[i].TextureID < _spriteInfos[j].TextureID; }
+            [&](const size_t i, const size_t j)
+            {
+                if (_spriteInfos[i].TextureID == _spriteInfos[j].TextureID)
+                    return i < j; // 保持原顺序
+                return _spriteInfos[i].TextureID < _spriteInfos[j].TextureID;
+            }
         );
         for (int i = 0; i < _numSprites; i += 1)
         {
