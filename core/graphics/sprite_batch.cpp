@@ -375,10 +375,11 @@ void SpriteBatch::PushSprite(
     const SpriteEffects effects
 )
 {
+    if (_numSprites >= MAX_SPRITES)
+        FlushBatch();
+
     if (_spriteSortMode == SpriteSortMode::Deferred)
     {
-        if (_numSprites >= MAX_SPRITES)
-            FlushBatch();
         GenerateVertexInfo(
             &_vertexInfo[_numSprites],
             sourceX,

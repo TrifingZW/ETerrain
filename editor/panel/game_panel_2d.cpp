@@ -243,7 +243,8 @@ void GamePanel2D::ImageInput()
                 }
             else if (ActiveToolButton == "Pen Fancy")
             {
-                ImGui::OpenPopup("Deleteasd");
+                CurrentTopography = topography;
+                ImGui::OpenPopup("编辑地形数据");
             }
             else if (ActiveToolButton == "Eraser")
             {
@@ -495,10 +496,9 @@ void GamePanel2D::GameView()
     else
         MouseSelect = nullptr;
 
-    EditorModelWindow();
-
-    ImGui::End();
     ImGui::PopStyleVar(4);
+    EditorModelWindow();
+    ImGui::End();
 }
 
 void GamePanel2D::GameTestView()
@@ -573,23 +573,66 @@ void GamePanel2D::EditorModelWindow()
     const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
-    if (ImGui::BeginPopupModal("Deleteasd", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    if (ImGui::BeginPopupModal("编辑地形数据", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
     {
-        ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!");
-        ImGui::Separator();
+        int 地块类型 = CurrentTopography->地块类型;
+        int 地块ID = CurrentTopography->地块ID;
+        int 地块X = CurrentTopography->地块X;
+        int 地块Y = CurrentTopography->地块Y;
+        int 装饰类型A = CurrentTopography->装饰类型A;
+        int 装饰AID = CurrentTopography->装饰AID;
+        int 装饰AX = CurrentTopography->装饰AX;
+        int 装饰AY = CurrentTopography->装饰AY;
+        int 装饰类型B = CurrentTopography->装饰类型B;
+        int 装饰BID = CurrentTopography->装饰BID;
+        int 装饰BX = CurrentTopography->装饰BX;
+        int 装饰BY = CurrentTopography->装饰BY;
+        int 水边缘 = CurrentTopography->水边缘;
+        int 路边缘 = CurrentTopography->路边缘;
+        int 海岸 = CurrentTopography->海岸;
+        int empty4 = CurrentTopography->empty4;
 
-        //static int unused_i = 0;
-        //ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
-
-        static bool dont_ask_me_next_time = false;
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-        ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
-        ImGui::PopStyleVar();
-
-        if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        ImGui::InputInt("地块类型", &地块类型, 0, 255);
+        ImGui::InputInt("地块ID", &地块ID, 0, 255);
+        ImGui::InputInt("地块X", &地块X, -128, 127);
+        ImGui::InputInt("地块Y", &地块Y, -128, 127);
+        ImGui::InputInt("装饰类型A", &装饰类型A, 0, 255);
+        ImGui::InputInt("装饰AID", &装饰AID, 0, 255);
+        ImGui::InputInt("装饰AX", &装饰AX, -128, 127);
+        ImGui::InputInt("装饰AY", &装饰AY, -128, 127);
+        ImGui::InputInt("装饰类型B", &装饰类型B, 0, 255);
+        ImGui::InputInt("装饰BID", &装饰BID, 0, 255);
+        ImGui::InputInt("装饰BX", &装饰BX, -128, 127);
+        ImGui::InputInt("装饰BY", &装饰BY, -128, 127);
+        ImGui::InputInt("水边缘", &水边缘, 0, 255);
+        ImGui::InputInt("路边缘", &路边缘, 0, 255);
+        ImGui::InputInt("海岸", &海岸, 0, 255);
+        ImGui::InputInt("empty4", &empty4, 0, 255);
+        if (ImGui::Button("确定", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))
+        {
+            ImGui::CloseCurrentPopup();
+        }
         ImGui::SetItemDefaultFocus();
         ImGui::SameLine();
-        if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        if (ImGui::Button("取消", ImVec2(-FLT_MIN, 0))) { ImGui::CloseCurrentPopup(); }
+        ImGui::EndPopup();
+    }
+}
+
+void GamePanel2D::OpenFileWindow()
+{
+    const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+    if (ImGui::BeginPopupModal("打开BTL文件", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        if (ImGui::Button("确定", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SetItemDefaultFocus();
+        ImGui::SameLine();
+        if (ImGui::Button("取消", ImVec2(-FLT_MIN, 0))) { ImGui::CloseCurrentPopup(); }
         ImGui::EndPopup();
     }
 }

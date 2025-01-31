@@ -23,6 +23,7 @@ public:
     int width = 1, height = 1;
     float TargetCameraZoom = 1.0f;
 
+    Topography* CurrentTopography = nullptr;
     Vector2* MouseSelect = nullptr;
     int SelectedTerrainG{}, SelectedTileIdx{};
     std::string ActiveToolButton = "Pen";
@@ -71,6 +72,7 @@ public:
     void Menu();
     void GameView();
     void GameTestView();
-    void PlacementSettings();
+    void    PlacementSettings();
     void EditorModelWindow();
+    void OpenFileWindow();
 };
